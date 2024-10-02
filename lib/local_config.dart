@@ -2,7 +2,7 @@ library firebase_local_config;
 
 import 'package:firebase_local_config/preferences/preferences_delegate.dart';
 import 'package:firebase_local_config/preferences/shared_preferences_delegate.dart';
-import 'package:firebase_local_config/widget/local_config_screen.dart';
+import 'package:firebase_local_config/widget/config_screen.dart';
 import 'package:flutter/material.dart';
 
 class LocalConfig {
