@@ -1,8 +1,8 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 
-class TextConfigWidget extends StatefulWidget {
-  const TextConfigWidget({
+class DataObjectConfigWidget extends StatefulWidget {
+  const DataObjectConfigWidget({
     super.key,
     required this.configKey,
     required this.configValue,
@@ -12,10 +12,10 @@ class TextConfigWidget extends StatefulWidget {
   final String configValue;
 
   @override
-  State<StatefulWidget> createState() => _TextConfigWidgetState();
+  State<StatefulWidget> createState() => _DataObjectConfigWidgetState();
 }
 
-class _TextConfigWidgetState extends State<TextConfigWidget> {
+class _DataObjectConfigWidgetState extends State<DataObjectConfigWidget> {
   String value = RemoteConfigValue.defaultValueForString;
 
   @override
@@ -29,9 +29,7 @@ class _TextConfigWidgetState extends State<TextConfigWidget> {
     return InkWell(
       child: ListTile(
         title: Text(widget.configKey),
-        leading: isNumeric(value)
-            ? const Icon(Icons.onetwothree)
-            : const Icon(Icons.abc),
+        leading: const Icon(Icons.data_object),
         trailing: Text(widget.configValue),
       ),
       onTap: () {
@@ -48,8 +46,6 @@ class _TextConfigWidgetState extends State<TextConfigWidget> {
       },
     );
   }
-
-  bool isNumeric(String source) => double.tryParse(source) != null;
 
   void onChanged(String value) {
     setState(() {

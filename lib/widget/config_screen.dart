@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:firebase_local_config/widget/bool_config_widget.dart';
+import 'package:firebase_local_config/widget/toggle_config_widget.dart';
+import 'package:firebase_local_config/widget/data_object_config_widget.dart';
 import 'package:firebase_local_config/widget/text_config_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class LocalConfigScreen extends StatelessWidget {
 
           final boolValue = bool.tryParse(configEntry.value);
           if (boolValue != null) {
-            return BoolConfigWidget(
+            return ToggleConfigWidget(
               configKey: configEntry.key,
               configValue: boolValue,
             );
@@ -28,7 +29,12 @@ class LocalConfigScreen extends StatelessWidget {
 
           try {
             final jsonValue = jsonDecode(configEntry.value);
-            if (jsonValue is Map<String, dynamic>) {}
+            if (jsonValue is Map<String, dynamic>) {
+              return DataObjectConfigWidget(
+                configKey: configEntry.key,
+                configValue: configEntry.value,
+              );
+            }
           } on FormatException catch (_) {}
 
           return TextConfigWidget(
