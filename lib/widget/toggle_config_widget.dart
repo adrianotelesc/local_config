@@ -31,7 +31,7 @@ class _ToggleConfigWidgetState extends State<ToggleConfigWidget> {
       child: ListTile(
         title: Text(widget.configKey),
         leading: const Icon(Icons.toggle_on),
-        trailing: Switch.adaptive(
+        trailing: Switch(
           value: value,
           onChanged: onChanged,
         ),
