@@ -1,4 +1,4 @@
-package com.example.sample
+package com.adrianotelesc.firebaselocalconfig.sample
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "76469425304",
+    "project_id": "fir-local-config-sample-260a9",
+    "storage_bucket": "fir-local-config-sample-260a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76469425304:android:c13e44e0b9969167a2eced",
+        "android_client_info": {
+          "package_name": "com.adrianotelesc.firebaselocalconfig.sample"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDC7ni0zbQvWpbZXzEUuhAR7ZzznnpXqMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
