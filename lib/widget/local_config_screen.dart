@@ -15,7 +15,10 @@ class LocalConfigScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Local Config')),
+      appBar: AppBar(
+        title: const Text('Local Config'),
+        centerTitle: false,
+      ),
       body: ListView.separated(
         itemCount: configs.length + 1,
         separatorBuilder: (context, index) {
