@@ -2,7 +2,6 @@ import 'package:firebase_local_config/widget/text_editor_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_local_config/local_config.dart';
 import 'package:firebase_local_config/model/config_value.dart';
-import 'package:firebase_local_config/widget/toggle_list_tile_widget.dart';
 import 'package:firebase_local_config/widget/text_input_list_tile_widget.dart';
 
 class LocalConfigScreen extends StatelessWidget {
@@ -24,11 +23,23 @@ class LocalConfigScreen extends StatelessWidget {
 
           switch (configEntry.value.valueType) {
             case ConfigValueType.bool:
-              return ToggleListTileWidget(
+              return TextInputListTileWidget(
                 title: configEntry.key,
-                value: configEntry.value.asBool() ?? false,
+                subtitle: _getType(configEntry.value.valueType),
+                value: configEntry.value.value,
+                predefinedValues: const ['false', 'true'],
+                textTypeIcon: const Icon(Icons.toggle_on),
+                validator: (value) {
+                  if (configEntry.value.valueType == ConfigValueType.bool &&
+                      value != null &&
+                      bool.tryParse(value) == null) {
+                    return 'Invalid boolean.';
+                  }
+
+                  return null;
+                },
                 onChanged: (value) =>
-                    LocalConfig.instance.setBool(configEntry.key, value),
+                    LocalConfig.instance.setString(configEntry.key, value),
               );
 
             case ConfigValueType.int:
@@ -44,7 +55,7 @@ class LocalConfigScreen extends StatelessWidget {
                 title: configEntry.key,
                 subtitle: _getType(configEntry.value.valueType),
                 value: configEntry.value.asString() ?? '',
-                leadingIcon: isNumeric
+                textTypeIcon: isNumeric
                     ? const Icon(Icons.onetwothree)
                     : isJson
                         ? const Icon(Icons.data_object)
@@ -66,7 +77,6 @@ class LocalConfigScreen extends StatelessWidget {
                         icon: const Icon(Icons.open_in_full),
                       )
                     : null,
-                isNumeric: configEntry.value.isNumeric,
                 onChanged: (value) {
                   if (configEntry.value.valueType == ConfigValueType.int) {
                     LocalConfig.instance.setInt(

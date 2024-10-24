@@ -6,21 +6,21 @@ class TextInputListTileWidget extends StatefulWidget {
     required this.title,
     required this.subtitle,
     required this.value,
-    required this.isNumeric,
-    this.leadingIcon,
+    this.textTypeIcon,
     this.suffixIcon,
     this.onChanged,
     this.validator,
+    this.predefinedValues = const [],
   });
 
   final String title;
   final String subtitle;
   final String value;
-  final Widget? leadingIcon;
+  final Widget? textTypeIcon;
   final Widget? suffixIcon;
-  final bool isNumeric;
   final Function(String value)? onChanged;
   final String? Function(String? value)? validator;
+  final List<String> predefinedValues;
 
   @override
   State<StatefulWidget> createState() => _TextInputListTileWidgetState();
@@ -44,7 +44,7 @@ class _TextInputListTileWidgetState extends State<TextInputListTileWidget> {
     return InkWell(
       child: ListTile(
         title: Text(widget.title),
-        leading: widget.leadingIcon,
+        leading: widget.textTypeIcon,
         trailing: Text(_value.isNotEmpty ? _value : '(empty string)'),
       ),
       onTap: () {
@@ -74,8 +74,8 @@ class _TextInputListTileWidgetState extends State<TextInputListTileWidget> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          widget.leadingIcon != null
-                              ? widget.leadingIcon!
+                          widget.textTypeIcon != null
+                              ? widget.textTypeIcon!
                               : const SizedBox.shrink(),
                           const SizedBox.square(dimension: 4),
                           Text(
@@ -88,15 +88,39 @@ class _TextInputListTileWidgetState extends State<TextInputListTileWidget> {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Form(
                           key: _formKey,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              border: const OutlineInputBorder(),
-                              suffixIcon: widget.suffixIcon,
-                            ),
-                            controller: _textController,
-                            autovalidateMode: AutovalidateMode.always,
-                            validator: widget.validator,
-                          ),
+                          child: widget.predefinedValues.isEmpty
+                              ? TextFormField(
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(),
+                                    suffixIcon: widget.suffixIcon,
+                                  ),
+                                  controller: _textController,
+                                  autovalidateMode: AutovalidateMode.always,
+                                  validator: widget.validator,
+                                )
+                              : DropdownButtonHideUnderline(
+                                  child: ButtonTheme(
+                                    alignedDropdown: true,
+                                    child: DropdownButtonFormField<String>(
+                                        decoration: InputDecoration(
+                                          border: const OutlineInputBorder(),
+                                          suffixIcon: widget.suffixIcon,
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                        items: widget.predefinedValues
+                                            .map((value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                        value: _value,
+                                        onChanged: (value) {
+                                          _textController.text =
+                                              value ?? _value;
+                                        }),
+                                  ),
+                                ),
                         ),
                       ),
                       Row(
