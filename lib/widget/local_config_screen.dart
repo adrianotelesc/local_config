@@ -7,7 +7,9 @@ import 'package:firebase_local_config/widget/text_input_list_tile_widget.dart';
 class LocalConfigScreen extends StatelessWidget {
   final List<MapEntry<String, ConfigValue>> configs;
 
-  const LocalConfigScreen({
+  final _searchTextController = TextEditingController();
+
+  LocalConfigScreen({
     super.key,
     required this.configs,
   });
@@ -27,24 +29,34 @@ class LocalConfigScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           if (index == 0) {
             return Padding(
-              padding: const EdgeInsets.only(
-                top: 8,
-                left: 16,
-                right: 24,
-                bottom: 8,
+              padding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 16,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Name',
-                    style: Theme.of(context).textTheme.labelSmall,
+              child: TextField(
+                controller: _searchTextController,
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 16,
                   ),
-                  Text(
-                    'Value',
-                    style: Theme.of(context).textTheme.labelSmall,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
                   ),
-                ],
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                    ),
+                  ),
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                  filled: true,
+                ),
               ),
             );
           }
@@ -95,14 +107,15 @@ class LocalConfigScreen extends StatelessWidget {
                         configEntry.value.valueType == ConfigValueType.string
                     ? IconButton(
                         onPressed: () {
-                          Navigator.of(context)
-                              .push(new MaterialPageRoute<Null>(
-                                  builder: (BuildContext context) {
-                                    return TextEditorScreen(
-                                      value: configEntry.value.value,
-                                    );
-                                  },
-                                  fullscreenDialog: true));
+                          Navigator.of(context).push(
+                            MaterialPageRoute<Null>(
+                                builder: (BuildContext context) {
+                                  return TextEditorScreen(
+                                    value: configEntry.value.value,
+                                  );
+                                },
+                                fullscreenDialog: true),
+                          );
                         },
                         icon: const Icon(Icons.open_in_full),
                       )

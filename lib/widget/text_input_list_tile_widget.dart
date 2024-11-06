@@ -44,117 +44,132 @@ class _TextInputListTileWidgetState extends State<TextInputListTileWidget> {
     return InkWell(
       child: ListTile(
         title: Text(widget.title),
+        subtitle: Text(_value.isNotEmpty ? _value : '(empty string)'),
         leading: widget.textTypeIcon,
-        trailing: Text(_value.isNotEmpty ? _value : '(empty string)'),
-      ),
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          useSafeArea: true,
-          isScrollControlled: true,
-          builder: (context) {
-            return Padding(
-              padding: EdgeInsets.only(
-                  bottom:
-                      MediaQueryData.fromView(View.of(context)).padding.bottom +
+        contentPadding: const EdgeInsets.only(left: 16, right: 8),
+        trailing: IconButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              useSafeArea: true,
+              isScrollControlled: true,
+              builder: (context) {
+                return Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQueryData.fromView(View.of(context))
+                              .padding
+                              .bottom +
                           MediaQuery.of(context).viewInsets.bottom),
-              child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 24,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.title,
-                        style: Theme.of(context).textTheme.titleLarge,
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 24,
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          widget.textTypeIcon != null
-                              ? widget.textTypeIcon!
-                              : const SizedBox.shrink(),
-                          const SizedBox.square(dimension: 4),
                           Text(
-                            widget.subtitle,
-                            style: Theme.of(context).textTheme.bodyMedium,
+                            widget.title,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              widget.textTypeIcon != null
+                                  ? widget.textTypeIcon!
+                                  : const SizedBox.shrink(),
+                              const SizedBox.square(dimension: 4),
+                              Text(
+                                widget.subtitle,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Form(
+                              key: _formKey,
+                              child: widget.predefinedValues.isEmpty
+                                  ? TextFormField(
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                          horizontal: 16,
+                                        ),
+                                        border: const OutlineInputBorder(),
+                                        suffixIcon: widget.suffixIcon,
+                                      ),
+                                      controller: _textController,
+                                      autovalidateMode: AutovalidateMode.always,
+                                      validator: widget.validator,
+                                    )
+                                  : DropdownButtonHideUnderline(
+                                      child: ButtonTheme(
+                                        alignedDropdown: true,
+                                        child: DropdownButtonFormField<String>(
+                                            isDense: false,
+                                            itemHeight: 48,
+                                            decoration: InputDecoration(
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              suffixIcon: widget.suffixIcon,
+                                              contentPadding:
+                                                  const EdgeInsets.only(
+                                                      right: 4),
+                                            ),
+                                            items: widget.predefinedValues
+                                                .map((value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                            value: _value,
+                                            onChanged: (value) {
+                                              _textController.text =
+                                                  value ?? _value;
+                                            }),
+                                      ),
+                                    ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  _textController.text = _value;
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              const SizedBox.square(dimension: 8),
+                              FilledButton(
+                                onPressed: () {
+                                  if (!(_formKey.currentState?.validate() ??
+                                      false)) {
+                                    return;
+                                  }
+                                  onChanged(_textController.text);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Save'),
+                              ),
+                            ],
                           )
                         ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Form(
-                          key: _formKey,
-                          child: widget.predefinedValues.isEmpty
-                              ? TextFormField(
-                                  decoration: InputDecoration(
-                                    border: const OutlineInputBorder(),
-                                    suffixIcon: widget.suffixIcon,
-                                  ),
-                                  controller: _textController,
-                                  autovalidateMode: AutovalidateMode.always,
-                                  validator: widget.validator,
-                                )
-                              : DropdownButtonHideUnderline(
-                                  child: ButtonTheme(
-                                    alignedDropdown: true,
-                                    child: DropdownButtonFormField<String>(
-                                        decoration: InputDecoration(
-                                          border: const OutlineInputBorder(),
-                                          suffixIcon: widget.suffixIcon,
-                                          contentPadding: EdgeInsets.zero,
-                                        ),
-                                        items: widget.predefinedValues
-                                            .map((value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                        value: _value,
-                                        onChanged: (value) {
-                                          _textController.text =
-                                              value ?? _value;
-                                        }),
-                                  ),
-                                ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              _textController.text = _value;
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Cancel'),
-                          ),
-                          const SizedBox.square(dimension: 8),
-                          FilledButton(
-                            onPressed: () {
-                              if (!(_formKey.currentState?.validate() ??
-                                  false)) {
-                                return;
-                              }
-                              onChanged(_textController.text);
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('Save'),
-                          ),
-                        ],
-                      )
-                    ],
-                  )),
-            );
+                      )),
+                );
+              },
+            ).whenComplete(() {
+              _textController.text = _value;
+            });
           },
-        ).whenComplete(() {
-          _textController.text = _value;
-        });
-      },
+          icon: const Icon(Icons.edit),
+        ),
+      ),
     );
   }
 
