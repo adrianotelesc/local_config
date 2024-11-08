@@ -195,12 +195,12 @@ class _EmptyConfigList extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              '(つ╥﹏╥)つ',
+              '( ╹ -╹)',
               style: Theme.of(context).textTheme.displayMedium,
             ),
-            const SizedBox.square(dimension: 24),
+            const SizedBox.square(dimension: 16),
             Text(
-              'No results...',
+              'There is nothing here.',
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],
