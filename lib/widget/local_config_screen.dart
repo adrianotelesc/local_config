@@ -195,7 +195,7 @@ class _EmptyConfigList extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              '(づ╥﹏╥)づ',
+              '(つ╥﹏╥)つ',
               style: Theme.of(context).textTheme.displayMedium,
             ),
             const SizedBox.square(dimension: 24),
