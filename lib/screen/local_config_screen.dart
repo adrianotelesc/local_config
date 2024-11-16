@@ -259,7 +259,11 @@ class _ConfigListTile extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 16, right: 8),
       title: Text(name),
-      subtitle: Text(value.displayText),
+      subtitle: Text(
+        value.displayText,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
       leading: Icon(value.type.icon),
       trailing: IconButton(
         onPressed: () {
