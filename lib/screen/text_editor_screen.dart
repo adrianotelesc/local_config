@@ -123,9 +123,10 @@ class _FormattingBarState extends State<_FormattingBar> {
   }
 
   void _updateValidState() {
-    if (!context.mounted) return;
-    setState(() {
-      isValid = checkJson(widget.textController.text);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        isValid = checkJson(widget.textController.text);
+      });
     });
   }
 
