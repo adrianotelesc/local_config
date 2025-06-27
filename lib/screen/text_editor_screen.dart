@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:local_config/delegate/editor_delegate.dart';
 import 'package:re_editor/re_editor.dart';
 import 'package:re_highlight/languages/json.dart';
 import 'package:re_highlight/styles/atom-one-dark.dart';
@@ -8,10 +7,12 @@ import 'package:re_highlight/styles/atom-one-dark.dart';
 class TextEditorScreen extends StatefulWidget {
   const TextEditorScreen({
     super.key,
-    this.initialValue = '',
+    this.text = '',
+    required this.delegate,
   });
 
-  final String initialValue;
+  final String text;
+  final EditorDelegate delegate;
 
   @override
   State<StatefulWidget> createState() => _TextEditorScreenState();
@@ -19,20 +20,21 @@ class TextEditorScreen extends StatefulWidget {
 
 class _TextEditorScreenState extends State<TextEditorScreen> {
   final _textController = CodeLineEditingController();
+
   bool _isValid = false;
 
   @override
   void initState() {
     super.initState();
-    _textController.text = jsonPrettify(widget.initialValue);
+    _textController.text = widget.delegate.prettify(widget.text);
     _textController.addListener(_updateValidState);
-    _isValid = checkJson(_textController.text);
+    _isValid = widget.delegate.validate(_textController.text);
   }
 
   void _updateValidState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        _isValid = checkJson(_textController.text);
+        _isValid = widget.delegate.validate(_textController.text);
       });
     });
   }
@@ -41,17 +43,20 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _AppBar(
+        title: widget.delegate.title,
         onCloseClick: pop,
         onSaveClick: _isValid ? popAndResult : null,
       ),
       body: Column(
         children: [
-          _FormattingBar(
-            isValid: _isValid,
-            onFormatClick: () {
-              _textController.text = jsonPrettify(_textController.text);
-            },
-          ),
+          if (widget.delegate.shouldValidate)
+            _FormattingBar(
+              isValid: _isValid,
+              onFormatClick: () {
+                _textController.text =
+                    widget.delegate.prettify(_textController.text);
+              },
+            ),
           _Editor(textController: _textController),
         ],
       ),
@@ -61,14 +66,14 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
   void pop() {
     Navigator.maybePop(
       context,
-      widget.initialValue,
+      widget.text,
     );
   }
 
   void popAndResult() {
     Navigator.maybePop(
       context,
-      jsonMinify(_textController.text),
+      widget.delegate.minify(_textController.text),
     );
   }
 
@@ -81,15 +86,20 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
 }
 
 class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({this.onCloseClick, this.onSaveClick});
+  const _AppBar({
+    required this.title,
+    this.onCloseClick,
+    this.onSaveClick,
+  });
 
+  final String title;
   final void Function()? onCloseClick;
   final void Function()? onSaveClick;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text('Editor'),
+      title: Text(title),
       leading: IconButton(
         tooltip: 'Close',
         onPressed: onCloseClick,
@@ -181,8 +191,7 @@ class _Editor extends StatelessWidget {
         shortcutsActivatorsBuilder:
             const DefaultCodeShortcutsActivatorsBuilder(),
         controller: textController,
-        indicatorBuilder:
-            (context, editingController, chunkController, notifier) {
+        indicatorBuilder: (_, editingController, chunkController, notifier) {
           return Row(
             children: [
               DefaultCodeLineNumber(
@@ -190,12 +199,14 @@ class _Editor extends StatelessWidget {
                 notifier: notifier,
               ),
               DefaultCodeChunkIndicator(
-                  width: 20, controller: chunkController, notifier: notifier)
+                width: 20,
+                controller: chunkController,
+                notifier: notifier,
+              )
             ],
           );
         },
         style: CodeEditorStyle(
-          fontSize: 16,
           codeTheme: CodeHighlightTheme(
             languages: {'json': CodeHighlightThemeMode(mode: langJson)},
             theme: atomOneDarkTheme,
@@ -203,35 +214,5 @@ class _Editor extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-bool checkJson(String jsonString) {
-  try {
-    jsonDecode(jsonString);
-    return true;
-  } on FormatException catch (_) {
-    return false;
-  }
-}
-
-String jsonPrettify(String jsonString) {
-  try {
-    final json = jsonDecode(jsonString);
-    final spaces = ' ' * 4;
-    final encoder = JsonEncoder.withIndent(spaces);
-    return encoder.convert(json);
-  } on FormatException catch (_) {
-    return jsonString;
-  }
-}
-
-String jsonMinify(String jsonString) {
-  try {
-    final json = jsonDecode(jsonString);
-    var encoder = const JsonEncoder();
-    return encoder.convert(json);
-  } on FormatException catch (_) {
-    return jsonString;
   }
 }

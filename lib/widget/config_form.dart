@@ -159,7 +159,8 @@ class _ConfigValueTextField extends StatelessWidget {
                       fullscreenDialog: true,
                       builder: (BuildContext context) {
                         return TextEditorScreen(
-                          initialValue: configValueTextController.text,
+                          text: configValueTextController.text,
+                          delegate: configValueType.editorDelegate,
                         );
                       },
                     ),

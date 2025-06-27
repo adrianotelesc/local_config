@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:local_config/delegate/editor_delegate.dart';
+import 'package:local_config/delegate/json_editor_delegate.dart';
+import 'package:local_config/delegate/string_editor_delegate.dart';
 import 'package:local_config/model/config_value.dart';
 
 extension ConfigValueTypeExtension on ConfigValueType {
@@ -71,6 +74,15 @@ extension ConfigValueTypeExtension on ConfigValueType {
         break;
     }
     return null;
+  }
+
+  EditorDelegate get editorDelegate {
+    switch (this) {
+      case ConfigValueType.jsonType:
+        return JsonEditorDelegate();
+      default:
+        return StringDelegate();
+    }
   }
 }
 
