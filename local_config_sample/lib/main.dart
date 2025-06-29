@@ -12,29 +12,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseRemoteConfig.instance.fetchAndActivate();
+  final configs = FirebaseRemoteConfig.instance.getAll().map((key, value) {
+    return MapEntry(
+      key,
+      ConfigValue(
+        value.asString(),
+      ),
+    );
+  });
 
-  final configs = <String, ConfigValue>{
-    'config_bool': const ConfigValue(
-      'true',
-      ConfigValueType.boolType,
-    ),
-    'config_int': const ConfigValue(
-      '0',
-      ConfigValueType.intType,
-    ),
-    'config_double': const ConfigValue(
-      '0.0',
-      ConfigValueType.doubleType,
-    ),
-    'config_string': const ConfigValue(
-      '',
-      ConfigValueType.stringType,
-    ),
-    'config_json': const ConfigValue(
-      '''{"title": { "value": "teste"}}''',
-      ConfigValueType.jsonType,
-    ),
-  };
   LocalConfig.instance.initialize(configs: configs);
 
   runApp(const MyApp());

@@ -9,7 +9,7 @@ import 'package:local_config/model/config_value.dart';
 extension ConfigValueTypeExtension on ConfigValueType {
   List<String> get presetValues {
     switch (this) {
-      case ConfigValueType.boolType:
+      case ConfigValueType.boolean:
         return ['false', 'true'];
       default:
         return [];
@@ -18,29 +18,29 @@ extension ConfigValueTypeExtension on ConfigValueType {
 
   String get name {
     switch (this) {
-      case ConfigValueType.boolType:
+      case ConfigValueType.boolean:
         return 'bool';
-      case ConfigValueType.intType:
+      case ConfigValueType.integer:
         return 'int';
-      case ConfigValueType.doubleType:
+      case ConfigValueType.decimal:
         return 'double';
-      case ConfigValueType.stringType:
+      case ConfigValueType.string:
         return 'String';
-      case ConfigValueType.jsonType:
+      case ConfigValueType.json:
         return 'JSON';
     }
   }
 
   IconData get icon {
     switch (this) {
-      case ConfigValueType.boolType:
+      case ConfigValueType.boolean:
         return Icons.toggle_on;
-      case ConfigValueType.intType:
-      case ConfigValueType.doubleType:
+      case ConfigValueType.integer:
+      case ConfigValueType.decimal:
         return Icons.onetwothree;
-      case ConfigValueType.stringType:
+      case ConfigValueType.string:
         return Icons.abc;
-      case ConfigValueType.jsonType:
+      case ConfigValueType.json:
         return Icons.data_object;
     }
   }
@@ -48,29 +48,29 @@ extension ConfigValueTypeExtension on ConfigValueType {
   String? validator(String? value) {
     value = value ?? '';
     switch (this) {
-      case ConfigValueType.boolType:
+      case ConfigValueType.boolean:
         if (bool.tryParse(value) == null) {
           return 'Invalid bolean';
         }
         break;
-      case ConfigValueType.intType:
+      case ConfigValueType.integer:
         if (int.tryParse(value) == null) {
           return 'Invalid int';
         }
         break;
-      case ConfigValueType.doubleType:
+      case ConfigValueType.decimal:
         if (double.tryParse(value) == null) {
           return 'Invalid double';
         }
         break;
-      case ConfigValueType.jsonType:
+      case ConfigValueType.json:
         try {
           jsonDecode(value);
         } on FormatException {
           return 'Invalid JSON';
         }
         break;
-      case ConfigValueType.stringType:
+      case ConfigValueType.string:
         break;
     }
     return null;
@@ -78,7 +78,7 @@ extension ConfigValueTypeExtension on ConfigValueType {
 
   EditorDelegate get editorDelegate {
     switch (this) {
-      case ConfigValueType.jsonType:
+      case ConfigValueType.json:
         return JsonEditorDelegate();
       default:
         return StringDelegate();
@@ -89,7 +89,7 @@ extension ConfigValueTypeExtension on ConfigValueType {
 extension ConfigValueExtension on ConfigValue {
   String get displayText {
     switch (type) {
-      case ConfigValueType.stringType:
+      case ConfigValueType.string:
         return asString.isNotEmpty ? asString : '(empty string)';
       default:
         return asString;

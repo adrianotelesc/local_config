@@ -29,7 +29,6 @@ class LocalConfig {
     for (final config in configsInPreferences.entries) {
       configs[config.key] = ConfigValue(
         config.value.toString(),
-        configs[config.key]!.type,
       );
     }
 
@@ -71,7 +70,7 @@ class LocalConfig {
 
   Future<void> setString(String key, String value) async {
     if (!_configs.containsKey(key)) return;
-    _configs[key] = ConfigValue(value, _configs[key]!.type);
+    _configs[key] = ConfigValue(value);
     _configsStreamController.add(_configs);
     await _preferencesDelegate.setPreference(key, value);
   }
