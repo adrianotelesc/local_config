@@ -2,6 +2,7 @@ library local_config;
 
 import 'dart:async';
 
+import 'package:local_config/extension/string_parsing.dart';
 import 'package:local_config/model/config.dart';
 import 'package:flutter/material.dart';
 import 'package:local_config/preferences/preferences_delegate.dart';
@@ -26,11 +27,11 @@ class LocalConfig {
       }
     }
 
-    for (final config in configsInPreferences.entries) {
-      configs[config.key] = Config(
-        value: config.value,
-      );
-    }
+    // for (final config in configsInPreferences.entries) {
+    //   configs[config.key] = Config(
+    //     value: config.value,
+    //   );
+    // }
 
     _configs.addAll(configs);
     _configsStreamController.add(_configs);
@@ -38,20 +39,17 @@ class LocalConfig {
 
   Future<bool?> getBool(String key) async {
     final config = await getString(key);
-    if (config == null) return null;
-    return bool.tryParse(config);
+    return config?.asBool;
   }
 
   Future<int?> getInt(String key) async {
     final config = await getString(key);
-    if (config == null) return null;
-    return int.tryParse(config);
+    return config?.asInt;
   }
 
   Future<double?> getDouble(String key) async {
     final config = await getString(key);
-    if (config == null) return null;
-    return double.tryParse(config);
+    return config?.asDouble;
   }
 
   Future<String?> getString(String key) async => _configs[key]?.value;

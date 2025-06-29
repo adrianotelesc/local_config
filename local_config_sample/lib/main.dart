@@ -11,17 +11,15 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseRemoteConfig.instance.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(minutes: 1),
+    minimumFetchInterval: const Duration(seconds: 10),
+  ));
   await FirebaseRemoteConfig.instance.fetchAndActivate();
   final configs = FirebaseRemoteConfig.instance.getAll().map((key, value) {
-    return MapEntry(
-      key,
-      Config(
-        value: value.asString(),
-      ),
-    );
+    return MapEntry(key, Config(value: value.asString()));
   });
-
-  LocalConfig.instance.initialize(configs: configs);
+  await LocalConfig.instance.initialize(configs: configs);
 
   runApp(const MyApp());
 }
