@@ -7,12 +7,9 @@ import 'package:local_config/model/config.dart';
 
 extension ConfigDisplayExtension on Config {
   String get displayText {
-    switch (type) {
-      case ConfigType.string:
-        return value.isNotEmpty ? value : '(empty string)';
-      default:
-        return value;
-    }
+    return type == ConfigType.string && value.isEmpty
+        ? '(empty string)'
+        : value;
   }
 }
 
@@ -52,12 +49,10 @@ extension ConfigTypeDisplayExtension on ConfigType {
     return null;
   }
 
-  TextEditorController get editorDelegate {
-    switch (this) {
-      case ConfigType.json:
-        return JsonEditorController();
-      default:
-        return StringEditorController();
-    }
+  TextEditorController get textEditorController {
+    return switch (this) {
+      ConfigType.json => JsonEditorController(),
+      _ => StringEditorController(),
+    };
   }
 }

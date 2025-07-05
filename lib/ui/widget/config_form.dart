@@ -261,7 +261,7 @@ class _ConfigValueTextField extends StatelessWidget {
                       builder: (BuildContext context) {
                         return TextEditorScreen(
                           text: configValueTextController.text,
-                          controller: configValueType.editorDelegate,
+                          controller: configValueType.textEditorController,
                         );
                       },
                     ),
