@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:local_config/ui/theme/extended_color_scheme.dart';
+import 'package:local_config/ui/theming/theme.dart';
 import 'package:local_config/ui/screen/text_editor/controller/text_editor_controller.dart';
 import 'package:re_editor/re_editor.dart';
 import 'package:re_highlight/languages/json.dart';
@@ -43,36 +43,7 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: const Color(0xFF1A73E8),
-          primary: const Color(0XFF86ABF2),
-          onPrimary: const Color(0XFF0B1D46),
-          surface: const Color(0xFF121212),
-        ),
-        useMaterial3: true,
-        searchBarTheme: SearchBarTheme.of(context).copyWith(
-          shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-          shape: const WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-          ),
-        ),
-        extensions: [
-          ExtendedColorScheme(
-            warning: const Color(0XFFFFB300),
-            warningContainer: const Color(0X14FFB300),
-            onWarning: const Color(0XFF000000),
-            onWarningContainer: const Color(0X4DFFB300),
-            success: const Color(0XFF6DD58C),
-            onSuccess: const Color(0XFF000000),
-            successContainer: const Color(0X146DD58C),
-            onSuccessContainer: const Color(0X4D6DD58C),
-          ),
-        ],
-      ),
+      data: defaultTheme,
       child: Scaffold(
         appBar: _AppBar(
           title: widget.controller.title,

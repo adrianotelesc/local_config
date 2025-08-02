@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-extension StringParsingExtension on String {
+extension StringExtension on String {
   Map<String, dynamic>? get asJson {
     try {
       return jsonDecode(this);
@@ -14,4 +14,8 @@ extension StringParsingExtension on String {
   double? get asDouble => double.tryParse(this);
 
   int? get asInt => int.tryParse(this);
+
+  bool containsInsensitive(String substring) {
+    return toLowerCase().contains(substring.toLowerCase());
+  }
 }

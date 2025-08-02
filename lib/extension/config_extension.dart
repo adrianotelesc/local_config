@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:local_config/ui/screen/text_editor/controller/text_editor_controller.dart';
 import 'package:local_config/ui/screen/text_editor/controller/json_editor_controller.dart';
 import 'package:local_config/ui/screen/text_editor/controller/string_editor_controller.dart';
-import 'package:local_config/extension/string_parsing_extension.dart';
+import 'package:local_config/extension/string_extension.dart';
 import 'package:local_config/model/config.dart';
 
-extension ConfigDisplayExtension on Config {
+extension ConfigExtension on Config {
   String get displayText {
     return type == ConfigType.string && value.isEmpty
         ? '(empty string)'
@@ -13,7 +13,7 @@ extension ConfigDisplayExtension on Config {
   }
 }
 
-extension ConfigTypeDisplayExtension on ConfigType {
+extension ConfigTypeExtension on ConfigType {
   List<String> get presets {
     return this == ConfigType.boolean ? ['false', 'true'] : [];
   }

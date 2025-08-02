@@ -4,8 +4,9 @@ import 'dart:async';
 
 import 'package:local_config/di/service_locator.dart';
 import 'package:local_config/repository/config_repository.dart';
+import 'package:local_config/repository/default_config_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:local_config/extension/string_parsing_extension.dart';
+import 'package:local_config/extension/string_extension.dart';
 import 'package:local_config/storage/shared_preferences_store.dart';
 
 export 'package:local_config/ui/screen/local_config_screen.dart';
@@ -16,12 +17,11 @@ class LocalConfig {
   static final instance = LocalConfig._();
 
   Future<void> initialize({required Map<String, String> all}) async {
-    final repo = ConfigRepository(
+    final repo = DefaultConfigRepository(
       store: SharedPreferencesStore(
         sharedPreferencesAsync: SharedPreferencesAsync(),
       ),
-    );
-    await repo.populate(all: all);
+    )..populate(all: all);
     ServiceLocator.register<ConfigRepository>(repo);
   }
 

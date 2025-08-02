@@ -1,12 +1,13 @@
-import 'package:local_config/di/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:local_config/di/service_locator.dart';
 import 'package:local_config/repository/config_repository.dart';
 import 'package:local_config/ui/screen/text_editor/text_editor_screen.dart';
-import 'package:local_config/extension/config_display_extension.dart';
+import 'package:local_config/extension/config_extension.dart';
 import 'package:local_config/model/config.dart';
 
-class _ConfigForm extends StatefulWidget {
-  const _ConfigForm({
+class ConfigForm extends StatefulWidget {
+  const ConfigForm({
+    super.key,
     required this.configName,
     required this.configValue,
   });
@@ -16,9 +17,24 @@ class _ConfigForm extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _ConfigFormState();
+
+  static void showAsBottomSheet({
+    required BuildContext context,
+    required String name,
+    required Config value,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) {
+        return ConfigForm(configName: name, configValue: value);
+      },
+    );
+  }
 }
 
-class _ConfigFormState extends State<_ConfigForm> {
+class _ConfigFormState extends State<ConfigForm> {
   final _configFormKey = GlobalKey<FormState>();
   final _configValueController = TextEditingController();
 
@@ -318,15 +334,15 @@ class _ConfigValueDropdownButton extends StatelessWidget {
 }
 
 class _FormActions extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final String configName;
+  final TextEditingController configValueTextController;
+
   const _FormActions({
     required this.formKey,
     required this.configName,
     required this.configValueTextController,
   });
-
-  final GlobalKey<FormState> formKey;
-  final String configName;
-  final TextEditingController configValueTextController;
 
   @override
   Widget build(BuildContext context) {
@@ -354,19 +370,4 @@ class _FormActions extends StatelessWidget {
       ],
     );
   }
-}
-
-void showConfigFormModal({
-  required BuildContext context,
-  required String name,
-  required Config value,
-}) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    builder: (context) {
-      return _ConfigForm(configName: name, configValue: value);
-    },
-  );
 }

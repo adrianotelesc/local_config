@@ -2,13 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:local_config/di/service_locator.dart';
+import 'package:local_config/extension/map_extension.dart';
+import 'package:local_config/extension/string_extension.dart';
 import 'package:local_config/repository/config_repository.dart';
-import 'package:local_config/ui/theme/extended_color_scheme.dart';
-import 'package:local_config/extension/config_display_extension.dart';
+import 'package:local_config/ui/theming/styles.dart';
+import 'package:local_config/extension/config_extension.dart';
+import 'package:local_config/ui/theming/theme.dart';
 import 'package:local_config/ui/widget/callout.dart';
 import 'package:local_config/ui/widget/config_form.dart';
 import 'package:local_config/model/config.dart';
-import 'package:local_config/ui/widget/sliver_header_delegate.dart';
+import 'package:local_config/ui/widget/extended_list_tile.dart';
+import 'package:local_config/ui/widget/clearable_search_bar.dart';
+import 'package:local_config/ui/widget/feedback_view.dart';
 
 class LocalConfigScreen extends StatefulWidget {
   const LocalConfigScreen({super.key});
@@ -18,166 +23,104 @@ class LocalConfigScreen extends StatefulWidget {
 }
 
 class _LocalConfigScreenState extends State<LocalConfigScreen> {
-  final _scrollController = ScrollController();
-  final _textController = TextEditingController();
-  List<MapEntry<String, Config>> _configs = [];
-  List<MapEntry<String, Config>> _visibleConfigs = [];
+  final _controller = TextEditingController();
 
-  StreamSubscription? _configsStreamSubscription;
+  final _repo = ServiceLocator.get<ConfigRepository>();
+
+  StreamSubscription? _populateSub;
+
+  StreamSubscription? _configsSub;
+
+  var _populateStatus = PopulateStatus.notStarted;
+
+  var _configs = <String, Config>{};
+
+  var _items = <(String, Config)>[];
+
+  var _hasOverrides = false;
 
   @override
   void initState() {
     super.initState();
-    _configs = ServiceLocator.get<ConfigRepository>().configs.entries.toList();
-    _configsStreamSubscription = _subscribeToConfigsStream();
-    _textController.addListener(_handleSearchTextChange);
+    _populateStatus = _repo.populateStatus;
+    _applyConfigs(_repo.configs);
+    _controller.addListener(_updateItems);
+    _populateSub = _repo.populateStatusStream.listen(_applyPopulateStatus);
+    _configsSub = _repo.configsStream.listen(_applyConfigs);
   }
 
-  StreamSubscription _subscribeToConfigsStream() {
-    return ServiceLocator.get<ConfigRepository>()
-        .stream
-        .listen(_updateConfigsState);
-  }
-
-  void _updateConfigsState(Map<String, Config> localConfigs) {
+  void _applyPopulateStatus(PopulateStatus populateStatus) {
     setState(() {
-      _configs = localConfigs.entries.toList();
-      _visibleConfigs = _filterConfigsBy(_textController.text);
+      _populateStatus = populateStatus;
     });
   }
 
-  List<MapEntry<String, Config>> _filterConfigsBy(String text) {
-    return text.trim().isNotEmpty ? _filterConfigsContaining(text) : _configs;
+  void _applyConfigs(Map<String, Config> configs) {
+    _configs = configs;
+    _updateItems();
+    _updateOverrides();
   }
 
-  List<MapEntry<String, Config>> _filterConfigsContaining(String text) {
-    return _configs
-        .where((config) => _caseInsensitiveContains(config.key, text))
-        .toList();
+  void _updateItems() {
+    final query = _controller.text;
+    final filtered = _configs.whereKey((key) {
+      return query.trim().isEmpty || key.containsInsensitive(query);
+    });
+    final items = filtered.records;
+    setState(() => _items = items);
   }
 
-  bool _caseInsensitiveContains(String string, String substring) {
-    return string.toLowerCase().contains(substring.toLowerCase());
-  }
-
-  void _handleSearchTextChange() {
-    final searchText = _textController.text;
-    _updateVisibleConfigsState(searchText);
-  }
-
-  void _updateVisibleConfigsState(String searchText) {
-    setState(() => _visibleConfigs = _filterConfigsBy(searchText));
+  void _updateOverrides() {
+    final hasOverrides = _configs.anyValue((config) => config.isOverridden);
+    if (hasOverrides == _hasOverrides) return;
+    setState(() => _hasOverrides = hasOverrides);
   }
 
   @override
   void dispose() {
-    _configsStreamSubscription?.cancel();
-    _configsStreamSubscription = null;
-    _scrollController.dispose();
+    _populateSub?.cancel();
+    _populateSub = null;
+    _configsSub?.cancel();
+    _configsSub = null;
+    _controller.removeListener(_updateItems);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: const Color(0xFF1A73E8),
-          primary: const Color(0XFF86ABF2),
-          onPrimary: const Color(0XFF0B1D46),
-          surface: const Color(0xFF121212),
-        ),
-        useMaterial3: true,
-        searchBarTheme: SearchBarTheme.of(context).copyWith(
-          shadowColor: const WidgetStatePropertyAll(Colors.transparent),
-          shape: const WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-          ),
-        ),
-        filledButtonTheme: FilledButtonThemeData(
-          style: ButtonStyle(
-            shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: ButtonStyle(
-            shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-        ),
-        extensions: [
-          ExtendedColorScheme(
-            warning: const Color(0XFFFFB300),
-            warningContainer: const Color(0X14FFB300),
-            onWarning: const Color(0XFF000000),
-            onWarningContainer: const Color(0X4DFFB300),
-            success: const Color(0XFF6DD58C),
-            onSuccess: const Color(0XFF000000),
-            successContainer: const Color(0X146DD58C),
-            onSuccessContainer: const Color(0X4D6DD58C),
-          ),
-        ],
-      ),
+      data: defaultTheme,
       child: Builder(builder: (context) {
         return Scaffold(
-          body: SafeArea(
-            child: CustomScrollView(
-              controller: _scrollController,
-              slivers: [
-                const _AppBar(),
-                if (_configs
-                    .where((config) => config.value.isOverridden)
-                    .isNotEmpty)
-                  SliverPersistentHeader(
-                    pinned: true,
-                    delegate: SliverHeaderDelegate(
-                      minHeight: 59,
-                      maxHeight: 59,
-                      child: Stack(
-                        children: [
-                          Container(
-                            color: Colors.black,
-                          ),
-                          Callout.warning(
-                            icon: Icons.error,
-                            text: 'Configs changed locally',
-                            action: FilledButton(
-                              onPressed: () {
-                                ServiceLocator.get<ConfigRepository>()
-                                    .resetAll();
-                              },
-                              child: const Text('Reset all'),
-                            ),
-                          )
-                        ],
-                      ),
+          body: CustomScrollView(
+            slivers: [
+              _AppBar(
+                hasOverrides: _hasOverrides,
+                repo: _repo,
+              ),
+              _SearchBar(
+                controller: _controller,
+              ),
+              switch (_populateStatus) {
+                PopulateStatus.notStarted => const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: FeedbackView(
+                      title: '( ╹ -╹)',
+                      message: 'You have\'nt initialized.',
                     ),
                   ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 16,
+                PopulateStatus.inProgress => const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
-                  sliver: SliverToBoxAdapter(
-                    child: _SearchBar(controller: _textController),
+                PopulateStatus.completed => _List(
+                    items: _items,
+                    repo: _repo,
                   ),
-                ),
-                _ConfigList(
-                  configs: _visibleConfigs,
-                  localConfigs: Map.fromEntries(_configs),
-                )
-              ],
-            ),
+              }
+            ],
           ),
         );
       }),
@@ -186,202 +129,121 @@ class _LocalConfigScreenState extends State<LocalConfigScreen> {
 }
 
 class _AppBar extends StatelessWidget {
-  const _AppBar();
+  final bool hasOverrides;
+  final ConfigRepository repo;
 
-  @override
-  Widget build(BuildContext context) {
-    return const SliverAppBar(
-      title: Text('Local Config'),
-      centerTitle: false,
-    );
-  }
-}
-
-class _SearchBar extends StatefulWidget {
-  const _SearchBar({required this.controller});
-
-  final TextEditingController controller;
-
-  @override
-  State<StatefulWidget> createState() => _SearchBarState();
-}
-
-class _SearchBarState extends State<_SearchBar> {
-  bool _isClearVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(_handleTextChange);
-  }
-
-  void _handleTextChange() {
-    final text = widget.controller.text;
-    setState(() => _isClearVisible = text.isNotEmpty);
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_handleTextChange);
-    widget.controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SearchBar(
-      padding: const WidgetStatePropertyAll(
-        EdgeInsets.only(left: 16),
-      ),
-      hintText: 'Search',
-      leading: const Icon(Icons.search),
-      controller: widget.controller,
-      trailing: [
-        if (_isClearVisible)
-          IconButton(
-            onPressed: _clearSearch,
-            icon: const Icon(Icons.close),
-          ),
-      ],
-    );
-  }
-
-  void _clearSearch() {
-    widget.controller.clear();
-  }
-}
-
-class _ConfigList extends StatelessWidget {
-  const _ConfigList({
-    this.configs = const [],
-    this.localConfigs = const {},
+  const _AppBar({
+    required this.hasOverrides,
+    required this.repo,
   });
 
-  final List<MapEntry<String, Config>> configs;
-  final Map<String, Config> localConfigs;
-
   @override
   Widget build(BuildContext context) {
-    if (configs.isEmpty) {
-      return const _EmptyState();
-    }
-
-    return SliverList.separated(
-      itemCount: configs.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
-      itemBuilder: (_, index) {
-        final configEntry = configs[index];
-        return _ConfigListTile(
-          name: configEntry.key,
-          config: configEntry.value,
-        );
-      },
+    return SliverAppBar(
+      title: const Text('Local Config'),
+      centerTitle: false,
+      floating: true,
+      pinned: true,
+      bottom: hasOverrides
+          ? PreferredSize(
+              preferredSize: const Size.fromHeight(
+                Callout.defaultHeight,
+              ),
+              child: Callout.warning(
+                icon: Icons.error,
+                text: 'Configs changed locally',
+                trailing: TextButton(
+                  onPressed: repo.resetAll,
+                  style: warningButtonStyle(context),
+                  child: const Text('Reset all'),
+                ),
+              ),
+            )
+          : null,
     );
   }
 }
 
-class _EmptyState extends StatelessWidget {
-  const _EmptyState();
+class _SearchBar extends StatelessWidget {
+  final TextEditingController controller;
+
+  const _SearchBar({
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SliverFillRemaining(
-      hasScrollBody: false,
+    return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 128, horizontal: 8),
-        child: Column(
-          children: [
-            Text(
-              '( ╹ -╹)',
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
-            const SizedBox.square(dimension: 16),
-            Text(
-              'There is nothing here.',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+        child: ClearableSearchBar(
+          controller: controller,
+          hintText: 'Search',
         ),
       ),
     );
   }
 }
 
-class _ConfigListTile extends StatelessWidget {
-  const _ConfigListTile({
-    required this.name,
-    required this.config,
-  });
+class _List extends StatelessWidget {
+  final List<(String, Config)> items;
+  final ConfigRepository repo;
 
-  final String name;
-  final Config config;
+  const _List({
+    required this.items,
+    required this.repo,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final customColors = Theme.of(context).extension<ExtendedColorScheme>();
+    if (items.isEmpty) {
+      return const SliverFillRemaining(
+        hasScrollBody: false,
+        child: FeedbackView(
+          title: '( ╹ -╹)',
+          message: 'There is nothing here.',
+        ),
+      );
+    }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (config.isOverridden)
-          Container(
-            color: customColors?.warningContainer,
-            child: Padding(
-              padding: const EdgeInsetsGeometry.only(
-                top: 16,
-                left: 16,
-                right: 16,
-              ),
-              child: Callout.warning(
-                style: CalloutStyle(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                icon: Icons.error,
-                text: 'Locally changed',
-                action: TextButton(
-                  onPressed: () {
-                    ServiceLocator.get<ConfigRepository>().reset(name);
-                  },
-                  style: ButtonStyle(
-                    overlayColor: WidgetStatePropertyAll(
-                      customColors?.warningContainer,
-                    ),
-                    foregroundColor: WidgetStatePropertyAll(
-                      customColors?.warning,
-                    ),
-                  ),
-                  child: const Text('Reset'),
-                ),
-              ),
-            ),
-          ),
-        ListTile(
-          tileColor: config.isOverridden
-              ? customColors?.warningContainer
-              : ListTileTheme.of(context).tileColor,
-          contentPadding: const EdgeInsets.only(
-            left: 16,
-            right: 8,
-          ),
-          title: Text(
-            name,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: config.isOverridden ? FontWeight.bold : null,
-                ),
-          ),
+    return SliverList.separated(
+      itemCount: items.length,
+      separatorBuilder: (_, __) => const Divider(height: 1),
+      itemBuilder: (_, index) {
+        final (name, config) = items[index];
+        final isOverridden = config.isOverridden;
+
+        return ExtendedListTile(
+          leading: Icon(config.type.icon),
+          style: isOverridden
+              ? warningExtendedListTileStyle(context) //
+              : null,
+          title: Text(name),
           subtitle: Text(
             config.displayText,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: config.isOverridden ? FontWeight.bold : null,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
           ),
-          leading: Icon(config.type.icon),
+          top: isOverridden
+              ? Callout.warning(
+                  style: CalloutStyle(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  icon: Icons.error,
+                  text: 'Locally changed',
+                  trailing: TextButton(
+                    onPressed: () => repo.reset(name),
+                    style: warningButtonStyle(context),
+                    child: const Text('Reset'),
+                  ),
+                )
+              : null,
           trailing: IconButton(
             onPressed: () {
-              showConfigFormModal(
+              ConfigForm.showAsBottomSheet(
                 context: context,
                 name: name,
                 value: config,
@@ -389,8 +251,8 @@ class _ConfigListTile extends StatelessWidget {
             },
             icon: const Icon(Icons.edit),
           ),
-        )
-      ],
+        );
+      },
     );
   }
 }

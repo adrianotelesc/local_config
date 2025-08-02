@@ -1,4 +1,4 @@
-import 'package:local_config/extension/string_parsing_extension.dart';
+import 'package:local_config/extension/string_extension.dart';
 
 class Config {
   final String defaultValue;

@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:local_config/ui/theme/extended_color_scheme.dart';
+import 'package:local_config/ui/theming/extended_color_scheme.dart';
 
 class Callout extends StatelessWidget {
+  static const double defaultHeight = 58;
+
   final _CalloutVariant _variant;
   final CalloutStyle? style;
   final IconData? icon;
   final String text;
-  final Widget? action;
+  final Widget? trailing;
+  final double height;
 
   const Callout.warning({
     super.key,
     this.style,
     this.icon,
     required this.text,
-    this.action,
+    this.trailing,
+    this.height = defaultHeight,
   }) : _variant = _CalloutVariant.warning;
 
   const Callout.success({
@@ -21,15 +25,13 @@ class Callout extends StatelessWidget {
     this.style,
     this.icon,
     required this.text,
-    this.action,
+    this.trailing,
+    this.height = defaultHeight,
   }) : _variant = _CalloutVariant.success;
 
   @override
   Widget build(BuildContext context) {
-    final extendedColors = Theme.of(context).extension<ExtendedColorScheme>();
-    if (extendedColors == null) {
-      throw StateError('ExtendedColorScheme not found in the theme context.');
-    }
+    final extendedColors = context.extendedColorScheme;
 
     final foregroundColor =
         style?.foregroundColor ?? _variant.foregroundColor(extendedColors);
@@ -39,6 +41,7 @@ class Callout extends StatelessWidget {
         style?.backgroundColor ?? _variant.backgroundColor(extendedColors);
 
     return Container(
+      height: height,
       padding: const EdgeInsets.only(
         left: 16,
         top: 4,
@@ -66,7 +69,7 @@ class Callout extends StatelessWidget {
                 ?.copyWith(color: foregroundColor),
           ),
           const Spacer(),
-          action ?? const SizedBox.shrink(),
+          trailing ?? const SizedBox.shrink(),
         ],
       ),
     );

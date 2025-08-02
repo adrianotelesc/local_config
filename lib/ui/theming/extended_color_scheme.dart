@@ -97,3 +97,13 @@ class ExtendedColorScheme extends ThemeExtension<ExtendedColorScheme> {
     );
   }
 }
+
+extension BuildContextThemeExtension on BuildContext {
+  ExtendedColorScheme get extendedColorScheme {
+    final extendedColors = Theme.of(this).extension<ExtendedColorScheme>();
+    if (extendedColors == null) {
+      throw StateError('ExtendedColorScheme not found in the theme context.');
+    }
+    return extendedColors;
+  }
+}
