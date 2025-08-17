@@ -10,8 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_analytics: ^11.5.0
-  firebase_remote_config: ^5.4.5
   shared_preferences: ^2.5.3
   re_editor: ^0.7.0
   re_highlight: ^0.0.3

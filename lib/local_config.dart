@@ -16,12 +16,19 @@ class LocalConfig {
 
   static final instance = LocalConfig._();
 
-  Future<void> initialize({required Map<String, String> all}) async {
+  Stream<Map<String, String>> get onConfigUpdated {
+    final repo = ServiceLocator.get<ConfigRepository>();
+    return repo.configsStream.map((configs) {
+      return configs.map((key, config) => MapEntry(key, config.value));
+    });
+  }
+
+  Future<void> initialize({required Map<String, String> configs}) async {
     final repo = DefaultConfigRepository(
       store: SharedPreferencesStore(
         sharedPreferencesAsync: SharedPreferencesAsync(),
       ),
-    )..populate(all: all);
+    )..populate(all: configs);
     ServiceLocator.register<ConfigRepository>(repo);
   }
 
