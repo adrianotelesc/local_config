@@ -7,9 +7,11 @@ class Config {
 
   String get value => overriddenValue ?? defaultValue;
 
-  bool get isDefault => overriddenValue == null;
+  bool get isDefault =>
+      overriddenValue == null || overriddenValue == defaultValue;
 
-  bool get isOverridden => overriddenValue != null;
+  bool get isOverridden =>
+      overriddenValue != null && overriddenValue != defaultValue;
 
   ConfigType get type {
     if (defaultValue.asBool != null) return ConfigType.boolean;
@@ -23,9 +25,9 @@ class Config {
     this.overriddenValue,
   });
 
-  Config copyWith(
+  Config copyWith({
     String? overriddenValue,
-  ) {
+  }) {
     return Config(
       defaultValue: defaultValue,
       overriddenValue: overriddenValue,

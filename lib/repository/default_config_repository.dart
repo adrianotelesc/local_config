@@ -48,14 +48,21 @@ class DefaultConfigRepository implements ConfigRepository {
 
   @override
   Future<void> set(String key, String value) async {
-    _update(key, value);
-    await _store.set(key, value);
+    final updated = _update(key, value);
+
+    if (!updated.isOverridden) {
+      await _store.remove(key);
+    } else {
+      await _store.set(key, value);
+    }
   }
 
-  void _update(String key, String? value) {
-    if (!_configs.containsKey(key)) return;
-    _configs.update(key, (config) => config.copyWith(value));
+  Config _update(String key, String? value) {
+    final updated = _configs.update(key, (config) {
+      return config.copyWith(overriddenValue: value);
+    });
     _configsController.add(configs);
+    return updated;
   }
 
   @override
@@ -71,7 +78,9 @@ class DefaultConfigRepository implements ConfigRepository {
   }
 
   void _updateAll() {
-    _configs.updateAll((_, value) => value.copyWith(null));
+    _configs.updateAll((_, value) {
+      return value.copyWith(overriddenValue: null);
+    });
     _configsController.add(configs);
   }
 }
