@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class AnimatedFloatingText extends StatefulWidget {
   final String text;
   final TextStyle? style;
-  final double amplitude; // horizontal/vertical shift
-  final Duration period; // duration of one oscillation
+  final double amplitude;
+  final Duration period;
   final TextAlign textAlign;
 
   const AnimatedFloatingText(
