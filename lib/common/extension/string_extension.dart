@@ -4,7 +4,7 @@ extension StringExtension on String {
   Map<String, dynamic>? get asJson {
     try {
       return jsonDecode(this);
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   }

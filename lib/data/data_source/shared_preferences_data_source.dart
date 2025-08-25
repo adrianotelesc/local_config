@@ -1,12 +1,12 @@
-import 'package:local_config/storage/key_value_store.dart';
+import 'package:local_config/domain/data_source/key_value_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferencesStore extends KeyValueStore {
+class SharedPreferencesDataSource extends KeyValueDataSource {
   static const _namespace = 'local_config';
 
   final SharedPreferencesAsync _sharedPreferencesAsync;
 
-  SharedPreferencesStore({
+  SharedPreferencesDataSource({
     required SharedPreferencesAsync sharedPreferencesAsync,
   }) : _sharedPreferencesAsync = sharedPreferencesAsync;
 
@@ -44,8 +44,9 @@ class SharedPreferencesStore extends KeyValueStore {
   @override
   Future<void> prune(Set<String> keysToRetain) async {
     final existingKeys = (await all).keys;
-    final keysToRemove =
-        existingKeys.where((key) => !keysToRetain.contains(key));
+    final keysToRemove = existingKeys.where(
+      (key) => !keysToRetain.contains(key),
+    );
     await Future.wait(keysToRemove.map(remove));
   }
 

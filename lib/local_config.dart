@@ -2,13 +2,13 @@ library local_config;
 
 import 'dart:async';
 
+import 'package:local_config/data/data_source/shared_preferences_data_source.dart';
 import 'package:local_config/di/service_locator.dart';
-import 'package:local_config/extension/string_extension.dart';
-import 'package:local_config/repository/config_repository.dart';
-import 'package:local_config/repository/default_config_repository.dart';
-import 'package:local_config/repository/dummy_config_repository.dart';
+import 'package:local_config/data/repository/default_config_repository.dart';
+import 'package:local_config/data/repository/dummy_config_repository.dart';
+import 'package:local_config/domain/repository/config_repository.dart';
+import 'package:local_config/common/extension/string_extension.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:local_config/storage/shared_preferences_store.dart';
 export 'package:local_config/ui/screen/local_config_list_screen.dart';
 
 class LocalConfig {
@@ -27,7 +27,7 @@ class LocalConfig {
 
   Future<void> initialize({required Map<String, String> configs}) async {
     final repo = DefaultConfigRepository(
-      store: SharedPreferencesStore(
+      store: SharedPreferencesDataSource(
         sharedPreferencesAsync: SharedPreferencesAsync(),
       ),
     )..populate(configs);

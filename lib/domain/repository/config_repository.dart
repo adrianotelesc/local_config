@@ -1,4 +1,4 @@
-import 'package:local_config/model/config.dart';
+import 'package:local_config/domain/model/config.dart';
 
 abstract class ConfigRepository {
   Map<String, Config> get configs;

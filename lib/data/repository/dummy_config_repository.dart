@@ -1,5 +1,5 @@
-import 'package:local_config/model/config.dart';
-import 'package:local_config/repository/config_repository.dart';
+import 'package:local_config/domain/model/config.dart';
+import 'package:local_config/domain/repository/config_repository.dart';
 
 class DummyConfigRepository implements ConfigRepository {
   @override

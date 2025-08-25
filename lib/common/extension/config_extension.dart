@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:local_config/ui/widget/text_editor/controller/text_editor_controller.dart';
 import 'package:local_config/ui/widget/text_editor/controller/json_editor_controller.dart';
 import 'package:local_config/ui/widget/text_editor/controller/string_editor_controller.dart';
-import 'package:local_config/extension/string_extension.dart';
-import 'package:local_config/model/config.dart';
+import 'package:local_config/common/extension/string_extension.dart';
+import 'package:local_config/domain/model/config.dart';
 
 extension ConfigExtension on Config {
   String get displayText {

@@ -1,4 +1,4 @@
-import 'package:local_config/ui/screen/text_editor/controller/text_editor_controller.dart';
+import 'package:local_config/ui/widget/text_editor/controller/text_editor_controller.dart';
 import 'package:re_editor/re_editor.dart';
 
 class StringEditorController implements TextEditorController {

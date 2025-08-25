@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local_config/di/service_locator.dart';
-import 'package:local_config/repository/config_repository.dart';
-import 'package:local_config/extension/config_extension.dart';
-import 'package:local_config/model/config.dart';
+import 'package:local_config/domain/repository/config_repository.dart';
+import 'package:local_config/common/extension/config_extension.dart';
+import 'package:local_config/domain/model/config.dart';
 import 'package:local_config/ui/widget/text_editor/text_editor.dart';
 import 'package:local_config/ui/theming/theme.dart';
 import 'package:local_config/ui/widget/input_form_field.dart';
