@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:local_config/ui/theming/theme.dart';
-import 'package:local_config/ui/screen/text_editor/controller/text_editor_controller.dart';
+import 'package:local_config/ui/widget/text_editor/controller/text_editor_controller.dart';
 import 'package:re_editor/re_editor.dart';
 import 'package:re_highlight/languages/json.dart';
 import 'package:re_highlight/styles/atom-one-dark.dart';
 
-class TextEditorScreen extends StatefulWidget {
-  const TextEditorScreen({
+class TextEditor extends StatefulWidget {
+  const TextEditor({
     super.key,
     this.text = '',
     required this.controller,
@@ -16,10 +16,10 @@ class TextEditorScreen extends StatefulWidget {
   final TextEditorController controller;
 
   @override
-  State<StatefulWidget> createState() => _TextEditorScreenState();
+  State<StatefulWidget> createState() => _TextEditorState();
 }
 
-class _TextEditorScreenState extends State<TextEditorScreen> {
+class _TextEditorState extends State<TextEditor> {
   final _textController = CodeLineEditingController();
 
   bool? _isValid;
@@ -56,8 +56,9 @@ class _TextEditorScreenState extends State<TextEditorScreen> {
               _FormattingBar(
                 isValid: _isValid ?? false,
                 onFormatClick: () {
-                  _textController.text =
-                      widget.controller.prettify(_textController.text);
+                  _textController.text = widget.controller.prettify(
+                    _textController.text,
+                  );
                 },
               ),
             _Editor(textController: _textController),
@@ -114,7 +115,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           tooltip: 'Save',
           onPressed: onSaveClick,
           icon: const Icon(Icons.check),
-        )
+        ),
       ],
     );
   }
@@ -162,10 +163,9 @@ class _FormattingBar extends StatelessWidget {
           ),
           Text(
             isValid ? 'Valid JSON' : 'Invalid JSON',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: primaryColor),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: primaryColor),
           ),
           const Spacer(),
           TextButton(
@@ -176,7 +176,7 @@ class _FormattingBar extends StatelessWidget {
               ),
             ),
             child: isValid ? const Text('Format') : const SizedBox.shrink(),
-          )
+          ),
         ],
       ),
     );
@@ -213,7 +213,7 @@ class _Editor extends StatelessWidget {
                 width: 20,
                 controller: chunkController,
                 notifier: notifier,
-              )
+              ),
             ],
           );
         },

@@ -3,7 +3,7 @@ import 'package:local_config/di/service_locator.dart';
 import 'package:local_config/repository/config_repository.dart';
 import 'package:local_config/extension/config_extension.dart';
 import 'package:local_config/model/config.dart';
-import 'package:local_config/ui/screen/text_editor/text_editor_screen.dart';
+import 'package:local_config/ui/widget/text_editor/text_editor.dart';
 import 'package:local_config/ui/theming/theme.dart';
 import 'package:local_config/ui/widget/input_form_field.dart';
 
@@ -200,7 +200,7 @@ class _Form extends StatelessWidget {
                             MaterialPageRoute<String>(
                               fullscreenDialog: true,
                               builder: (_) {
-                                return TextEditorScreen(
+                                return TextEditor(
                                   text: controller.text,
                                   controller: config.type.textEditorController,
                                 );
