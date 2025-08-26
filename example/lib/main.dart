@@ -75,7 +75,7 @@ class _ExamplePageState extends State<ExamplePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const LocalConfigListScreen(),
+                  builder: (context) => LocalConfig.instance.screen,
                 ),
               );
             },

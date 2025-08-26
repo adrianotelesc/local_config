@@ -5,15 +5,15 @@ import 'package:local_config/domain/repository/config_repository.dart';
 import 'package:local_config/domain/data_source/key_value_data_source.dart';
 
 class DefaultConfigRepository implements ConfigRepository {
-  final KeyValueDataSource _store;
+  final KeyValueDataSource _dataSource;
 
   final _configs = <String, Config>{};
 
   final _controller = StreamController<Map<String, Config>>.broadcast();
 
   DefaultConfigRepository({
-    required KeyValueDataSource store,
-  }) : _store = store;
+    required KeyValueDataSource dataSource,
+  }) : _dataSource = dataSource;
 
   @override
   Map<String, Config> get configs => Map.unmodifiable(_configs);
@@ -24,11 +24,11 @@ class DefaultConfigRepository implements ConfigRepository {
   @override
   Future<void> populate(Map<String, String> configs) async {
     _populate(configs);
-    await _store.prune(configs.keys.toSet());
+    await _dataSource.prune(configs.keys.toSet());
   }
 
   Future<void> _populate(Map<String, String> all) async {
-    final stored = await _store.all;
+    final stored = await _dataSource.all;
     _configs.addAll(
       all.map((key, value) {
         return MapEntry(
@@ -51,9 +51,9 @@ class DefaultConfigRepository implements ConfigRepository {
     final updated = _update(key, value);
 
     if (!updated.isOverridden) {
-      await _store.remove(key);
+      await _dataSource.remove(key);
     } else {
-      await _store.set(key, value);
+      await _dataSource.set(key, value);
     }
   }
 
@@ -68,13 +68,13 @@ class DefaultConfigRepository implements ConfigRepository {
   @override
   Future<void> reset(String key) async {
     _update(key, null);
-    await _store.remove(key);
+    await _dataSource.remove(key);
   }
 
   @override
   Future<void> resetAll() async {
     _updateAll();
-    await _store.clear();
+    await _dataSource.clear();
   }
 
   void _updateAll() {

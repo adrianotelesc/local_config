@@ -13,6 +13,7 @@ dependencies:
   shared_preferences: ^2.5.3
   re_editor: ^0.7.0
   re_highlight: ^0.0.3
+  get_it: ^8.2.0
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:local_config/di/service_locator.dart';
+import 'package:local_config/core/service_locator/service_locator.dart';
 import 'package:local_config/domain/repository/config_repository.dart';
 import 'package:local_config/ui/extension/config_display_extension.dart';
 import 'package:local_config/domain/model/config.dart';
@@ -8,10 +8,12 @@ import 'package:local_config/ui/theming/theme.dart';
 import 'package:local_config/ui/widget/input_form_field.dart';
 
 class LocalConfigEditingScreen extends StatefulWidget {
+  final ServiceLocator locator;
   final String name;
 
   const LocalConfigEditingScreen({
     super.key,
+    required this.locator,
     required this.name,
   });
 
@@ -22,7 +24,7 @@ class LocalConfigEditingScreen extends StatefulWidget {
 class _LocalConfigEditingScreenState extends State<LocalConfigEditingScreen> {
   final _controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final _repo = ServiceLocator.locate<ConfigRepository>();
+  late final _repo = widget.locator.locate<ConfigRepository>();
 
   late Config _config;
 
