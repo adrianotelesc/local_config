@@ -15,7 +15,6 @@ import 'package:local_config/ui/widget/callout.dart';
 import 'package:local_config/domain/model/config.dart';
 import 'package:local_config/ui/widget/extended_list_tile.dart';
 import 'package:local_config/ui/widget/clearable_search_bar.dart';
-import 'package:local_config/ui/widget/message.dart';
 import 'package:local_config/ui/widget/animated_jitter_text.dart';
 import 'package:provider/provider.dart';
 
@@ -159,22 +158,26 @@ class _SetupMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverFillRemaining(
       hasScrollBody: false,
-      child: Message(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 24,
-        ),
-        spacing: 24,
-        header: AnimatedJitterText(
-          LocalConfigLocalizations.of(context)!.whatAreTheConfigs,
-          style: Theme.of(context).textTheme.displaySmall,
-        ),
-        body: Text(
-          LocalConfigLocalizations.of(context)!.reasosForIssues,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        footer: AnimatedFloatingText(
-          LocalConfigLocalizations.of(context)!.wait,
-          style: Theme.of(context).textTheme.titleLarge,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 24,
+          children: [
+            AnimatedJitterText(
+              LocalConfigLocalizations.of(context)!.whatAreTheConfigs,
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+            Text(
+              LocalConfigLocalizations.of(context)!.reasosForIssues,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            AnimatedFloatingText(
+              LocalConfigLocalizations.of(context)!.wait,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ],
         ),
       ),
     );
@@ -220,13 +223,18 @@ class _List extends StatelessWidget {
       // TODO: Improve this message.
       return SliverFillRemaining(
         hasScrollBody: false,
-        child: Message(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-          ),
-          body: AnimatedFloatingText(
-            LocalConfigLocalizations.of(context)!.noResults,
-            style: Theme.of(context).textTheme.displaySmall,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16,
+            children: [
+              AnimatedFloatingText(
+                LocalConfigLocalizations.of(context)!.noResults,
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+            ],
           ),
         ),
       );
