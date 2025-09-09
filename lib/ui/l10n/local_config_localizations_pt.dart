@@ -15,10 +15,10 @@ class LocalConfigLocalizationsPt extends LocalConfigLocalizations {
   String get search => 'Buscar';
 
   @override
-  String get configsChangedLocally => 'Alterações aplicadas';
+  String get changesApplied => 'Alterações aplicadas';
 
   @override
-  String get changedLocally => 'Alterado';
+  String get changed => 'Alterado';
 
   @override
   String get revertAll => 'Reverter tudo';
@@ -48,18 +48,41 @@ class LocalConfigLocalizationsPt extends LocalConfigLocalizations {
   String get fullScreenEditor => 'Editor de tela cheia';
 
   @override
-  String get noResults => 'Uuuh... Nothing here... Just emptiness...';
+  String get noResults => 'Uuuh..\nNada aqui...\nApenas o vazio...';
 
   @override
-  String get whatAreTheConfigs => 'WHERE ARE THE CONFIGS!?';
+  String get noConfigsQuestion => 'SEM CONFIGURAÇÕES?!';
 
   @override
-  String get reasosForIssues =>
-      'Hmm... this might be happening because:\n• Local Config SDK hasn’t been initialized yet.\n• Configs are still populating.';
+  String get possibleCauses => 'Isso pode acontecer por alguns motivos:';
 
   @override
-  String get wait =>
-      'If you\\\'ve been waiting a while, maybe your configs are... empty.';
+  String get uninitializedTitle => '• A inicialização não foi feita.';
+
+  @override
+  String get uninitializedDescription =>
+      'Tem certeza de que a biblioteca inicializada do jeito certo?';
+
+  @override
+  String get emptyConfigsTitle => '• As configurações estão vazias.';
+
+  @override
+  String get emptyConfigsDescription =>
+      'Pode ser que você tenha passado as configs vazias na inicialização.';
+
+  @override
+  String get loadingConfigsTitle => '• As configs ainda não chegaram.';
+
+  @override
+  String get loadingConfigsDescription =>
+      'É raro, mas dependendo da inicialização, pode haver um pequeno atraso.';
+
+  @override
+  String get loadingQuestion => 'Carregando???';
+
+  @override
+  String get openGitHubIssue =>
+      'Se nada funcionar, abra uma issue no GitHub que a gente te ajuda.';
 
   @override
   String get emptyString => '(string vazia)';

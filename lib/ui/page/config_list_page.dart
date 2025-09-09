@@ -90,7 +90,7 @@ class _ConfigListScreenState extends State<ConfigListScreen> {
                   repo: _repo,
                 ),
                 if (_configs.isEmpty)
-                  const _SetupMessage()
+                  const _PendingStatusNotice()
                 else ...[
                   _SearchBar(
                     controller: _controller,
@@ -134,7 +134,7 @@ class _AppBar extends StatelessWidget {
                 icon: Icons.error,
                 text: LocalConfigLocalizations.of(
                   context,
-                )!.configsChangedLocally,
+                )!.changesApplied,
                 trailing: TextButton(
                   onPressed: repo.resetAll,
                   style: warningButtonStyle(context),
@@ -149,33 +149,118 @@ class _AppBar extends StatelessWidget {
   }
 }
 
-class _SetupMessage extends StatelessWidget {
-  const _SetupMessage();
-
-  // TODO: Improve this message.
+class _PendingStatusNotice extends StatelessWidget {
+  const _PendingStatusNotice();
 
   @override
   Widget build(BuildContext context) {
     return SliverFillRemaining(
       hasScrollBody: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 24,
           children: [
             AnimatedJitterText(
-              LocalConfigLocalizations.of(context)!.whatAreTheConfigs,
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-            Text(
-              LocalConfigLocalizations.of(context)!.reasosForIssues,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            AnimatedFloatingText(
-              LocalConfigLocalizations.of(context)!.wait,
+              LocalConfigLocalizations.of(context)!.noConfigsQuestion,
               style: Theme.of(context).textTheme.titleLarge,
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: LocalConfigLocalizations.of(
+                      context,
+                    )!.possibleCauses,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const TextSpan(text: '\n\n'),
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: LocalConfigLocalizations.of(
+                          context,
+                        )!.uninitializedTitle,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const TextSpan(text: ' '),
+                      TextSpan(
+                        text: LocalConfigLocalizations.of(
+                          context,
+                        )!.uninitializedDescription,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                  const TextSpan(text: '\n\n'),
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: LocalConfigLocalizations.of(
+                          context,
+                        )!.emptyConfigsTitle,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const TextSpan(text: ' '),
+                      TextSpan(
+                        text: LocalConfigLocalizations.of(
+                          context,
+                        )!.emptyConfigsDescription,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                  const TextSpan(text: '\n\n'),
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: LocalConfigLocalizations.of(
+                          context,
+                        )!.loadingConfigsTitle,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const TextSpan(text: ' '),
+                      TextSpan(
+                        text: LocalConfigLocalizations.of(
+                          context,
+                        )!.loadingConfigsDescription,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const TextSpan(text: ' '),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: AnimatedFloatingText(
+                          LocalConfigLocalizations.of(
+                            context,
+                          )!.loadingQuestion,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const TextSpan(text: '\n\n'),
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: LocalConfigLocalizations.of(
+                          context,
+                        )!.openGitHubIssue,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -264,7 +349,7 @@ class _List extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   icon: Icons.error,
-                  text: LocalConfigLocalizations.of(context)!.changedLocally,
+                  text: LocalConfigLocalizations.of(context)!.changed,
                   trailing: TextButton(
                     onPressed: () => repo.reset(name),
                     style: warningButtonStyle(context),

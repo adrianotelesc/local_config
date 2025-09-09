@@ -113,17 +113,17 @@ abstract class LocalConfigLocalizations {
   /// **'Search'**
   String get search;
 
-  /// No description provided for @configsChangedLocally.
+  /// No description provided for @changesApplied.
   ///
   /// In en, this message translates to:
   /// **'Changes applied'**
-  String get configsChangedLocally;
+  String get changesApplied;
 
-  /// No description provided for @changedLocally.
+  /// No description provided for @changed.
   ///
   /// In en, this message translates to:
   /// **'Changed'**
-  String get changedLocally;
+  String get changed;
 
   /// No description provided for @revertAll.
   ///
@@ -182,26 +182,68 @@ abstract class LocalConfigLocalizations {
   /// No description provided for @noResults.
   ///
   /// In en, this message translates to:
-  /// **'Uuuh... Nothing here... Just emptiness...'**
+  /// **'Uuuh...\nNothing here...\nJust emptiness...'**
   String get noResults;
 
-  /// No description provided for @whatAreTheConfigs.
+  /// No description provided for @noConfigsQuestion.
   ///
   /// In en, this message translates to:
-  /// **'WHERE ARE THE CONFIGS!?'**
-  String get whatAreTheConfigs;
+  /// **'NO CONFIGS!?'**
+  String get noConfigsQuestion;
 
-  /// No description provided for @reasosForIssues.
+  /// No description provided for @possibleCauses.
   ///
   /// In en, this message translates to:
-  /// **'Hmm... this might be happening because:\n• Local Config SDK hasn’t been initialized yet.\n• Configs are still populating.'**
-  String get reasosForIssues;
+  /// **'This might be happening for a few reasons:'**
+  String get possibleCauses;
 
-  /// No description provided for @wait.
+  /// No description provided for @uninitializedTitle.
   ///
   /// In en, this message translates to:
-  /// **'If you\\\'ve been waiting a while, maybe your configs are... empty.'**
-  String get wait;
+  /// **'• The initialization wasn\'t done.'**
+  String get uninitializedTitle;
+
+  /// No description provided for @uninitializedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you initialized the lib the right way?'**
+  String get uninitializedDescription;
+
+  /// No description provided for @emptyConfigsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'• The configs are empty.'**
+  String get emptyConfigsTitle;
+
+  /// No description provided for @emptyConfigsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'You might have passed empty configs in the initialization.'**
+  String get emptyConfigsDescription;
+
+  /// No description provided for @loadingConfigsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'• The configs haven\'t arrived yet.'**
+  String get loadingConfigsTitle;
+
+  /// No description provided for @loadingConfigsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s rare, but depending on the initialization, there might be a small delay.'**
+  String get loadingConfigsDescription;
+
+  /// No description provided for @loadingQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading???'**
+  String get loadingQuestion;
+
+  /// No description provided for @openGitHubIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'If nothing works, open a GitHub issue that we\'ll help you.'**
+  String get openGitHubIssue;
 
   /// No description provided for @emptyString.
   ///

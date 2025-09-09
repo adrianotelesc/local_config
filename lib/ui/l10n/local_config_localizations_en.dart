@@ -15,10 +15,10 @@ class LocalConfigLocalizationsEn extends LocalConfigLocalizations {
   String get search => 'Search';
 
   @override
-  String get configsChangedLocally => 'Changes applied';
+  String get changesApplied => 'Changes applied';
 
   @override
-  String get changedLocally => 'Changed';
+  String get changed => 'Changed';
 
   @override
   String get revertAll => 'Revert all';
@@ -48,18 +48,41 @@ class LocalConfigLocalizationsEn extends LocalConfigLocalizations {
   String get fullScreenEditor => 'Full screen editor';
 
   @override
-  String get noResults => 'Uuuh... Nothing here... Just emptiness...';
+  String get noResults => 'Uuuh...\nNothing here...\nJust emptiness...';
 
   @override
-  String get whatAreTheConfigs => 'WHERE ARE THE CONFIGS!?';
+  String get noConfigsQuestion => 'NO CONFIGS!?';
 
   @override
-  String get reasosForIssues =>
-      'Hmm... this might be happening because:\n• Local Config SDK hasn’t been initialized yet.\n• Configs are still populating.';
+  String get possibleCauses => 'This might be happening for a few reasons:';
 
   @override
-  String get wait =>
-      'If you\\\'ve been waiting a while, maybe your configs are... empty.';
+  String get uninitializedTitle => '• The initialization wasn\'t done.';
+
+  @override
+  String get uninitializedDescription =>
+      'Are you sure you initialized the lib the right way?';
+
+  @override
+  String get emptyConfigsTitle => '• The configs are empty.';
+
+  @override
+  String get emptyConfigsDescription =>
+      'You might have passed empty configs in the initialization.';
+
+  @override
+  String get loadingConfigsTitle => '• The configs haven\'t arrived yet.';
+
+  @override
+  String get loadingConfigsDescription =>
+      'It\'s rare, but depending on the initialization, there might be a small delay.';
+
+  @override
+  String get loadingQuestion => 'Loading???';
+
+  @override
+  String get openGitHubIssue =>
+      'If nothing works, open a GitHub issue that we\'ll help you.';
 
   @override
   String get emptyString => '(empty string)';
