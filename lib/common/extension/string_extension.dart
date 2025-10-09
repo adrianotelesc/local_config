@@ -15,6 +15,6 @@ extension StringExtension on String {
 
   int? get asIntOrNull => int.tryParse(this);
 
-  bool containsInsensitive(String substring) =>
-      toLowerCase().contains(substring.toLowerCase());
+  bool containsInsensitive(String other) =>
+      toLowerCase().contains(other.toLowerCase());
 }
