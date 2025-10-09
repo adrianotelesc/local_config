@@ -21,7 +21,6 @@
     "emptyConfigsDescription": "You might have passed empty configs in the initialization.",
     "loadingConfigsTitle": "• The configs haven't arrived yet.",
     "loadingConfigsDescription": "It's rare, but depending on the initialization, there might be a small delay.",
-    "loadingQuestion": "Loading???",
     "openGitHubIssue": "If nothing works, open a GitHub issue that we'll help you.",
     "emptyString": "(empty string)",
     "boolean": "Boolean",

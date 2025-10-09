@@ -233,12 +233,6 @@ abstract class LocalConfigLocalizations {
   /// **'It\'s rare, but depending on the initialization, there might be a small delay.'**
   String get loadingConfigsDescription;
 
-  /// No description provided for @loadingQuestion.
-  ///
-  /// In en, this message translates to:
-  /// **'Loading???'**
-  String get loadingQuestion;
-
   /// No description provided for @openGitHubIssue.
   ///
   /// In en, this message translates to:

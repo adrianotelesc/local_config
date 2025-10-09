@@ -21,7 +21,6 @@
     "emptyConfigsDescription": "Pode ser que você tenha passado as configs vazias na inicialização.",
     "loadingConfigsTitle": "• As configs ainda não chegaram.",
     "loadingConfigsDescription": "É raro, mas dependendo da inicialização, pode haver um pequeno atraso.",
-    "loadingQuestion": "Carregando???",
     "openGitHubIssue": "Se nada funcionar, abra uma issue no GitHub que a gente te ajuda.",
     "emptyString": "(string vazia)",
     "boolean": "Booleano",

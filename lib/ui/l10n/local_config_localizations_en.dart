@@ -78,9 +78,6 @@ class LocalConfigLocalizationsEn extends LocalConfigLocalizations {
       'It\'s rare, but depending on the initialization, there might be a small delay.';
 
   @override
-  String get loadingQuestion => 'Loading???';
-
-  @override
   String get openGitHubIssue =>
       'If nothing works, open a GitHub issue that we\'ll help you.';
 

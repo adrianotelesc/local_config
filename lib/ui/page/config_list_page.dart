@@ -232,16 +232,6 @@ class _PendingStatusNotice extends StatelessWidget {
                         )!.loadingConfigsDescription,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      const TextSpan(text: ' '),
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Text(
-                          LocalConfigLocalizations.of(
-                            context,
-                          )!.loadingQuestion,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
                     ],
                   ),
                   const TextSpan(text: '\n\n'),
