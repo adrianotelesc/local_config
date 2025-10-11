@@ -6,16 +6,16 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:local_config/common/extension/string_extension.dart';
 import 'package:local_config/core/di/service_locator.dart';
-import 'package:local_config/core/storage/key_value_store.dart';
-import 'package:local_config/data/data_source/default_config_data_source.dart';
+import 'package:local_config/core/service/key_value_service.dart';
+import 'package:local_config/data/data_source/default_key_value_data_source.dart';
 import 'package:local_config/data/repository/default_config_repository.dart';
 import 'package:local_config/data/repository/no_op_config_repository.dart';
-import 'package:local_config/domain/data_source/config_data_source.dart';
+import 'package:local_config/domain/data_source/key_value_data_source.dart';
 import 'package:local_config/domain/repository/config_repository.dart';
 import 'package:local_config/infra/di/get_it_service_locator.dart';
-import 'package:local_config/infra/storage/namespaced_key_value_store.dart';
-import 'package:local_config/infra/storage/secure_storage_key_value_store.dart';
-import 'package:local_config/infra/storage/shared_preferences_key_value_store.dart';
+import 'package:local_config/infra/service/namespaced_key_value_service.dart';
+import 'package:local_config/infra/service/secure_storage_key_value_service.dart';
+import 'package:local_config/infra/service/shared_preferences_key_value_service.dart';
 import 'package:local_config/infra/util/key_namespace.dart';
 import 'package:local_config/ui/local_config_entrypoint.dart';
 
@@ -37,25 +37,25 @@ class LocalConfig {
     bool isSecureStorageEnabled = false,
   }) {
     _serviceLocator
-      ..registerFactory<KeyValueStore>(
-        () => NamespacedKeyValueStore(
-          keyNamespace: KeyNamespace(namespace: _namespace),
-          innerStore: isSecureStorageEnabled
-              ? SecureStorageKeyValueStore(
+      ..registerFactory<KeyValueService>(
+        () => NamespacedKeyValueService(
+          namespace: KeyNamespace(namespace: _namespace),
+          inner: isSecureStorageEnabled
+              ? SecureStorageKeyValueService(
                   secureStorage: const FlutterSecureStorage(
                     aOptions: AndroidOptions(
                       encryptedSharedPreferences: true,
                     ),
                   ),
                 )
-              : SharedPreferencesKeyValueStore(
-                  sharedPreferencesAsync: SharedPreferencesAsync(),
+              : SharedPreferencesKeyValueService(
+                  sharedPreferences: SharedPreferencesAsync(),
                 ),
         ),
       )
-      ..registerFactory<ConfigDataSource>(
-        () => DefaultConfigDataSource(
-          keyValueStore: _serviceLocator.get(),
+      ..registerFactory<KeyValueDataSource>(
+        () => DefaultKeyValueDataSource(
+          service: _serviceLocator.get(),
         ),
       )
       ..unregister<ConfigRepository>()

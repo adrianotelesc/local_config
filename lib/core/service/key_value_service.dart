@@ -1,4 +1,4 @@
-abstract class KeyValueStore {
+abstract class KeyValueService {
   Future<Map<String, Object?>> get all;
 
   Future<String?> getString(String key);

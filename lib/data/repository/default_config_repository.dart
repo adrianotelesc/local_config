@@ -1,18 +1,18 @@
 import 'dart:async';
 
-import 'package:local_config/domain/data_source/config_data_source.dart';
+import 'package:local_config/domain/data_source/key_value_data_source.dart';
 import 'package:local_config/domain/model/config.dart';
 import 'package:local_config/domain/repository/config_repository.dart';
 
 class DefaultConfigRepository implements ConfigRepository {
-  final ConfigDataSource _dataSource;
+  final KeyValueDataSource _dataSource;
 
   final _configs = <String, Config>{};
 
   final _controller = StreamController<Map<String, Config>>.broadcast();
 
   DefaultConfigRepository({
-    required ConfigDataSource dataSource,
+    required KeyValueDataSource dataSource,
   }) : _dataSource = dataSource;
 
   @override
@@ -54,14 +54,14 @@ class DefaultConfigRepository implements ConfigRepository {
   }
 
   Future<void> _populate(Map<String, String> all) async {
-    final stored = await _dataSource.all;
+    final allStored = await _dataSource.all;
     _configs.addAll(
       all.map((key, value) {
         return MapEntry(
           key,
           Config(
             defaultValue: value,
-            overriddenValue: stored[key],
+            overriddenValue: allStored[key],
           ),
         );
       }),

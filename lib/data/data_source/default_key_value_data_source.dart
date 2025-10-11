@@ -1,16 +1,16 @@
-import 'package:local_config/core/storage/key_value_store.dart';
-import 'package:local_config/domain/data_source/config_data_source.dart';
+import 'package:local_config/core/service/key_value_service.dart';
+import 'package:local_config/domain/data_source/key_value_data_source.dart';
 
-class DefaultConfigDataSource extends ConfigDataSource {
-  final KeyValueStore _store;
+class DefaultKeyValueDataSource extends KeyValueDataSource {
+  final KeyValueService _service;
 
-  DefaultConfigDataSource({
-    required KeyValueStore keyValueStore,
-  }) : _store = keyValueStore;
+  DefaultKeyValueDataSource({
+    required KeyValueService service,
+  }) : _service = service;
 
   @override
   Future<Map<String, String>> get all async {
-    final all = await _store.all;
+    final all = await _service.all;
 
     return all.map(
       (key, value) => MapEntry(key, value.toString()),
@@ -27,7 +27,7 @@ class DefaultConfigDataSource extends ConfigDataSource {
   }
 
   @override
-  Future<String?> get(String key) => _store.getString(key);
+  Future<String?> get(String key) => _service.getString(key);
 
   @override
   Future<void> prune(Set<String> retainedKeys) async {
@@ -41,8 +41,8 @@ class DefaultConfigDataSource extends ConfigDataSource {
   }
 
   @override
-  Future<void> remove(String key) => _store.remove(key);
+  Future<void> remove(String key) => _service.remove(key);
 
   @override
-  Future<void> set(String key, String value) => _store.setString(key, value);
+  Future<void> set(String key, String value) => _service.setString(key, value);
 }
