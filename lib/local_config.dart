@@ -18,7 +18,7 @@ import 'package:local_config/infra/di/get_it_service_locator.dart';
 import 'package:local_config/infra/service/namespaced_key_value_service.dart';
 import 'package:local_config/infra/service/secure_storage_key_value_service.dart';
 import 'package:local_config/infra/service/shared_preferences_key_value_service.dart';
-import 'package:local_config/infra/util/key_namespace.dart';
+import 'package:local_config/common/util/key_namespace.dart';
 import 'package:local_config/ui/local_config_entrypoint.dart';
 
 class LocalConfig {

@@ -1,6 +1,6 @@
 import 'package:local_config/common/extension/map_extension.dart';
+import 'package:local_config/common/util/key_namespace.dart';
 import 'package:local_config/core/service/key_value_service.dart';
-import 'package:local_config/infra/util/key_namespace.dart';
 
 class NamespacedKeyValueService implements KeyValueService {
   final KeyNamespace _namespace;
