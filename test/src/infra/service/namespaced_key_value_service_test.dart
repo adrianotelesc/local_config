@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:local_config/common/util/key_namespace.dart';
-import 'package:local_config/core/service/key_value_service.dart';
-import 'package:local_config/infra/service/namespaced_key_value_service.dart';
+import 'package:local_config/src/common/util/key_namespace.dart';
+import 'package:local_config/src/core/service/key_value_service.dart';
+import 'package:local_config/src/infra/service/namespaced_key_value_service.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockKeyNamespace extends Mock implements KeyNamespace {}

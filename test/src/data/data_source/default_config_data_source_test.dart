@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:local_config/core/service/key_value_service.dart';
-import 'package:local_config/data/data_source/default_key_value_data_source.dart';
+import 'package:local_config/src/core/service/key_value_service.dart';
+import 'package:local_config/src/data/data_source/default_key_value_data_source.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockKeyValueService extends Mock implements KeyValueService {}
