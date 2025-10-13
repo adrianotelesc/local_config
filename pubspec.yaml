@@ -4,8 +4,8 @@ version: 0.0.1
 repository: https://github.com/adrianotelesc/local-config
 
 environment:
-  sdk: ^3.9.0
-  flutter: ">=1.17.0"
+  sdk: ^3.7.0
+  flutter: ">=3.29.0"
 
 flutter:
   generate: true
