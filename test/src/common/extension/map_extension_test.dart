@@ -31,7 +31,7 @@ void main() {
     test('returns list of (key, value) tuples', () {
       const map = {'a': 1, 'b': 2, 'c': 3};
 
-      final result = map.records;
+      final result = map.asRecords;
 
       expect(result.length, 3);
       expect(result, contains(('a', 1)));
@@ -42,7 +42,7 @@ void main() {
     test('returns empty list for empty map', () {
       const map = {};
 
-      final result = map.records;
+      final result = map.asRecords;
 
       expect(result, isEmpty);
     });

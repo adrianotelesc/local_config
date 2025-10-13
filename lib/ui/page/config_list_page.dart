@@ -56,7 +56,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
     final filtered = _configs.whereKey((key) {
       return query.trim().isEmpty || key.containsInsensitive(query);
     });
-    final items = filtered.records;
+    final items = filtered.asRecords;
     setState(() => _items = items);
   }
 
