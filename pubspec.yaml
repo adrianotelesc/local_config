@@ -1,5 +1,5 @@
 name: local_config
-description: A Flutter package to manage local configs in your app.
+description: Manage local configs in Flutter — inspired by Firebase Remote Config, optimized for development, testing, and staging.
 version: 0.0.1
 repository: https://github.com/adrianotelesc/local-config
 
