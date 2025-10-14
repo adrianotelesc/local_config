@@ -10,7 +10,7 @@ The main goal is to provide the ability to manage configs locally for any purpos
 
 - Familiar API inspired by **Firebase Remote Config** (`getBool`, `getString`, etc)
 - Built-in widget also inspired by **Firebase Remote Config** for viewing/editing parameter values
-- Persistent parameter value overrides
+- Persistent parameter value overrides using [`shared_preferences`](https://pub.dev/packages/shared_preferences) or [`flutter_secure_storage`](https://pub.dev/packages/flutter_secure_storage)
 
 ---
 
