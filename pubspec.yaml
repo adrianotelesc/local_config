@@ -3,7 +3,7 @@ description: |
   Make changes to your app's default behavior 
   and appearance by changing parameter values 
   — just like Firebase Remote Config, but locally.
-version: 0.0.3
+version: 0.0.4
 topics:
   - local
   - config
