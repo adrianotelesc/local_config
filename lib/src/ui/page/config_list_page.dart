@@ -95,12 +95,14 @@ class _ConfigListPageState extends State<ConfigListPage> {
                 if (_configs.isEmpty)
                   const _PendingStatusNotice()
                 else ...[
-                  SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
+                  SliverToBoxAdapter(child: SizedBox.square(dimension: 16)),
                   _SearchBar(controller: _controller, focusNode: _focusNode),
                   SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
                   SliverToBoxAdapter(
                     child: SwitchListTile(
-                      title: Text('Show only changed'),
+                      title: Text(
+                        LocalConfigLocalizations.of(context)!.showChangesOnly,
+                      ),
                       value: showOnlyChanged,
                       onChanged: (value) {
                         setState(() {
@@ -304,7 +306,7 @@ class _List extends StatelessWidget {
       return SliverFillRemaining(
         hasScrollBody: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(LocalConfigLocalizations.of(context)!.noResults),
         ),
       );
