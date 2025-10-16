@@ -62,20 +62,15 @@ import 'local_config_localizations_pt.dart';
 /// be consistent with the languages listed in the LocalConfigLocalizations.supportedLocales
 /// property.
 abstract class LocalConfigLocalizations {
-  LocalConfigLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  LocalConfigLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
   static LocalConfigLocalizations? of(BuildContext context) {
-    return Localizations.of<LocalConfigLocalizations>(
-      context,
-      LocalConfigLocalizations,
-    );
+    return Localizations.of<LocalConfigLocalizations>(context, LocalConfigLocalizations);
   }
 
-  static const LocalizationsDelegate<LocalConfigLocalizations> delegate =
-      _LocalConfigLocalizationsDelegate();
+  static const LocalizationsDelegate<LocalConfigLocalizations> delegate = _LocalConfigLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -87,18 +82,17 @@ abstract class LocalConfigLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('pt'),
+    Locale('pt')
   ];
 
   /// No description provided for @localConfig.
@@ -182,8 +176,14 @@ abstract class LocalConfigLocalizations {
   /// No description provided for @noResults.
   ///
   /// In en, this message translates to:
-  /// **'Uuuh...\nNothing here...\nJust emptiness...'**
+  /// **'No parameters, values, or conditions matched your search criteria.'**
   String get noResults;
+
+  /// No description provided for @showChangesOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Show changes only'**
+  String get showChangesOnly;
 
   /// No description provided for @noConfigsQuestion.
   ///
@@ -300,38 +300,34 @@ abstract class LocalConfigLocalizations {
   String editorOf(Object type);
 }
 
-class _LocalConfigLocalizationsDelegate
-    extends LocalizationsDelegate<LocalConfigLocalizations> {
+class _LocalConfigLocalizationsDelegate extends LocalizationsDelegate<LocalConfigLocalizations> {
   const _LocalConfigLocalizationsDelegate();
 
   @override
   Future<LocalConfigLocalizations> load(Locale locale) {
-    return SynchronousFuture<LocalConfigLocalizations>(
-      lookupLocalConfigLocalizations(locale),
-    );
+    return SynchronousFuture<LocalConfigLocalizations>(lookupLocalConfigLocalizations(locale));
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'pt'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'pt'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_LocalConfigLocalizationsDelegate old) => false;
 }
 
 LocalConfigLocalizations lookupLocalConfigLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return LocalConfigLocalizationsEn();
-    case 'pt':
-      return LocalConfigLocalizationsPt();
+    case 'en': return LocalConfigLocalizationsEn();
+    case 'pt': return LocalConfigLocalizationsPt();
   }
 
   throw FlutterError(
     'LocalConfigLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

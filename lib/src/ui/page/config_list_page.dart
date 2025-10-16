@@ -95,7 +95,9 @@ class _ConfigListPageState extends State<ConfigListPage> {
                 if (_configs.isEmpty)
                   const _PendingStatusNotice()
                 else ...[
+                  SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
                   _SearchBar(controller: _controller, focusNode: _focusNode),
+                  SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
                   SliverToBoxAdapter(
                     child: SwitchListTile(
                       title: Text('Show only changed'),
@@ -109,7 +111,9 @@ class _ConfigListPageState extends State<ConfigListPage> {
                       },
                     ),
                   ),
+                  SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
                   _List(items: _items, repo: _repo),
+                  SliverToBoxAdapter(child: SizedBox.square(dimension: 32)),
                 ],
               ],
             ),
@@ -277,7 +281,7 @@ class _SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ClearableSearchBar(
           controller: controller,
           focusNode: focusNode,
@@ -297,22 +301,11 @@ class _List extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) {
-      // TODO: Improve this message.
       return SliverFillRemaining(
         hasScrollBody: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 16,
-            children: [
-              Text(
-                LocalConfigLocalizations.of(context)!.noResults,
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Text(LocalConfigLocalizations.of(context)!.noResults),
         ),
       );
     }

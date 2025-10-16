@@ -48,7 +48,10 @@ class LocalConfigLocalizationsPt extends LocalConfigLocalizations {
   String get fullScreenEditor => 'Editor de tela cheia';
 
   @override
-  String get noResults => 'Uuuh..\nNada aqui...\nApenas o vazio...';
+  String get noResults => 'Nenhum parâmetro, valor ou condição corresponde aos critérios de pesquisa.';
+
+  @override
+  String get showChangesOnly => 'Mostrar apenas as mudanças';
 
   @override
   String get noConfigsQuestion => 'SEM CONFIGURAÇÕES?!';
@@ -60,26 +63,22 @@ class LocalConfigLocalizationsPt extends LocalConfigLocalizations {
   String get uninitializedTitle => '• A inicialização não foi feita.';
 
   @override
-  String get uninitializedDescription =>
-      'Tem certeza de que a biblioteca inicializada do jeito certo?';
+  String get uninitializedDescription => 'Tem certeza de que a biblioteca inicializada do jeito certo?';
 
   @override
   String get emptyConfigsTitle => '• As configurações estão vazias.';
 
   @override
-  String get emptyConfigsDescription =>
-      'Pode ser que você tenha passado as configs vazias na inicialização.';
+  String get emptyConfigsDescription => 'Pode ser que você tenha passado as configs vazias na inicialização.';
 
   @override
   String get loadingConfigsTitle => '• As configs ainda não chegaram.';
 
   @override
-  String get loadingConfigsDescription =>
-      'É raro, mas dependendo da inicialização, pode haver um pequeno atraso.';
+  String get loadingConfigsDescription => 'É raro, mas dependendo da inicialização, pode haver um pequeno atraso.';
 
   @override
-  String get openGitHubIssue =>
-      'Se nada funcionar, abra uma issue no GitHub que a gente te ajuda.';
+  String get openGitHubIssue => 'Se nada funcionar, abra uma issue no GitHub que a gente te ajuda.';
 
   @override
   String get emptyString => '(string vazia)';
@@ -103,8 +102,7 @@ class LocalConfigLocalizationsPt extends LocalConfigLocalizations {
   String get validJson => 'JSON Válido';
 
   @override
-  String get help =>
-      'Essa é a chave que você vai passar para o SDK da Configuração Local, por exemplo:\n';
+  String get help => 'Essa é a chave que você vai passar para o SDK da Configuração Local, por exemplo:\n';
 
   @override
   String get format => 'Formatar';
