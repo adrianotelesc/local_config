@@ -18,10 +18,8 @@ class NamespacedKeyValueService implements KeyValueService {
     final all = await _inner.all;
 
     final namespaced = all
-        .whereKey((key) => _namespace.matches(key))
-        .map(
-          (key, value) => MapEntry(_namespace.strip(key), value),
-        );
+        .where((key, _) => _namespace.matches(key))
+        .map((key, value) => MapEntry(_namespace.strip(key), value));
 
     return namespaced;
   }

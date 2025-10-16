@@ -33,6 +33,8 @@ class _ConfigListPageState extends State<ConfigListPage> {
 
   StreamSubscription? _sub;
 
+  var showOnlyChanged = false;
+
   var _configs = <String, Config>{};
 
   var _items = <(String, Config)>[];
@@ -56,8 +58,11 @@ class _ConfigListPageState extends State<ConfigListPage> {
 
   void _updateItems() {
     final query = _controller.text;
-    final filtered = _configs.whereKey((key) {
-      return query.trim().isEmpty || key.containsInsensitive(query);
+    final filtered = _configs.where((key, value) {
+      return (!showOnlyChanged || value.isOverridden) &&
+          (query.isEmpty ||
+              key.containsInsensitive(query) ||
+              value.value.containsInsensitive(query));
     });
     final items = filtered.asRecords;
     setState(() => _items = items);
@@ -91,6 +96,19 @@ class _ConfigListPageState extends State<ConfigListPage> {
                   const _PendingStatusNotice()
                 else ...[
                   _SearchBar(controller: _controller, focusNode: _focusNode),
+                  SliverToBoxAdapter(
+                    child: SwitchListTile(
+                      title: Text('Show only changed'),
+                      value: showOnlyChanged,
+                      onChanged: (value) {
+                        setState(() {
+                          showOnlyChanged = value;
+                        });
+
+                        _updateItems();
+                      },
+                    ),
+                  ),
                   _List(items: _items, repo: _repo),
                 ],
               ],
