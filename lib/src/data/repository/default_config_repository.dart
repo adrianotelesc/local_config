@@ -10,7 +10,8 @@ class DefaultConfigRepository implements ConfigRepository {
 
   final ConfigStore _store;
 
-  final _controller = StreamController<Map<String, Config>>.broadcast();
+  final _controller =
+      StreamController<Map<String, LocalConfigValue>>.broadcast();
 
   DefaultConfigRepository({
     required KeyValueDataSource dataSource,
@@ -19,16 +20,16 @@ class DefaultConfigRepository implements ConfigRepository {
        _store = store;
 
   @override
-  Map<String, Config> get configs => _store.configs;
+  Map<String, LocalConfigValue> get configs => _store.configs;
 
   @override
-  Stream<Map<String, Config>> get configsStream => _controller.stream;
+  Stream<Map<String, LocalConfigValue>> get configsStream => _controller.stream;
 
   @override
-  Config? get(String key) => _store.get(key);
+  LocalConfigValue? get(String key) => _store.get(key);
 
   @override
-  Future<void> populate(Map<String, String> defaults) async {
+  Future<void> populate(Map<String, dynamic> defaults) async {
     final overrides = await _dataSource.all;
 
     _store.populate(defaults, overrides);
@@ -57,7 +58,7 @@ class DefaultConfigRepository implements ConfigRepository {
   }
 
   @override
-  Future<void> set(String key, String value) async {
+  Future<void> set(String key, dynamic value) async {
     final updated = _store.update(key, value);
 
     if (!updated.isOverridden) {

@@ -25,14 +25,14 @@ class _ConfigEditPageState extends State<ConfigEditPage> {
 
   late final ConfigRepository _repo;
 
-  late Config _config;
+  late LocalConfigValue _config;
 
   @override
   void initState() {
     super.initState();
     _repo = context.read<ServiceLocator>().get<ConfigRepository>();
     _config = _repo.configs[widget.name]!;
-    _controller.text = _config.value;
+    _controller.text = _config.value.toString();
   }
 
   @override
@@ -102,7 +102,7 @@ class _AppBar extends StatelessWidget {
 class _Form extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final String name;
-  final Config config;
+  final LocalConfigValue config;
   final TextEditingController controller;
   final ConfigRepository repo;
 
@@ -153,7 +153,7 @@ class _Form extends StatelessWidget {
                   text: config.type.getDisplayName(context),
                 ),
                 entries:
-                    ConfigType.values.map((value) {
+                    LocalConfigType.values.map((value) {
                       return DropdownMenuEntry(
                         value: value.getDisplayName(context),
                         label: value.getDisplayName(context),

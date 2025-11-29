@@ -34,9 +34,9 @@ class _ConfigListPageState extends State<ConfigListPage> {
 
   var showOnlyChanged = false;
 
-  var _configs = <String, Config>{};
+  var _configs = <String, LocalConfigValue>{};
 
-  var _items = <(String, Config)>[];
+  var _items = <(String, LocalConfigValue)>[];
 
   var _hasOverrides = false;
 
@@ -49,7 +49,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
     _sub = _repo.configsStream.listen(_updateConfigs);
   }
 
-  void _updateConfigs(Map<String, Config> configs) {
+  void _updateConfigs(Map<String, LocalConfigValue> configs) {
     _configs = configs;
     _updateItems();
     _updateOverrides();
@@ -287,7 +287,7 @@ class _SearchBar extends StatelessWidget {
 }
 
 class _List extends StatelessWidget {
-  final List<(String, Config)> items;
+  final List<(String, LocalConfigValue)> items;
   final ConfigRepository repo;
 
   const _List({required this.items, required this.repo});

@@ -14,7 +14,7 @@ class LocalConfig {
   }
 
   void initialize({
-    required Map<String, String> parameters,
+    required Map<String, dynamic> parameters,
     bool isSecureStorageEnabled = false,
   }) {
     _serviceLocator
@@ -36,13 +36,9 @@ class LocalConfig {
         ),
       )
       ..registerFactory<KeyValueDataSource>(
-        () => DefaultKeyValueDataSource(
-          service: _serviceLocator.get(),
-        ),
+        () => DefaultKeyValueDataSource(service: _serviceLocator.get()),
       )
-      ..registerFactory<ConfigStore>(
-        () => DefaultConfigStore(),
-      )
+      ..registerFactory<ConfigStore>(() => DefaultConfigStore())
       ..unregister<ConfigRepository>()
       ..registerLazySingleton<ConfigRepository>(
         () => DefaultConfigRepository(
@@ -59,7 +55,7 @@ class LocalConfig {
     );
   }
 
-  Stream<Map<String, String>> get onConfigUpdated {
+  Stream<Map<String, dynamic>> get onConfigUpdated {
     final repo = _serviceLocator.get<ConfigRepository>();
     return repo.configsStream.map((configs) {
       return configs.map((key, config) => MapEntry(key, config.value));

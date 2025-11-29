@@ -8,11 +8,16 @@ void main() async {
 
   LocalConfig.instance.initialize(
     parameters: {
-      'feature_enabled': 'true',
+      'feature_enabled': true,
       'api_base_url': 'https://api.myapp.com/v1',
-      'retry_attempts': '3',
-      'animation_speed': '1.25',
-      'theme': '{"seedColor": "#2196F3", "darkMode": false}',
+      'retry_attempts': 3,
+      'animation_speed': 1.25,
+      'theme': {"seedColor": "#2196F3", "darkMode": false},
+      'feature_enabled_string': 'true',
+      'api_base_url_string': 'https://api.myapp.com/v1',
+      'retry_attempts_string': '3',
+      'animation_speed_string': '1.25',
+      'theme_string': '{"seedColor": "#2196F3", "darkMode": false}',
     },
   );
 
@@ -29,9 +34,7 @@ class ExampleApp extends StatelessWidget {
     return MaterialApp(
       title: title,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       debugShowCheckedModeBanner: false,
       home: const ExamplePage(title: title),
@@ -49,7 +52,7 @@ class ExamplePage extends StatefulWidget {
 }
 
 class _ExamplePageState extends State<ExamplePage> {
-  Map<String, String> _configs = {};
+  Map<String, dynamic> _configs = {};
   StreamSubscription? _configSub;
 
   @override

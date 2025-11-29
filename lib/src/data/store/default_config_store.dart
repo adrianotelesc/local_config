@@ -2,16 +2,17 @@ import 'package:local_config/src/data/store/config_store.dart';
 import 'package:local_config/src/domain/entity/config.dart';
 
 class DefaultConfigStore implements ConfigStore {
-  final Map<String, Config> _configs = {};
+  final Map<String, LocalConfigValue> _configs = {};
 
   @override
-  Map<String, Config> get configs => Map<String, Config>.unmodifiable(_configs);
+  Map<String, LocalConfigValue> get configs =>
+      Map<String, LocalConfigValue>.unmodifiable(_configs);
 
   @override
-  Config? get(String key) => _configs[key];
+  LocalConfigValue? get(String key) => _configs[key];
 
   @override
-  Config update(String key, String? value) {
+  LocalConfigValue update(String key, dynamic value) {
     final updated = _configs.update(key, (config) {
       return config.copyWith(overriddenValue: value);
     });
@@ -19,19 +20,19 @@ class DefaultConfigStore implements ConfigStore {
   }
 
   @override
-  void updateAll(String? value) {
+  void updateAll(dynamic value) {
     _configs.updateAll((_, value) {
       return value.copyWith(overriddenValue: null);
     });
   }
 
   @override
-  void populate(Map<String, String> defaults, Map<String, String> overrides) {
+  void populate(Map<String, dynamic> defaults, Map<String, dynamic> overrides) {
     _configs.addAll(
       defaults.map((key, value) {
         return MapEntry(
           key,
-          Config(
+          LocalConfigValue(
             defaultValue: value,
             overriddenValue: overrides[key],
           ),
