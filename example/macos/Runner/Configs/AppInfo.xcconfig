@@ -8,7 +8,7 @@
 PRODUCT_NAME = local_config_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.adrianotelesc.local_config_example
+PRODUCT_BUNDLE_IDENTIFIER = com.adrianotelesc.localconfigexample
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 com.adrianotelesc. All rights reserved.
