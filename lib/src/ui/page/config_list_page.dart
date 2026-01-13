@@ -63,7 +63,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
               key.containsInsensitive(query) ||
               value.value.containsInsensitive(query));
     });
-    final items = filtered.asRecords;
+    final items = filtered.toRecordList();
     setState(() => _items = items);
   }
 
