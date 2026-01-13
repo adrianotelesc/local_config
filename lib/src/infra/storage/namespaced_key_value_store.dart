@@ -14,7 +14,7 @@ class NamespacedKeyValueStore implements KeyValueStore {
        _inner = inner;
 
   @override
-  Future<Map<String, Object?>> get all async {
+  Future<Map<String, String>> get all async {
     final all = await _inner.all;
 
     final namespaced = all

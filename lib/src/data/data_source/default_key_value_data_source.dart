@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:local_config/src/core/storage/key_value_store.dart';
 import 'package:local_config/src/data/data_source/key_value_data_source.dart';
 
@@ -9,9 +7,9 @@ class DefaultKeyValueDataSource extends KeyValueDataSource {
   DefaultKeyValueDataSource({required KeyValueStore store}) : _store = store;
 
   @override
-  Future<Map<String, dynamic>> get all async {
+  Future<Map<String, String>> get all async {
     final all = await _store.all;
-    return all.map((key, value) => MapEntry(key, TypeSerializer.encode(value)));
+    return all.map((key, value) => MapEntry(key, value));
   }
 
   @override
@@ -24,8 +22,7 @@ class DefaultKeyValueDataSource extends KeyValueDataSource {
   }
 
   @override
-  Future<dynamic> get(String key) async =>
-      TypeSerializer.decode(await _store.getString(key));
+  Future<String?> get(String key) => _store.getString(key);
 
   @override
   Future<void> prune(Set<String> retainedKeys) async {
@@ -42,37 +39,5 @@ class DefaultKeyValueDataSource extends KeyValueDataSource {
   Future<void> remove(String key) => _store.remove(key);
 
   @override
-  Future<void> set(String key, dynamic value) =>
-      _store.setString(key, TypeSerializer.encode(value));
-}
-
-class TypeSerializer {
-  static String encode(dynamic value) {
-    return jsonEncode({'type': value.runtimeType.toString(), 'value': value});
-  }
-
-  static dynamic decode(String? jsonStr) {
-    if (jsonStr == null) return null;
-
-    final map = jsonDecode(jsonStr);
-    final type = map['type'];
-    final value = map['value'];
-
-    switch (type) {
-      case 'int':
-        return value as int;
-      case 'double':
-        return (value as num).toDouble();
-      case 'bool':
-        return value as bool;
-      case 'String':
-        return value as String;
-      case 'List':
-        return List<dynamic>.from(value);
-      case 'Map':
-        return Map<String, dynamic>.from(value);
-      default:
-        return value;
-    }
-  }
+  Future<void> set(String key, String value) => _store.setString(key, value);
 }

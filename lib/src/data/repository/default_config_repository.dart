@@ -28,7 +28,7 @@ class DefaultConfigRepository implements ConfigRepository {
   ConfigValue? get(String key) => _manager.get(key);
 
   @override
-  Future<void> populate(Map<String, dynamic> defaults) async {
+  Future<void> populate(Map<String, String> defaults) async {
     final overrides = await _dataSource.all;
 
     _manager.populate(defaults, overrides);
@@ -57,7 +57,7 @@ class DefaultConfigRepository implements ConfigRepository {
   }
 
   @override
-  Future<void> set(String key, dynamic value) async {
+  Future<void> set(String key, String value) async {
     final updated = _manager.update(key, value);
 
     if (!updated.isOverridden) {

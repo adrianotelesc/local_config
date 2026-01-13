@@ -1,13 +1,13 @@
 abstract class KeyValueDataSource {
-  Future<Map<String, dynamic>> get all;
+  Future<Map<String, String>> get all;
 
   Future<void> clear();
 
-  Future<dynamic> get(String key);
+  Future<String?> get(String key);
 
   Future<void> prune(Set<String> retainedKeys);
 
   Future<void> remove(String key);
 
-  Future<void> set(String key, dynamic value);
+  Future<void> set(String key, String value);
 }

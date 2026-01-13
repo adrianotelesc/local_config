@@ -9,7 +9,10 @@ class SharedPreferencesKeyValueStore extends KeyValueStore {
   }) : _sharedPreferences = sharedPreferences;
 
   @override
-  Future<Map<String, Object?>> get all => _sharedPreferences.getAll();
+  Future<Map<String, String>> get all async {
+    final all = await _sharedPreferences.getAll();
+    return all.map((key, value) => MapEntry(key, value?.toString() ?? ''));
+  }
 
   @override
   Future<String?> getString(String key) => _sharedPreferences.getString(key);

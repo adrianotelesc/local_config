@@ -17,6 +17,9 @@ final class LocalConfig {
     required Map<String, dynamic> parameters,
     KeyValueStore? keyValueStore,
   }) {
+    final stringfiedParameters = parameters.map((key, value) {
+      return MapEntry(key, value?.toString() ?? '');
+    });
     _serviceLocator
       ..registerFactory<KeyValueStore>(
         () => NamespacedKeyValueStore(
@@ -37,7 +40,7 @@ final class LocalConfig {
         () => DefaultConfigRepository(
           dataSource: _serviceLocator.get(),
           manager: _serviceLocator.get(),
-        )..populate(parameters),
+        )..populate(stringfiedParameters),
       );
   }
 

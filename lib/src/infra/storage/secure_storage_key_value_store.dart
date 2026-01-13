@@ -8,7 +8,7 @@ class SecureStorageKeyValueStore implements KeyValueStore {
     : _secureStorage = secureStorage;
 
   @override
-  Future<Map<String, Object?>> get all => _secureStorage.readAll();
+  Future<Map<String, String>> get all => _secureStorage.readAll();
 
   @override
   Future<String?> getString(String key) => _secureStorage.read(key: key);

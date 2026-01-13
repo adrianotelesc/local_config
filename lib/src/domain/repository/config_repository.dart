@@ -7,11 +7,11 @@ abstract class ConfigRepository {
 
   ConfigValue? get(String key);
 
-  Future<void> populate(Map<String, dynamic> defaults);
+  Future<void> populate(Map<String, String> defaults);
 
   Future<void> reset(String key);
 
   Future<void> resetAll();
 
-  Future<void> set(String key, dynamic value);
+  Future<void> set(String key, String value);
 }

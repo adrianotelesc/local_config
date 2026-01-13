@@ -1,5 +1,5 @@
 abstract class KeyValueStore {
-  Future<Map<String, Object?>> get all;
+  Future<Map<String, String>> get all;
 
   Future<String?> getString(String key);
 

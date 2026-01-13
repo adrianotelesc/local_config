@@ -43,7 +43,7 @@ void main() {
     test('all returns stringified map from KeyValueStore', () async {
       when(
         () => store.all,
-      ).thenAnswer((_) async => {'a': 1, 'b': true, 'c': 'str'});
+      ).thenAnswer((_) async => {'a': '1', 'b': 'true', 'c': 'str'});
 
       final result = await dataSource.all;
 
