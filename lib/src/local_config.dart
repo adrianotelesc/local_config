@@ -31,12 +31,12 @@ final class LocalConfig {
       ..registerFactory<KeyValueDataSource>(
         () => DefaultKeyValueDataSource(store: _serviceLocator.get()),
       )
-      ..registerFactory<ConfigStore>(() => DefaultConfigStore())
+      ..registerFactory<ConfigManager>(() => DefaultConfigStore())
       ..unregister<ConfigRepository>()
       ..registerLazySingleton<ConfigRepository>(
         () => DefaultConfigRepository(
           dataSource: _serviceLocator.get(),
-          store: _serviceLocator.get(),
+          manager: _serviceLocator.get(),
         )..populate(parameters),
       );
   }

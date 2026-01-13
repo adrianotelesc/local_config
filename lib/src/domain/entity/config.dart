@@ -1,11 +1,11 @@
 import 'package:local_config/src/common/extension/string_extension.dart';
 
-class LocalConfigValue {
+class ConfigValue {
   final dynamic defaultValue;
 
   final dynamic overriddenValue;
 
-  const LocalConfigValue({required this.defaultValue, this.overriddenValue});
+  const ConfigValue({required this.defaultValue, this.overriddenValue});
 
   @override
   int get hashCode => Object.hash(defaultValue, overriddenValue);
@@ -16,21 +16,21 @@ class LocalConfigValue {
   bool get isOverridden =>
       overriddenValue != null && overriddenValue != defaultValue;
 
-  LocalConfigType get type {
+  ConfigType get type {
     return switch (defaultValue) {
-      bool() => LocalConfigType.boolean,
-      num() => LocalConfigType.number,
-      Map() => LocalConfigType.json,
+      bool() => ConfigType.boolean,
+      num() => ConfigType.number,
+      Map() => ConfigType.json,
       String() => _inferTypeFromString(defaultValue),
       _ => throw Exception('Unsupported type: ${defaultValue.runtimeType}'),
     };
   }
 
-  LocalConfigType _inferTypeFromString(String value) {
-    if (value.asBoolOrNull != null) return LocalConfigType.boolean;
-    if (value.asDoubleOrNull != null) return LocalConfigType.number;
-    if (value.asMapOrNull != null) return LocalConfigType.json;
-    return LocalConfigType.string;
+  ConfigType _inferTypeFromString(String value) {
+    if (value.asBoolOrNull != null) return ConfigType.boolean;
+    if (value.asDoubleOrNull != null) return ConfigType.number;
+    if (value.asMapOrNull != null) return ConfigType.json;
+    return ConfigType.string;
   }
 
   dynamic get value => overriddenValue ?? defaultValue;
@@ -38,12 +38,12 @@ class LocalConfigValue {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is LocalConfigValue &&
+      other is ConfigValue &&
           defaultValue == other.defaultValue &&
           overriddenValue == other.overriddenValue;
 
-  LocalConfigValue copyWith({String? overriddenValue}) {
-    return LocalConfigValue(
+  ConfigValue copyWith({String? overriddenValue}) {
+    return ConfigValue(
       defaultValue: defaultValue,
       overriddenValue: overriddenValue,
     );
@@ -51,15 +51,14 @@ class LocalConfigValue {
 
   @override
   String toString() =>
-      'LocalConfigValue(default: $defaultValue, overridden: $overriddenValue)';
+      'ConfigValue(default: $defaultValue, overridden: $overriddenValue)';
 }
 
-enum LocalConfigType {
+enum ConfigType {
   boolean,
   number,
   string,
   json;
 
-  bool get isText =>
-      this == LocalConfigType.string || this == LocalConfigType.json;
+  bool get isText => this == ConfigType.string || this == ConfigType.json;
 }

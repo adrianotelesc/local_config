@@ -6,45 +6,45 @@ import 'package:local_config/src/ui/widget/text_editor/controller/string_editor_
 import 'package:local_config/src/common/extension/string_extension.dart';
 import 'package:local_config/src/domain/entity/config.dart';
 
-extension ConfigDisplayExtension on LocalConfigValue {
+extension ConfigDisplayExtension on ConfigValue {
   String getDisplayText(BuildContext context) {
-    return type == LocalConfigType.string && value.isEmpty
+    return type == ConfigType.string && value.isEmpty
         ? LocalConfigLocalizations.of(context)!.emptyString
         : value.toString();
   }
 }
 
-extension ConfigTypeExtension on LocalConfigType {
+extension ConfigTypeExtension on ConfigType {
   List<String> get presets {
-    return this == LocalConfigType.boolean ? ['false', 'true'] : [];
+    return this == ConfigType.boolean ? ['false', 'true'] : [];
   }
 
   String getDisplayName(BuildContext context) {
     return switch (this) {
-      LocalConfigType.boolean => LocalConfigLocalizations.of(context)!.boolean,
-      LocalConfigType.number => LocalConfigLocalizations.of(context)!.number,
-      LocalConfigType.string => 'String',
-      LocalConfigType.json => 'JSON',
+      ConfigType.boolean => LocalConfigLocalizations.of(context)!.boolean,
+      ConfigType.number => LocalConfigLocalizations.of(context)!.number,
+      ConfigType.string => 'String',
+      ConfigType.json => 'JSON',
     };
   }
 
   IconData get icon {
     return switch (this) {
-      LocalConfigType.boolean => Icons.toggle_on,
-      LocalConfigType.number => Icons.onetwothree,
-      LocalConfigType.string => Icons.abc,
-      LocalConfigType.json => Icons.data_object,
+      ConfigType.boolean => Icons.toggle_on,
+      ConfigType.number => Icons.onetwothree,
+      ConfigType.string => Icons.abc,
+      ConfigType.json => Icons.data_object,
     };
   }
 
   String? validator(BuildContext context, String? value) {
-    if (this == LocalConfigType.boolean && value?.asBoolOrNull == null) {
+    if (this == ConfigType.boolean && value?.asBoolOrNull == null) {
       return LocalConfigLocalizations.of(context)!.invalidBoolean;
     }
-    if (this == LocalConfigType.number && value?.asDoubleOrNull == null) {
+    if (this == ConfigType.number && value?.asDoubleOrNull == null) {
       return LocalConfigLocalizations.of(context)!.invalidNumber;
     }
-    if (this == LocalConfigType.json && value?.asMapOrNull == null) {
+    if (this == ConfigType.json && value?.asMapOrNull == null) {
       return LocalConfigLocalizations.of(context)!.invalidJson;
     }
     return null;
@@ -53,16 +53,16 @@ extension ConfigTypeExtension on LocalConfigType {
   // TODO: Refactor this.
   TextEditorController get textEditorController {
     return switch (this) {
-      LocalConfigType.json => JsonEditorController(),
+      ConfigType.json => JsonEditorController(),
       _ => StringEditorController(),
     };
   }
 
   TextSpan help(BuildContext context, {String name = 'name'}) {
     final suffixes = switch (this) {
-      LocalConfigType.boolean => ['Boolean'],
-      LocalConfigType.number => ['Int', 'Double'],
-      LocalConfigType.string || LocalConfigType.json => ['String'],
+      ConfigType.boolean => ['Boolean'],
+      ConfigType.number => ['Int', 'Double'],
+      ConfigType.string || ConfigType.json => ['String'],
     };
 
     return TextSpan(

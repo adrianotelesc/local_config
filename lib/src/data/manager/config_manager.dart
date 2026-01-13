@@ -1,13 +1,13 @@
 import 'package:local_config/src/domain/entity/config.dart';
 
-abstract class ConfigStore {
-  Map<String, LocalConfigValue> get configs;
+abstract class ConfigManager {
+  Map<String, ConfigValue> get configs;
 
   void populate(Map<String, dynamic> defaults, Map<String, dynamic> overrides);
 
-  LocalConfigValue? get(String key);
+  ConfigValue? get(String key);
 
-  LocalConfigValue update(String key, dynamic value);
+  ConfigValue update(String key, dynamic value);
 
   void updateAll(dynamic value);
 }

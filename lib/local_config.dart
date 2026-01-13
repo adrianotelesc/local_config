@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:local_config/src/data/store/config_store.dart';
-import 'package:local_config/src/data/store/default_config_store.dart';
+import 'package:local_config/src/data/manager/config_manager.dart';
+import 'package:local_config/src/data/manager/default_config_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:local_config/src/core/di/service_locator.dart';

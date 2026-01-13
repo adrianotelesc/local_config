@@ -3,14 +3,13 @@ import 'package:local_config/src/domain/repository/config_repository.dart';
 
 class NoOpConfigRepository implements ConfigRepository {
   @override
-  Map<String, LocalConfigValue> get configs => {};
+  Map<String, ConfigValue> get configs => {};
 
   @override
-  Stream<Map<String, LocalConfigValue>> get configsStream =>
-      const Stream.empty();
+  Stream<Map<String, ConfigValue>> get configsStream => const Stream.empty();
 
   @override
-  LocalConfigValue? get(String key) => null;
+  ConfigValue? get(String key) => null;
 
   @override
   Future<void> populate(Map<String, dynamic> defaults) async {}
