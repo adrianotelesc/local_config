@@ -95,6 +95,10 @@ class _ConfigListPageState extends State<ConfigListPage> {
             SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
             SliverToBoxAdapter(
               child: SwitchListTile(
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 0,
+                ),
                 title: Text(
                   LocalConfigLocalizations.of(context)!.showChangesOnly,
                 ),
@@ -109,13 +113,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
               ),
             ),
             SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
-            DecoratedSliver(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(24)),
-                color: Theme.of(context).colorScheme.surfaceContainerLow,
-              ),
-              sliver: _List(items: _items, repo: _repo),
-            ),
+            _List(items: _items, repo: _repo),
           ],
         ],
       ),
@@ -144,14 +142,20 @@ class _AppBar extends StatelessWidget {
           hasOverrides
               ? PreferredSize(
                 preferredSize: const Size.fromHeight(Callout.defaultHeight),
-                child: Callout.warning(
-                  icon: Icons.error,
-                  text: LocalConfigLocalizations.of(context)!.changesApplied,
-                  trailing: TextButton(
-                    onPressed: repo.resetAll,
-                    style: warningButtonStyle(context),
-                    child: Text(
-                      LocalConfigLocalizations.of(context)!.revertAll,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Callout.warning(
+                    icon: Icons.error,
+                    style: CalloutStyle(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    text: LocalConfigLocalizations.of(context)!.changesApplied,
+                    trailing: TextButton(
+                      onPressed: repo.resetAll,
+                      style: warningButtonStyle(context),
+                      child: Text(
+                        LocalConfigLocalizations.of(context)!.revertAll,
+                      ),
                     ),
                   ),
                 ),
@@ -284,7 +288,7 @@ class _SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: ClearableSearchBar(
           controller: controller,
           focusNode: focusNode,
@@ -303,65 +307,78 @@ class _List extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverMainAxisGroup(
-      slivers: [
-        if (items.isEmpty)
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            sliver: SliverToBoxAdapter(
-              child: Text(LocalConfigLocalizations.of(context)!.noResults),
-            ),
-          ),
-        if (items.isNotEmpty)
-          SliverList.separated(
-            itemCount: items.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
-            itemBuilder: (_, index) {
-              final (name, config) = items[index];
-              final isOverridden = config.isOverridden;
+    return SliverPadding(
+      padding: EdgeInsets.only(left: 12, right: 12, bottom: 16),
+      sliver: DecoratedSliver(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
+        ),
+        sliver: SliverMainAxisGroup(
+          slivers: [
+            if (items.isEmpty)
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                sliver: SliverToBoxAdapter(
+                  child: Text(LocalConfigLocalizations.of(context)!.noResults),
+                ),
+              ),
+            if (items.isNotEmpty)
+              SliverList.separated(
+                itemCount: items.length,
+                separatorBuilder: (_, __) => const Divider(height: 1),
+                itemBuilder: (_, index) {
+                  final (name, config) = items[index];
+                  final isOverridden = config.isOverridden;
 
-              return ExtendedListTile(
-                leading: Icon(config.type.icon),
-                style:
-                    isOverridden
-                        ? warningExtendedListTileStyle(context) //
-                        : null,
-                title: Text(name),
-                subtitle: Text(
-                  config.getDisplayText(context),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                top:
-                    isOverridden
-                        ? Callout.warning(
-                          style: CalloutStyle(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          icon: Icons.error,
-                          text: LocalConfigLocalizations.of(context)!.changed,
-                          trailing: TextButton(
-                            onPressed: () => repo.reset(name),
-                            style: warningButtonStyle(context),
-                            child: Text(
-                              LocalConfigLocalizations.of(context)!.revert,
-                            ),
-                          ),
-                        )
-                        : null,
-                trailing: IconButton(
-                  onPressed: () {
-                    Navigator.of(
-                      context,
-                    ).pushNamed(LocalConfigRoutes.configEdit, arguments: name);
-                  },
-                  icon: const Icon(Icons.edit),
-                ),
-              );
-            },
-          ),
-      ],
+                  return ExtendedListTile(
+                    leading: Icon(config.type.icon),
+                    style:
+                        isOverridden
+                            ? warningExtendedListTileStyle(context) //
+                            : null,
+                    title: Text(name),
+                    subtitle: Text(
+                      config.getDisplayText(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    top:
+                        isOverridden
+                            ? Callout.warning(
+                              style: CalloutStyle(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              icon: Icons.error,
+                              text:
+                                  LocalConfigLocalizations.of(context)!.changed,
+                              trailing: TextButton(
+                                onPressed: () => repo.reset(name),
+                                style: warningButtonStyle(context),
+                                child: Text(
+                                  LocalConfigLocalizations.of(context)!.revert,
+                                ),
+                              ),
+                            )
+                            : null,
+                    trailing: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          LocalConfigRoutes.configEdit,
+                          arguments: name,
+                        );
+                      },
+                      icon: const Icon(Icons.edit),
+                    ),
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
     );
-    ;
   }
 }

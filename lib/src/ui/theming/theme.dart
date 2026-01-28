@@ -17,11 +17,28 @@ final defaultTheme = ThemeData(
     backgroundColor: surface,
     surfaceTintColor: surface,
   ),
+  inputDecorationTheme: InputDecorationTheme(
+    focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+    border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+    disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+  ),
+  dropdownMenuTheme: DropdownMenuThemeData(
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+    ),
+    menuStyle: MenuStyle(
+      shape: WidgetStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 0)),
+    ),
+  ),
   bottomSheetTheme: const BottomSheetThemeData(shape: RoundedRectangleBorder()),
   searchBarTheme: SearchBarThemeData(
     shadowColor: const WidgetStatePropertyAll(Colors.transparent),
     shape: WidgetStatePropertyAll(
-      RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     ),
   ),
   filledButtonTheme: FilledButtonThemeData(
