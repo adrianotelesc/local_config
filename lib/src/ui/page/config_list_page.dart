@@ -308,7 +308,7 @@ class _List extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: EdgeInsets.only(left: 12, right: 12, bottom: 16),
+      padding: EdgeInsets.only(left: 12, right: 12, bottom: 32),
       sliver: DecoratedSliver(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -372,6 +372,7 @@ class _List extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.edit),
+                      tooltip: LocalConfigLocalizations.of(context)!.edit,
                     ),
                   );
                 },

@@ -30,6 +30,9 @@ class LocalConfigLocalizationsPt extends LocalConfigLocalizations {
   String get editParameter => 'Editar parâmetro';
 
   @override
+  String get edit => 'Editar';
+
+  @override
   String get save => 'Salvar';
 
   @override

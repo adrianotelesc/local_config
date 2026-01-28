@@ -30,6 +30,9 @@ class LocalConfigLocalizationsEn extends LocalConfigLocalizations {
   String get editParameter => 'Edit parameter';
 
   @override
+  String get edit => 'Edit';
+
+  @override
   String get save => 'Save';
 
   @override

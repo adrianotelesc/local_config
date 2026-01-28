@@ -6,6 +6,7 @@
     "revertAll": "Revert all",
     "revert": "Revert",
     "editParameter": "Edit parameter",
+    "edit": "Edit",
     "save": "Save",
     "parameterName": "Parameter name (key)",
     "dataType": "Data type",
