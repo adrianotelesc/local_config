@@ -127,8 +127,19 @@ class _AppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RootAwareSliverAppBar(
-      title: Text(LocalConfigLocalizations.of(context)!.localConfig),
-      centerTitle: false,
+      title: Row(
+        spacing: 8,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            'assets/images/logo.png',
+            package: 'local_config',
+            height: 24,
+          ),
+          Text(LocalConfigLocalizations.of(context)!.localConfig),
+        ],
+      ),
+      centerTitle: true,
       floating: true,
       pinned: true,
       bottom:
