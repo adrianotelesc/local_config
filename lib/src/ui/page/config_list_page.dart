@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:boxy/slivers.dart';
 import 'package:flutter/material.dart';
 import 'package:local_config/src/common/extension/map_extension.dart';
 import 'package:local_config/src/common/extension/string_extension.dart';
@@ -309,11 +310,11 @@ class _List extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: EdgeInsets.only(left: 12, right: 12, bottom: 32),
-      sliver: DecoratedSliver(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
+      sliver: SliverContainer(
+        background: ColoredBox(
           color: Theme.of(context).colorScheme.surfaceContainerLow,
         ),
+        borderRadius: BorderRadius.circular(16),
         sliver: SliverMainAxisGroup(
           slivers: [
             if (items.isEmpty)
