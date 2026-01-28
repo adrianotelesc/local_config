@@ -38,6 +38,7 @@ class _ConfigEditPageState extends State<ConfigEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
       body: CustomScrollView(
         slivers: [
           _AppBar(
@@ -81,6 +82,7 @@ class _AppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RootAwareSliverAppBar(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
       title: Text(LocalConfigLocalizations.of(context)!.editParameter),
       actionsPadding: const EdgeInsets.all(8),
       actions: [

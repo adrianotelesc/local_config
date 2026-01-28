@@ -30,15 +30,18 @@ class ExtendedListTile extends StatelessWidget {
             color: tileColor,
             child: top,
           ),
-        ListTile(
-          leading: leading,
-          title: title,
-          titleTextStyle: style?.titleTextStyle,
-          subtitle: subtitle,
-          subtitleTextStyle: style?.subtitleTextStyle,
-          trailing: trailing,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          tileColor: tileColor,
+        Container(
+          color: tileColor,
+          child: ListTile(
+            leading: leading,
+            title: title,
+            titleTextStyle: style?.titleTextStyle,
+            subtitle: subtitle,
+            subtitleTextStyle: style?.subtitleTextStyle,
+            trailing: trailing,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+            tileColor: tileColor,
+          ),
         ),
       ],
     );

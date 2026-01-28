@@ -46,6 +46,7 @@ class _TextEditorState extends State<TextEditor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
       appBar: _AppBar(
         title: widget.title,
         onCloseClick: pop,
@@ -94,6 +95,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
       title: Text(title),
       leading: IconButton(
         tooltip: 'Close',

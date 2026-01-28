@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class RootAwareSliverAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final Widget title;
+  final Color? backgroundColor;
   final bool centerTitle;
   final bool floating;
   final bool pinned;
@@ -13,6 +14,7 @@ class RootAwareSliverAppBar extends StatelessWidget
   const RootAwareSliverAppBar({
     super.key,
     required this.title,
+    this.backgroundColor,
     this.centerTitle = false,
     this.floating = false,
     this.pinned = false,
@@ -38,6 +40,7 @@ class RootAwareSliverAppBar extends StatelessWidget
     }
 
     return SliverAppBar(
+      backgroundColor: backgroundColor,
       automaticallyImplyLeading: false,
       leading: leading,
       title: title,

@@ -109,8 +109,13 @@ class _ConfigListPageState extends State<ConfigListPage> {
               ),
             ),
             SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
-            _List(items: _items, repo: _repo),
-            SliverToBoxAdapter(child: SizedBox.square(dimension: 32)),
+            DecoratedSliver(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(24)),
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+              ),
+              sliver: _List(items: _items, repo: _repo),
+            ),
           ],
         ],
       ),
@@ -305,58 +310,65 @@ class _List extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) {
-      return SliverFillRemaining(
-        hasScrollBody: false,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(LocalConfigLocalizations.of(context)!.noResults),
-        ),
-      );
-    }
-
-    return SliverList.separated(
-      itemCount: items.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
-      itemBuilder: (_, index) {
-        final (name, config) = items[index];
-        final isOverridden = config.isOverridden;
-
-        return ExtendedListTile(
-          leading: Icon(config.type.icon),
-          style:
-              isOverridden
-                  ? warningExtendedListTileStyle(context) //
-                  : null,
-          title: Text(name),
-          subtitle: Text(
-            config.getDisplayText(context),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+    return SliverMainAxisGroup(
+      slivers: [
+        if (items.isEmpty)
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            sliver: SliverToBoxAdapter(
+              child: Text(LocalConfigLocalizations.of(context)!.noResults),
+            ),
           ),
-          top:
-              isOverridden
-                  ? Callout.warning(
-                    style: CalloutStyle(borderRadius: BorderRadius.circular(8)),
-                    icon: Icons.error,
-                    text: LocalConfigLocalizations.of(context)!.changed,
-                    trailing: TextButton(
-                      onPressed: () => repo.reset(name),
-                      style: warningButtonStyle(context),
-                      child: Text(LocalConfigLocalizations.of(context)!.revert),
-                    ),
-                  )
-                  : null,
-          trailing: IconButton(
-            onPressed: () {
-              Navigator.of(
-                context,
-              ).pushNamed(LocalConfigRoutes.configEdit, arguments: name);
+        if (items.isNotEmpty)
+          SliverList.separated(
+            itemCount: items.length,
+            separatorBuilder: (_, __) => const Divider(height: 1),
+            itemBuilder: (_, index) {
+              final (name, config) = items[index];
+              final isOverridden = config.isOverridden;
+
+              return ExtendedListTile(
+                leading: Icon(config.type.icon),
+                style:
+                    isOverridden
+                        ? warningExtendedListTileStyle(context) //
+                        : null,
+                title: Text(name),
+                subtitle: Text(
+                  config.getDisplayText(context),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                top:
+                    isOverridden
+                        ? Callout.warning(
+                          style: CalloutStyle(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          icon: Icons.error,
+                          text: LocalConfigLocalizations.of(context)!.changed,
+                          trailing: TextButton(
+                            onPressed: () => repo.reset(name),
+                            style: warningButtonStyle(context),
+                            child: Text(
+                              LocalConfigLocalizations.of(context)!.revert,
+                            ),
+                          ),
+                        )
+                        : null,
+                trailing: IconButton(
+                  onPressed: () {
+                    Navigator.of(
+                      context,
+                    ).pushNamed(LocalConfigRoutes.configEdit, arguments: name);
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
+              );
             },
-            icon: const Icon(Icons.edit),
           ),
-        );
-      },
+      ],
     );
+    ;
   }
 }
