@@ -70,8 +70,12 @@ void main() async {
   await FirebaseRemoteConfig.instance.fetchAndActivate();
 
   await LocalConfig.instance.initialize(
-    parameters: FirebaseRemoteConfig.instance.getAll().map(
-      (key, value) => MapEntry(key, value.asString()),
+    parameters: Map.fromEntries(
+      _remoteConfig
+          .getAll()
+          .entries
+          .where((e) => e.value.source != ValueSource.valueStatic && e.value.source != ValueSource.valueDefault)
+          .map((e) => MapEntry(e.key, e.value.asString())),
     ),
   );
 
