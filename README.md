@@ -71,7 +71,7 @@ void main() async {
 
   await LocalConfig.instance.initialize(
     parameters: Map.fromEntries(
-      _remoteConfig
+      FirebaseRemoteConfig.instance
           .getAll()
           .entries
           .where((e) => e.value.source != ValueSource.valueStatic && e.value.source != ValueSource.valueDefault)
