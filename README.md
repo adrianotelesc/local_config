@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/adrianotelesc/local_config" align="center">
-        <img alt="Local Config" src="https://github.com/user-attachments/assets/a4c8f820-a52f-4921-b49e-d942e11426e8" />
+        <img alt="Local Config" src="https://github.com/adrianotelesc/local-config/blob/readme-banner-update/docs/images/banner.png" />
     </a>
 </p>
 
@@ -70,12 +70,8 @@ void main() async {
   await FirebaseRemoteConfig.instance.fetchAndActivate();
 
   await LocalConfig.instance.initialize(
-    parameters: Map.fromEntries(
-      FirebaseRemoteConfig.instance
-          .getAll()
-          .entries
-          .where((e) => e.value.source != ValueSource.valueStatic && e.value.source != ValueSource.valueDefault)
-          .map((e) => MapEntry(e.key, e.value.asString())),
+    parameters: FirebaseRemoteConfig.instance.getAll().map(
+      (key, value) => MapEntry(key, value.asString()),
     ),
   );
 
