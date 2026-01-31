@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://pub.dev/packages/local_config"><img src="https://img.shields.io/pub/v/local_config.svg" alt="Pub"></a>
-  <a href="https://github.com/felangel/bloc/actions"><img src="https://github.com/felangel/bloc/actions/workflows/main.yaml/badge.svg" alt="build"></a>
+  <a href="https://github.com/adrianotelesc/local-config/actions"><img src="https://github.com/adrianotelesc/local-config/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="https://codecov.io/gh/felangel/bloc"><img src="https://codecov.io/gh/felangel/Bloc/branch/master/graph/badge.svg" alt="codecov"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
 </p>
