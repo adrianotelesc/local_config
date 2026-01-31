@@ -10,21 +10,29 @@ abstract final class LocalConfigTheme {
   );
 
   static InputDecorationTheme get _inputDecorationTheme => InputDecorationTheme(
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(LocalConfigRadii.medium),
-      borderSide: BorderSide(color: _colorScheme.primary, width: 2),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(LocalConfigRadii.medium),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(LocalConfigRadius.medium),
       borderSide: BorderSide(color: _colorScheme.outline),
     ),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(LocalConfigRadii.medium),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(LocalConfigRadius.medium),
       borderSide: BorderSide(color: _colorScheme.outline),
     ),
     disabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(LocalConfigRadii.medium),
+      borderRadius: BorderRadius.circular(LocalConfigRadius.medium),
       borderSide: BorderSide(color: _colorScheme.onSurface.withAlpha(23)),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(LocalConfigRadius.medium),
+      borderSide: BorderSide(color: _colorScheme.primary, width: 2),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(LocalConfigRadius.medium),
+      borderSide: BorderSide(color: _colorScheme.error),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(LocalConfigRadius.medium),
+      borderSide: BorderSide(color: _colorScheme.error, width: 2),
     ),
   );
 
@@ -42,10 +50,9 @@ abstract final class LocalConfigTheme {
       menuStyle: MenuStyle(
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(LocalConfigRadii.medium),
+            borderRadius: BorderRadius.circular(LocalConfigRadius.medium),
           ),
         ),
-
         padding: WidgetStateProperty.all(
           const EdgeInsets.symmetric(vertical: 0),
         ),
