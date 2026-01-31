@@ -49,6 +49,7 @@ enum ConfigType {
 
   static ConfigType inferFromValue(String source) {
     if (bool.tryParse(source) != null) return ConfigType.boolean;
+    if (num.tryParse(source) != null) return ConfigType.number;
     if (tryJsonDecode(source) != null) return ConfigType.json;
     return ConfigType.string;
   }

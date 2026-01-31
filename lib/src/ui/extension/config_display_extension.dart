@@ -41,6 +41,9 @@ extension ConfigTypeExtension on ConfigType {
     if (this == ConfigType.boolean && bool.tryParse(value) == null) {
       return LocalConfigLocalizations.of(context)!.invalidBoolean;
     }
+    if (this == ConfigType.number && num.tryParse(value) == null) {
+      return LocalConfigLocalizations.of(context)!.invalidNumber;
+    }
     if (this == ConfigType.json && tryJsonDecode(value) == null) {
       return LocalConfigLocalizations.of(context)!.invalidJson;
     }
