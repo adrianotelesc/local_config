@@ -1,4 +1,15 @@
-# Local Config
+<p align="center">
+    <a href="https://github.com/adrianotelesc/local_config" align="center">
+        <img alt="Local Config" src="https://github.com/adrianotelesc/local-config/blob/readme-banner-update/docs/images/banner.png" />
+    </a>
+</p>
+
+<p align="center">
+  <a href="https://pub.dev/packages/local_config"><img src="https://img.shields.io/pub/v/local_config.svg" alt="Pub"></a>
+  <a href="https://github.com/adrianotelesc/local-config/actions"><img src="https://github.com/adrianotelesc/local-config/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="https://codecov.io/gh/adrianotelesc/local-config"><img src="https://codecov.io/gh/adrianotelesc/local-config/graph/badge.svg?token=SM8RpYH49p"/></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
+</p>
 
 Make changes to your app's default behavior and appearance by changing parameter values — just like Firebase Remote Config, but locally. It’s designed for teams that need flexibility to override parameters, test feature flags, and simulate Remote Config behavior directly on their devices.
 
@@ -34,11 +45,24 @@ void main() async {
 
   await LocalConfig.instance.initialize(
     parameters: {
-        'feature_enabled': 'true',
-        'api_base_url': 'https://api.myapp.com/v1',
-        'retry_attempts': '3',
-        'animation_speed': '1.25',
-        'theme': '{"seedColor": "#2196F3", "darkMode": false}',
+      'social_login_enabled': false,
+      'timeout_ms': 8000,
+      'animation_speed': 1.25,
+      'api_base_url': 'https://api.myapp.com/v1',
+      "checkout": {
+        "payment_methods": {
+          "allowed": ["credit_card", "pix", "boleto"],
+          "default": "credit_card",
+        },
+        "installments": {
+          "enabled": false,
+          "rules": [
+            {"max_installments": 3, "min_order_value": 0},
+            {"max_installments": 6, "min_order_value": 100},
+            {"max_installments": 10, "min_order_value": 300},
+          ],
+        },
+      },
     },
   );
 
@@ -87,11 +111,11 @@ IconButton(
 #### Get parameter values
 
 ```dart
-final featureEnabled = LocalConfig.instance.getBool('feature_enabled');
-final apiBaseUrl = LocalConfig.instance.getString('api_base_url');
-final retryAttempts = LocalConfig.instance.getInt('retry_attempts');
+final socialLoginEnabled = LocalConfig.instance.getBool('social_login_enabled');
+final timeoutMs = LocalConfig.instance.getInt('timeout_ms');
 final animatinoSpeed = LocalConfig.instance.getDouble('animation_speed');
-final theme = LocalConfig.instance.getString('theme');
+final apiBaseUrl = LocalConfig.instance.getString('api_base_url');
+final checkout = LocalConfig.instance.getString('checkout');
 ```
 
 #### Or listen for updates (if your implementation supports it)
