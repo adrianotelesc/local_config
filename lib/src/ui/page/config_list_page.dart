@@ -132,7 +132,7 @@ class _AppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return RootAwareSliverAppBar(
       title: Image.asset(
-        'assets/images/logotype.png',
+        'assets/images/logo.png',
         package: 'local_config',
         height: 24,
       ),
