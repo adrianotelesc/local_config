@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 
 class KeyNamespace {
-  static const String separator = '.';
+  static const String separator = '_';
 
   final String _base;
+
   final List<String> _segments;
 
   late final String _basePrefix = '$_base$separator';
@@ -13,14 +14,9 @@ class KeyNamespace {
 
   KeyNamespace({required String base, List<String> segments = const []})
     : assert(base.isNotEmpty, 'base cannot be empty'),
-      assert(!base.contains(separator), 'base cannot contain separator'),
       assert(
         segments.every((p) => p.isNotEmpty),
         'segments cannot contain empty',
-      ),
-      assert(
-        segments.every((p) => !p.contains(separator)),
-        'segments cannot contain separator',
       ),
       _base = base,
       _segments = List.unmodifiable(segments);
