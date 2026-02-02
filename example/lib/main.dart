@@ -53,8 +53,11 @@ class ExamplePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Local Config Example')),
       floatingActionButton: FloatingActionButton(
-        // todo: find a way to avoid singleton access here, just `showLocalConfigPage` or `LocalConfigPage`.
-        onPressed: () => LocalConfig.instance.showLocalConfigPage(context),
+        onPressed: () {
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => LocalConfigEntrypoint()));
+        },
         child: const Icon(Icons.edit),
       ),
       body: _ConfigListView(),
