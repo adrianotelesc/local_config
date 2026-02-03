@@ -75,12 +75,15 @@ class _ConfigListPageState extends State<ConfigListPage> {
   }
 
   void _updateItems() {
-    final query = _textController.text;
+    final query = _textController.text
+        .split(RegExp(r'\s+'))
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty);
     final filtered = _configs.where((key, value) {
       return (!showOnlyChanged || value.isOverridden) &&
           (query.isEmpty ||
-              key.containsInsensitive(query) ||
-              value.raw.containsInsensitive(query));
+              query.any((q) => key.containsInsensitive(q)) ||
+              query.any((q) => value.raw.containsInsensitive(q)));
     });
     final items = filtered.toRecordList();
     setState(() => _items = items);
