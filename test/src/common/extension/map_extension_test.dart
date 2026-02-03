@@ -1,76 +1,130 @@
-import 'dart:convert';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:local_config/src/common/extension/map_extension.dart';
 
 void main() {
-  group('MapExtension.whereKey', () {
-    final map = {'a': 1, 'b': 2, 'c': 3};
+  group('MapExtension', () {
+    group('where', () {
+      test('filters by key and value', () {
+        final map = {'a': 1, 'b': 2, 'c': 3};
 
-    test('returns filtered Map by key', () {
-      final result = map.where((key, value) => key != 'b');
+        final result = map.where((k, v) => v.isEven);
 
-      expect(result.length, 2);
-      expect(result.containsKey('a'), isTrue);
-      expect(result.containsKey('c'), isTrue);
-      expect(result.containsKey('b'), isFalse);
+        expect(result, {'b': 2});
+      });
+
+      test('returns empty map when none match', () {
+        final map = {'a': 1, 'b': 3};
+
+        final result = map.where((_, v) => v.isEven);
+
+        expect(result, isEmpty);
+      });
     });
 
-    test('returns empty map when no keys pass test', () {
-      final result = map.where((key, value) => key == 'z');
+    // ——————————————————————————
 
-      expect(result, isEmpty);
+    group('whereKey', () {
+      test('filters by key only', () {
+        final map = {'apple': 1, 'banana': 2, 'avocado': 3};
+
+        final result = map.whereKey((k) => k.startsWith('a'));
+
+        expect(result, {'apple': 1, 'avocado': 3});
+      });
+
+      test('returns empty map when no key matches', () {
+        final map = {'a': 1};
+
+        final result = map.whereKey((k) => k == 'z');
+
+        expect(result, isEmpty);
+      });
     });
 
-    test('returns full map when all keys pass test', () {
-      final result = map.where((key, value) => true);
+    // ——————————————————————————
 
-      expect(result, map);
-    });
-  });
+    group('toRecordList', () {
+      test('converts to list of records', () {
+        final map = {'a': 1, 'b': 2};
 
-  group('MapExtension.toRecordList', () {
-    test('returns list of (key, value) tuples', () {
-      const map = {'a': 1, 'b': 2, 'c': 3};
+        final result = map.toRecordList();
 
-      final result = map.toRecordList();
+        expect(result, contains(('a', 1)));
+        expect(result, contains(('b', 2)));
+        expect(result.length, 2);
+      });
 
-      expect(result.length, 3);
-      expect(result, contains(('a', 1)));
-      expect(result, contains(('b', 2)));
-      expect(result, contains(('c', 3)));
-    });
+      test('returns empty list for empty map', () {
+        final result = <String, int>{}.toRecordList();
 
-    test('returns empty list for empty map', () {
-      const map = {};
-
-      final result = map.toRecordList();
-
-      expect(result, isEmpty);
-    });
-  });
-
-  group('MapExtension.anyValue', () {
-    const map = {'a': 1, 'b': 2, 'c': 3};
-
-    test('returns true when map has any value passes test', () {
-      final result = map.anyValue((value) => value > 2);
-
-      expect(result, isTrue);
+        expect(result, isEmpty);
+      });
     });
 
-    test('returns false when map has none value passes test', () {
-      final result = map.anyValue((value) => value > 5);
+    // ——————————————————————————
 
-      expect(result, isFalse);
+    group('anyValue', () {
+      test('returns true when any value matches', () {
+        final map = {'a': 1, 'b': 4};
+
+        final result = map.anyValue((v) => v.isEven);
+
+        expect(result, isTrue);
+      });
+
+      test('returns false when no value matches', () {
+        final map = {'a': 1, 'b': 3};
+
+        final result = map.anyValue((v) => v.isEven);
+
+        expect(result, isFalse);
+      });
+
+      test('returns false for empty map', () {
+        final result = <String, int>{}.anyValue((v) => true);
+
+        expect(result, isFalse);
+      });
     });
 
-    test('returns false when map is empty', () {
-      const map = {};
+    // ——————————————————————————
 
-      final result = map.anyValue((value) => true);
+    group('mapValues', () {
+      test('maps values keeping keys', () {
+        final map = {'a': 1, 'b': 2};
 
-      expect(result, isFalse);
+        final result = map.mapValues((v) => 'num:$v');
+
+        expect(result, {'a': 'num:1', 'b': 'num:2'});
+      });
+
+      test('supports type change', () {
+        final map = {'a': 1};
+
+        final result = map.mapValues((v) => v.toDouble());
+
+        expect(result['a'], 1.0);
+      });
+    });
+
+    // ——————————————————————————
+
+    group('mapKeys', () {
+      test('maps keys keeping values', () {
+        final map = {'a': 1, 'b': 2};
+
+        final result = map.mapKeys((k) => k.toUpperCase());
+
+        expect(result, {'A': 1, 'B': 2});
+      });
+
+      test('supports key type change', () {
+        final map = {'1': 'a', '2': 'b'};
+
+        final result = map.mapKeys(int.parse);
+
+        expect(result, {1: 'a', 2: 'b'});
+      });
     });
   });
 }

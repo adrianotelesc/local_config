@@ -3,38 +3,57 @@ import 'package:local_config/src/common/extension/string_extension.dart';
 
 void main() {
   group('StringExtension.containsInsensitive', () {
-    const string = 'Hello World';
-
-    test('returns true when substring exists ignoring lowercase', () {
-      const substring = 'hello';
-
-      final result = string.containsInsensitive(substring);
-
-      expect(result, isTrue);
+    test('returns true for exact match', () {
+      expect('hello'.containsInsensitive('hello'), isTrue);
     });
 
-    test('returns true when substring exists ignoring uppercase', () {
-      const substring = 'WORLD';
-
-      final result = string.containsInsensitive(substring);
-
-      expect(result, isTrue);
+    test('returns true ignoring case', () {
+      expect('Hello'.containsInsensitive('hello'), isTrue);
+      expect('HELLO'.containsInsensitive('hello'), isTrue);
+      expect('hello'.containsInsensitive('HELLO'), isTrue);
     });
 
-    test('returns false when substring does not exist', () {
-      const substring = 'dart';
-
-      final result = string.containsInsensitive(substring);
-
-      expect(result, isFalse);
+    test('returns true for substring match', () {
+      expect('Hello World'.containsInsensitive('world'), isTrue);
     });
 
-    test('matches empty substring', () {
-      const substring = '';
+    test('returns true for substring at start', () {
+      expect('Flutter'.containsInsensitive('flu'), isTrue);
+    });
 
-      final result = string.containsInsensitive(substring);
+    test('returns true for substring at end', () {
+      expect('Flutter'.containsInsensitive('TER'), isTrue);
+    });
 
-      expect(result, isTrue);
+    test('returns false when not contained', () {
+      expect('hello'.containsInsensitive('xyz'), isFalse);
+    });
+
+    test('returns true when other is empty', () {
+      // String.contains('') is always true
+      expect('hello'.containsInsensitive(''), isTrue);
+    });
+
+    test('returns false when source is empty and other is not', () {
+      expect(''.containsInsensitive('a'), isFalse);
+    });
+
+    test('returns true when both are empty', () {
+      expect(''.containsInsensitive(''), isTrue);
+    });
+
+    test('works with spaces', () {
+      expect('Hello Big World'.containsInsensitive('big world'), isTrue);
+    });
+
+    test('works with simple unicode case folding', () {
+      expect('Árvore'.containsInsensitive('ár'), isTrue);
+    });
+
+    test('does not mutate original string behavior', () {
+      final string = 'Hello';
+      string.containsInsensitive('he');
+      expect(string, 'Hello'); // sanity check
     });
   });
 }

@@ -1,77 +1,160 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:local_config/src/common/util/key_namespace.dart';
+import 'package:local_config/src/core/model/key_namespace.dart';
 
 void main() {
   group('KeyNamespace', () {
-    test('throws assertion error when namespace is empty', () {
-      expect(() => KeyNamespace(namespace: ''), throwsA(isA<AssertionError>()));
+    group('construction', () {
+      test('creates with base only', () {
+        final namespace = KeyNamespace(base: 'app');
+
+        expect(namespace.base, 'app');
+        expect(namespace.segments, isEmpty);
+        expect(namespace.basePrefix, 'app_');
+        expect(namespace.qualifiedPrefix, 'app_');
+      });
+
+      test('creates with segments', () {
+        final namespace = KeyNamespace(base: 'app', segments: ['user', 'v1']);
+
+        expect(namespace.basePrefix, 'app_');
+        expect(namespace.qualifiedPrefix, 'app_user_v1_');
+      });
+
+      test('segments list is unmodifiable', () {
+        final namespace = KeyNamespace(base: 'app', segments: ['a']);
+
+        expect(() => namespace.segments.add('b'), throwsUnsupportedError);
+      });
+
+      test('throws assertion when base is empty', () {
+        expect(() => KeyNamespace(base: ''), throwsAssertionError);
+      });
+
+      test('throws assertion when a segment is empty', () {
+        expect(
+          () => KeyNamespace(base: 'app', segments: ['']),
+          throwsAssertionError,
+        );
+      });
     });
 
-    test('throws assertion error when separator is empty', () {
-      expect(
-        () => KeyNamespace(namespace: 'app', separator: ''),
-        throwsA(isA<AssertionError>()),
-      );
+    group('matches', () {
+      final namespace = KeyNamespace(base: 'app', segments: ['user']);
+
+      test('matchesBase detects base prefix', () {
+        expect(namespace.matchesBase('app_key'), isTrue);
+        expect(namespace.matchesBase('other_key'), isFalse);
+      });
+
+      test('matchesQualified detects qualified prefix', () {
+        expect(namespace.matchesQualified('app_user_key'), isTrue);
+        expect(namespace.matchesQualified('app_other_key'), isFalse);
+      });
     });
 
-    test('uses default separator ":" when not provided', () {
-      final ns = KeyNamespace(namespace: 'user');
-      expect(ns.apply('token'), 'user:token');
+    group('qualify', () {
+      final namespace = KeyNamespace(base: 'app', segments: ['user']);
+
+      test('qualifies plain key', () {
+        expect(namespace.qualify('theme'), 'app_user_theme');
+      });
+
+      test('is idempotent for qualified key', () {
+        const key = 'app_user_theme';
+
+        expect(namespace.qualify(key), key);
+      });
+
+      test('upgrades base-qualified key', () {
+        expect(namespace.qualify('app_theme'), 'app_user_theme');
+      });
+
+      test('throws on empty key', () {
+        expect(() => namespace.qualify(''), throwsArgumentError);
+      });
+
+      test('throws when key equals qualified prefix', () {
+        expect(() => namespace.qualify('app_user_'), throwsArgumentError);
+      });
+
+      test('throws when key equals base prefix', () {
+        expect(() => namespace.qualify('app_'), throwsArgumentError);
+      });
     });
 
-    test('apply() prefixes key with namespace and separator', () {
-      final ns = KeyNamespace(namespace: 'config', separator: '_');
+    group('strip', () {
+      final namespace = KeyNamespace(base: 'app', segments: ['user']);
 
-      final result = ns.apply('theme');
+      test('strips qualified prefix', () {
+        expect(namespace.strip('app_user_theme'), 'theme');
+      });
 
-      expect(result, 'config_theme');
+      test('strips base prefix', () {
+        expect(namespace.strip('app_theme'), 'theme');
+      });
+
+      test('returns original when not matching', () {
+        expect(namespace.strip('other_theme'), 'other_theme');
+      });
+
+      test('strip after qualify returns original leaf', () {
+        const leaf = 'theme';
+        final qualified = namespace.qualify(leaf);
+
+        expect(namespace.strip(qualified), leaf);
+      });
     });
 
-    test('matches() returns true when key starts with namespace prefix', () {
-      final ns = KeyNamespace(namespace: 'settings');
-      expect(ns.matches('settings:theme'), isTrue);
+    group('round-trip behavior', () {
+      final namespace = KeyNamespace(base: 'cfg', segments: ['v1']);
+
+      test('qualify → strip round trip', () {
+        const leaf = 'enabled';
+
+        final q = namespace.qualify(leaf);
+        final s = namespace.strip(q);
+
+        expect(s, leaf);
+      });
+
+      test('qualify is idempotent', () {
+        final q1 = namespace.qualify('flag');
+        final q2 = namespace.qualify(q1);
+
+        expect(q1, q2);
+      });
     });
 
-    test('matches() returns false when key does not start with namespace', () {
-      final ns = KeyNamespace(namespace: 'settings');
-      expect(ns.matches('theme'), isFalse);
+    group('toString', () {
+      test('returns qualified prefix', () {
+        final namespace = KeyNamespace(base: 'app', segments: ['x']);
+
+        expect(namespace.toString(), 'app_x_');
+      });
     });
 
-    test('strip() removes namespace prefix only once', () {
-      final ns = KeyNamespace(namespace: 'data', separator: '-');
+    group('equality', () {
+      test('equal when base and segments equal', () {
+        final a = KeyNamespace(base: 'app', segments: ['a']);
+        final b = KeyNamespace(base: 'app', segments: ['a']);
 
-      final result = ns.strip('data-key');
+        expect(a, equals(b));
+        expect(a.hashCode, equals(b.hashCode));
+      });
 
-      expect(result, 'key');
-    });
+      test('not equal when base differs', () {
+        final a = KeyNamespace(base: 'a');
+        final b = KeyNamespace(base: 'b');
 
-    test('strip() returns same key if prefix not present', () {
-      final ns = KeyNamespace(namespace: 'data', separator: '-');
+        expect(a, isNot(equals(b)));
+      });
 
-      final result = ns.strip('other-key');
+      test('not equal when segments differ', () {
+        final a = KeyNamespace(base: 'app', segments: ['a']);
+        final b = KeyNamespace(base: 'app', segments: ['b']);
 
-      expect(result, 'other-key');
-    });
-
-    test('matches, apply and strip are consistent together', () {
-      final ns = KeyNamespace(namespace: 'cfg');
-
-      const key = 'theme';
-      final namespaced = ns.apply(key);
-
-      expect(ns.matches(namespaced), isTrue);
-      expect(ns.strip(namespaced), key);
-    });
-
-    test('works correctly with multi-character separator', () {
-      final ns = KeyNamespace(namespace: 'myApp', separator: '::');
-
-      const key = 'token';
-      final result = ns.apply(key);
-
-      expect(result, 'myApp::token');
-      expect(ns.matches(result), isTrue);
-      expect(ns.strip(result), 'token');
+        expect(a, isNot(equals(b)));
+      });
     });
   });
 }
