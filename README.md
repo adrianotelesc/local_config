@@ -1,13 +1,13 @@
 <p align="center">
     <a href="https://github.com/adrianotelesc/local_config" align="center">
-        <img alt="Local Config" src="https://raw.githubusercontent.com/adrianotelesc/local-config/main/doc/images/banner.png" />
+        <img alt="Local Config" src="https://raw.githubusercontent.com/adrianotelesc/local_config/main/doc/images/banner.png" />
     </a>
 </p>
 
 <p align="center">
   <a href="https://pub.dev/packages/local_config"><img src="https://img.shields.io/pub/v/local_config.svg" alt="Pub"></a>
-  <a href="https://github.com/adrianotelesc/local-config/actions/workflows/ci.yml"><img src="https://github.com/adrianotelesc/local-config/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://codecov.io/gh/adrianotelesc/local-config"><img src="https://codecov.io/gh/adrianotelesc/local-config/graph/badge.svg?token=SM8RpYH49p"/></a>
+  <a href="https://github.com/adrianotelesc/local_config/actions/workflows/ci.yml"><img src="https://github.com/adrianotelesc/local_config/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://codecov.io/gh/adrianotelesc/local_config"><img src="https://codecov.io/gh/adrianotelesc/local_config/graph/badge.svg?token=SM8RpYH49p"/></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
 </p>
 
@@ -126,11 +126,11 @@ LocalConfig.instance.onConfigUpdated.listen((configs) {
 });
 ```
 
-For a full demo, check the [`example`](https://github.com/adrianotelesc/local-config/tree/main/example) folder.
+For a full demo, check the [`example`](https://github.com/adrianotelesc/local_config/tree/main/example) folder.
 
 ---
 
 ## Additional Information
 
-- Report issues or request features in the [GitHub Issues](https://github.com/adrianotelesc/local-config/issues)  
+- Report issues or request features in the [GitHub Issues](https://github.com/adrianotelesc/local_config/issues)  
 - Contributions are welcome! Feel free to open pull requests.

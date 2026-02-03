@@ -10,8 +10,8 @@ topics:
   - management
   - persistence
   - storage
-repository: https://github.com/adrianotelesc/local-config
-issue_tracker: https://github.com/adrianotelesc/local-config/issues
+repository: https://github.com/adrianotelesc/local_config
+issue_tracker: https://github.com/adrianotelesc/local_config/issues
 
 environment:
   sdk: ^3.7.0
