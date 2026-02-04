@@ -101,7 +101,6 @@ class _TextFormField extends StatelessWidget {
 
 class _DropdownMenu extends StatelessWidget {
   final TextStyle? textStyle;
-  final MenuStyle? menuStyle;
   final bool enabled;
   final TextEditingController controller;
   final List<DropdownMenuEntry<String>> entries;
@@ -109,7 +108,6 @@ class _DropdownMenu extends StatelessWidget {
   const _DropdownMenu({
     this.enabled = true,
     this.textStyle,
-    this.menuStyle,
     required this.controller,
     required this.entries,
   });
@@ -118,7 +116,6 @@ class _DropdownMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownMenu(
       enabled: enabled,
-      menuStyle: menuStyle,
       textStyle: textStyle?.copyWith(
         color: enabled ? null : textStyle?.color?.withAlpha(87),
       ),
