@@ -73,6 +73,8 @@ class _TextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      ignorePointers: false,
+      scrollPhysics: AlwaysScrollableScrollPhysics(),
       controller: controller,
       decoration: InputDecoration(
         border: const OutlineInputBorder(),
