@@ -4,7 +4,7 @@ set -e
 PACKAGE=$(grep '^name:' pubspec.yaml | sed 's/name:[[:space:]]*//')
 
 TEST_DIR="test"
-TEST_FILE="$TEST_DIR/${PACKAGE}_coverage_loader_test.g.dart"
+TEST_FILE="$TEST_DIR/${PACKAGE}_coverage_loader_test.dart"
 TMP_FILE="$TEST_FILE.tmp"
 
 mkdir -p "$TEST_DIR"
