@@ -144,10 +144,7 @@ class _Form extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     spacing: 8,
                     children: [
-                      Text(
-                        LocalConfigLocalizations.of(context).parameterName,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
+                      Text(LocalConfigLocalizations.of(context).parameterName),
                       const Icon(Icons.help_outline, size: 16),
                     ],
                   ),

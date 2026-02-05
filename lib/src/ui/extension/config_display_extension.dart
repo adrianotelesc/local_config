@@ -73,18 +73,25 @@ extension ConfigTypeExtension on ConfigType {
             children: [
               TextSpan(
                 text: '\nconfig.get$suffix("',
-                style: const TextStyle(fontFamily: 'monospace'),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontFamily: 'GoogleSansCode',
+                  color: ColorScheme.of(context).surface,
+                ),
               ),
               TextSpan(
                 text: name,
-                style: const TextStyle(
-                  fontFamily: 'monospace',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontFamily: 'GoogleSansCode',
                   fontWeight: FontWeight.bold,
+                  color: ColorScheme.of(context).surface,
                 ),
               ),
-              const TextSpan(
+              TextSpan(
                 text: '");',
-                style: TextStyle(fontFamily: 'monospace'),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontFamily: 'GoogleSansCode',
+                  color: ColorScheme.of(context).surface,
+                ),
               ),
             ],
           );

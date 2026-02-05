@@ -88,6 +88,12 @@ abstract final class LocalConfigTheme {
       selectionColor: _colorScheme.primary.withAlpha(102),
       selectionHandleColor: _colorScheme.primary,
     ),
+    tooltipTheme: TooltipThemeData(
+      decoration: BoxDecoration(
+        color: _colorScheme.onSurfaceVariant,
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
     extensions: [
       ExtendedColorScheme(
         warning: Color(0XFFFFB300),
