@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_config/src/ui/widget/text_editor/controller/text_editor_controller.dart';
 import 'package:re_editor/re_editor.dart';
-import 'package:re_highlight/languages/json.dart';
-import 'package:re_highlight/styles/atom-one-dark.dart';
 
 // TODO: Refactor everything about text editor.
 
@@ -63,7 +61,10 @@ class _TextEditorState extends State<TextEditor> {
                 );
               },
             ),
-          _Editor(textController: _textController),
+          _Editor(
+            textController: _textController,
+            textEditorController: widget.controller,
+          ),
         ],
       ),
     );
@@ -169,9 +170,13 @@ class _FormattingBar extends StatelessWidget {
 }
 
 class _Editor extends StatelessWidget {
-  const _Editor({required this.textController});
+  const _Editor({
+    required this.textController,
+    required this.textEditorController,
+  });
 
   final CodeLineEditingController textController;
+  final TextEditorController textEditorController;
 
   @override
   Widget build(BuildContext context) {
@@ -202,12 +207,7 @@ class _Editor extends StatelessWidget {
             ],
           );
         },
-        style: CodeEditorStyle(
-          codeTheme: CodeHighlightTheme(
-            languages: {'json': CodeHighlightThemeMode(mode: langJson)},
-            theme: atomOneDarkTheme,
-          ),
-        ),
+        style: textEditorController.editorStyle,
       ),
     );
   }
