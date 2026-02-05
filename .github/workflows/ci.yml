@@ -65,6 +65,11 @@ jobs:
       - name: Generate coverage loader
         run: bash ./tool/gen_coverage_loader.sh
 
+      - name: Verify loader exists
+        run: |
+          ls test
+          cat test/*coverage_loader_test.dart
+
       - name: Run tests
         run: flutter test --fail-fast --coverage
 
