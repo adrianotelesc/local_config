@@ -92,7 +92,7 @@ void main() async {
 }
 
 ```
-> **⚠️ Warning**: When using [`RemoteConfigValue.asString()`](https://pub.dev/documentation/firebase_remote_config/latest/firebase_remote_config/RemoteConfigValue/asString.html) from [firebase_remote_config](https://pub.dev/packages/firebase_remote_config) package, the returned value may not always match the expected logical type. For example, booleans can sometimes come as numeric strings (`"0"` or `"1"`) instead of `"true"` or `"false"`.
+> **⚠️ Warning**: When using [`RemoteConfigValue.asString()`](https://pub.dev/documentation/firebase_remote_config/latest/firebase_remote_config/RemoteConfigValue/asString.html) from the [firebase_remote_config](https://pub.dev/packages/firebase_remote_config) package, the returned value may not always match the expected logical type. For example, boolean values may sometimes come as numeric strings (`"0"` or `"1"`) instead of `"true"` or `"false"`.
 
 #### Navigate to built-in entrypoint widget
 
