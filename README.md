@@ -92,7 +92,7 @@ void main() async {
 }
 
 ```
-> **⚠️ Warning**: When using remoteValue.asString() from Firebase Remote Config, the returned value may not always match the expected logical type. For example, booleans can sometimes come as numeric strings ("0" or "1") instead of "true" or "false". Because of this behavior, Local Config may end up treating the parameter as a different type than originally defined in the Remote Config interface. This is not a blocking issue, just an implementation detail to keep in mind when reading values.
+> **⚠️ Warning**: When using remoteValue.asString() from Firebase Remote Config, the returned value may not always match the expected logical type. For example, booleans can sometimes come as numeric strings ("0" or "1") instead of "true" or "false".
 
 #### Navigate to built-in entrypoint widget
 
