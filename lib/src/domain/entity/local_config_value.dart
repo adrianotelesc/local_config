@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:local_config/src/common/util/json_safe_convert.dart';
+import 'package:local_config/src/common/utils/type_converters.dart';
 
 class LocalConfigValue {
   final String defaultValue;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:local_config/src/common/util/json_safe_convert.dart';
+import 'package:local_config/src/common/utils/type_converters.dart';
 import 'package:local_config/src/domain/entity/local_config_value.dart';
 import 'package:local_config/src/ui/l10n/local_config_localizations.dart';
 import 'package:local_config/src/ui/widget/text_editor/controller/text_editor_controller.dart';

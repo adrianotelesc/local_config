@@ -1,5 +1,6 @@
-import 'package:local_config/src/common/extension/map_extension.dart';
-import 'package:local_config/src/common/util/key_validation.dart';
+import 'package:local_config/src/common/extensions/map_extension.dart';
+import 'package:local_config/src/common/extensions/string_extension.dart';
+import 'package:local_config/src/common/utils/case_validators.dart';
 import 'package:local_config/src/core/model/key_namespace.dart';
 import 'package:local_config/src/core/storage/key_value_store.dart';
 import 'package:local_config/src/data/data_source/key_value_data_source.dart';
@@ -39,7 +40,13 @@ class DefaultKeyValueDataSource extends KeyValueDataSource {
 
   @override
   Future<void> set(String key, String value) async {
-    keyValidate(key);
+    if (isSnakeCase(key)) {
+      throw ArgumentError.value(
+        key,
+        'key',
+        'The parameter key must start with an English letter or underscore character [A-Z, a-z], and may also include numbers.',
+      );
+    }
 
     await _store.setString(_namespace.qualify(key), value);
   }

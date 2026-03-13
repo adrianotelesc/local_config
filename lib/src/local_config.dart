@@ -1,5 +1,5 @@
-import 'package:local_config/src/common/util/boolify.dart';
-import 'package:local_config/src/common/util/key_validation.dart';
+import 'package:local_config/src/common/extensions/map_extension.dart';
+import 'package:local_config/src/common/utils/type_converters.dart';
 import 'package:local_config/src/domain/entity/local_config_settings.dart';
 import 'package:local_config/src/domain/entity/local_config_update.dart';
 import 'package:local_config/src/domain/entity/local_config_value.dart';
@@ -10,9 +10,7 @@ import 'package:local_config/src/domain/policy/missing_retained_key_prune_policy
 import 'package:local_config/src/domain/policy/prune_policy.dart';
 import 'package:local_config/src/infra/di/internal_service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:local_config/src/common/extension/map_extension.dart';
 import 'package:local_config/src/core/model/key_namespace.dart';
-import 'package:local_config/src/common/util/stringify.dart';
 import 'package:local_config/src/core/storage/key_value_store.dart';
 import 'package:local_config/src/data/data_source/default_key_value_data_source.dart';
 import 'package:local_config/src/data/data_source/key_value_data_source.dart';
@@ -82,9 +80,6 @@ final class LocalConfig {
   }
 
   Future<void> setDefaults(Map<String, Object> defaults) async {
-    for (final key in defaults.keys) {
-      keyValidate(key);
-    }
     final repo = serviceLocator.get<ConfigRepository>();
     await repo.populate(defaults.mapValues((Object value) => stringify(value)));
   }
@@ -102,7 +97,7 @@ final class LocalConfig {
   bool? getBool(String key) {
     final value = getValue(key);
     if (value == null) return null;
-    return tryBoolify(value.raw);
+    return tryParseBool(value.raw);
   }
 
   double? getDouble(String key) {

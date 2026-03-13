@@ -1,4 +1,4 @@
-import 'package:local_config/src/common/util/key_validation.dart';
+import 'package:local_config/src/common/utils/case_validators.dart';
 import 'package:local_config/src/domain/entity/local_config_value.dart';
 import 'package:local_config/src/domain/manager/config_manager.dart';
 
@@ -32,10 +32,6 @@ class DefaultConfigManager implements ConfigManager {
     Map<String, dynamic> defaultParameters,
     Map<String, dynamic> overrideParameters,
   ) {
-    for (final key in defaultParameters.keys) {
-      keyValidate(key);
-    }
-
     _configs.addAll(
       defaultParameters.map((key, value) {
         return MapEntry(

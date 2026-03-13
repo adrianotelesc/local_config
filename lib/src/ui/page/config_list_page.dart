@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:boxy/slivers.dart';
 import 'package:flutter/material.dart';
-import 'package:local_config/src/common/extension/map_extension.dart';
-import 'package:local_config/src/common/extension/string_extension.dart';
+import 'package:local_config/src/common/extensions/map_extension.dart';
+import 'package:local_config/src/common/extensions/string_extension.dart';
 import 'package:local_config/src/core/di/service_locator.dart';
 import 'package:local_config/src/domain/repository/config_repository.dart';
 import 'package:local_config/src/ui/l10n/local_config_localizations.dart';

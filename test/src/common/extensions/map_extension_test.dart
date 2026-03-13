@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:local_config/src/common/extension/map_extension.dart';
+import 'package:local_config/src/common/extensions/map_extension.dart';
 
 void main() {
   group('MapExtension', () {

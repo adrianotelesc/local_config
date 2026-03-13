@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:local_config/src/common/util/json_safe_convert.dart';
+import 'package:local_config/src/common/utils/type_converters.dart';
 
 void main() {
   group('tryJsonDecode', () {
