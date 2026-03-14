@@ -30,9 +30,18 @@ class DefaultConfigRepository implements ConfigRepository {
 
   @override
   Future<void> populate(Map<String, String> defaultParameters) async {
-    await _dataSource.prune(defaultParameters);
+    final retainedKeys = defaultParameters.keys.toSet();
+
+    await _dataSource.prune(retainedKeys);
 
     final overrideParameters = await _dataSource.all;
+
+    for (final key in retainedKeys) {
+      if (defaultParameters[key] == overrideParameters[key]) {
+        overrideParameters.remove(key);
+        _dataSource.remove(key);
+      }
+    }
 
     _manager.populate(defaultParameters, overrideParameters);
   }

@@ -6,4 +6,8 @@ abstract class KeyValueStore {
   Future<void> setString(String key, String value);
 
   Future<void> remove(String key);
+
+  Future<void> clear();
+
+  Future<void> prune(Set<String> retainedKeys);
 }

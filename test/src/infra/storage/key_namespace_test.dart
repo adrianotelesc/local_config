@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:local_config/src/core/model/key_namespace.dart';
+import 'package:local_config/src/infra/storage/key_namespace.dart';
 
 void main() {
   group('KeyNamespace', () {

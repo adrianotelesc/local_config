@@ -1,36 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:local_config/src/core/model/key_namespace.dart';
 import 'package:local_config/src/core/storage/key_value_store.dart';
 import 'package:local_config/src/data/data_source/default_key_value_data_source.dart';
-import 'package:local_config/src/domain/policy/prune_policy.dart';
 
 class MockKeyValueStore extends Mock implements KeyValueStore {}
 
-class MockKeyValuePrunePolicy extends Mock implements KeyValuePrunePolicy {}
-
 void main() {
   late MockKeyValueStore store;
-  late MockKeyValuePrunePolicy prunePolicy;
-  late KeyNamespace namespace;
   late DefaultKeyValueDataSource dataSource;
 
   setUpAll(() {
-    registerFallbackValue(KeyNamespace(base: 'fallback'));
     registerFallbackValue(const MapEntry<String, String>('k', 'v'));
   });
 
   setUp(() {
     store = MockKeyValueStore();
-    prunePolicy = MockKeyValuePrunePolicy();
-    namespace = KeyNamespace(base: 'cfg', segments: ['v1']);
 
-    dataSource = DefaultKeyValueDataSource(
-      namespace: namespace,
-      store: store,
-      prunePolicy: prunePolicy,
-    );
+    dataSource = DefaultKeyValueDataSource(store: store);
   });
 
   group('all', () {
@@ -109,50 +96,13 @@ void main() {
         (_) async => {'cfg_v1_a': '1', 'cfg_v1_b': '2', 'other': '3'},
       );
 
-      when(
-        () => prunePolicy.shouldRemove(
-          namespace: namespace,
-          entry: any(named: 'entry'),
-          retained: any(named: 'retained'),
-        ),
-      ).thenAnswer((invocation) {
-        final entry =
-            invocation.namedArguments[#entry] as MapEntry<String, String>;
-        return entry.key == 'cfg_v1_b';
-      });
-
       when(() => store.remove(any())).thenAnswer((_) async {});
 
-      await dataSource.prune({'a': '1'});
+      await dataSource.prune({'a'});
 
       verify(() => store.remove('cfg_v1_b')).called(1);
       verifyNever(() => store.remove('cfg_v1_a'));
       verifyNever(() => store.remove('other'));
-    });
-
-    test('passes correct namespace to policy', () async {
-      when(() => store.all).thenAnswer((_) async => {'cfg_v1_a': '1'});
-
-      when(
-        () => prunePolicy.shouldRemove(
-          namespace: namespace,
-          entry: any(named: 'entry'),
-          retained: any(named: 'retained'),
-        ),
-      ).thenReturn(false);
-
-      await dataSource.prune({});
-
-      final captured =
-          verify(
-            () => prunePolicy.shouldRemove(
-              namespace: captureAny(named: 'namespace'),
-              entry: captureAny(named: 'entry'),
-              retained: captureAny(named: 'retained'),
-            ),
-          ).captured;
-
-      expect(captured.first, same(namespace));
     });
   });
 }

@@ -23,4 +23,16 @@ class SharedPreferencesKeyValueStore extends KeyValueStore {
   @override
   Future<void> setString(String key, String value) =>
       _sharedPreferences.setString(key, value);
+
+  @override
+  Future<void> clear() => _sharedPreferences.clear();
+
+  @override
+  Future<void> prune(Set<String> retainedKeys) async {
+    for (final key in (await all).keys) {
+      if (!retainedKeys.contains(key)) {
+        _sharedPreferences.remove(key);
+      }
+    }
+  }
 }

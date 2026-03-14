@@ -19,4 +19,16 @@ class SecureStorageKeyValueStore implements KeyValueStore {
   @override
   Future<void> setString(String key, String value) =>
       _secureStorage.write(key: key, value: value);
+
+  @override
+  Future<void> clear() => _secureStorage.deleteAll();
+
+  @override
+  Future<void> prune(Set<String> retainedKeys) async {
+    for (final key in (await all).keys) {
+      if (!retainedKeys.contains(key)) {
+        _secureStorage.delete(key: key);
+      }
+    }
+  }
 }

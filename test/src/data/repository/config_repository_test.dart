@@ -32,7 +32,7 @@ void main() {
 
       await repo.populate({'a': '1'});
 
-      verify(() => dataSource.prune({'a': '1'})).called(1);
+      verify(() => dataSource.prune({'a'})).called(1);
       verify(() => manager.populate({'a': '1'}, {'a': '2'})).called(1);
     });
   });
