@@ -64,7 +64,7 @@ class _ConfigListView extends StatefulWidget {
 }
 
 class _ConfigListViewState extends State<_ConfigListView> {
-  List<MapEntry<String, Object>> _configEntries = [];
+  List<MapEntry<String, LocalConfigValue>> _configEntries = [];
 
   StreamSubscription? _configUpdateSub;
 
@@ -97,7 +97,7 @@ class _ConfigListViewState extends State<_ConfigListView> {
         final key = configEntry.key;
         final value = configEntry.value;
 
-        return ListTile(title: Text(key), subtitle: Text(value.toString()));
+        return ListTile(title: Text(key), subtitle: Text(value.asString));
       },
     );
   }

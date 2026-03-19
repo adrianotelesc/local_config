@@ -1,5 +1,4 @@
-synthetic-package: false
-arb-dir: lib/src/ui/l10n
+arb-dir: lib/src/presentation/l10n
 template-arb-file: local_config_en.arb
 output-localization-file: local_config_localizations.dart
 output-class: LocalConfigLocalizations
