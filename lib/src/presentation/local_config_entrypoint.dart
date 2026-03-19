@@ -9,7 +9,9 @@ import 'package:local_config/src/presentation/page/config_list_page.dart';
 import 'package:local_config/src/presentation/local_config_theme.dart';
 import 'package:provider/provider.dart';
 
+/// The entry point widget for Local Config UI.
 class LocalConfigEntrypoint extends StatelessWidget {
+  /// Creates a entry point for Local Config UI.
   const LocalConfigEntrypoint({super.key});
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:local_config/src/core/persistence/key_value_storage.dart';
 
+/// A KeyValueStorage implementation that uses FlutterSecureStorage for secure data storage.
 class SecureStorageKeyValueStorage implements KeyValueStorage {
   final FlutterSecureStorage _secureStorage;
 

@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:local_config/src/core/persistence/key_value_storage.dart';
 
+/// A KeyValueStorage implementation that uses SharedPreferences for data storage.
 class SharedPreferencesKeyValueStorage extends KeyValueStorage {
   final SharedPreferencesAsync _sharedPreferences;
 
