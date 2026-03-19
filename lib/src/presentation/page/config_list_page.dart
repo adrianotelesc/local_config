@@ -6,7 +6,7 @@ import 'package:local_config/src/common/extensions/map_extension.dart';
 import 'package:local_config/src/common/extensions/string_extension.dart';
 import 'package:local_config/src/core/di/service_locator.dart';
 import 'package:local_config/src/domain/repository/local_config_repository.dart';
-import 'package:local_config/src/presentation/l10n/local_config_localizations.dart';
+import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
 import 'package:local_config/src/presentation/local_config_routes.dart';
 import 'package:local_config/src/presentation/local_config_theme.dart';
 import 'package:local_config/src/presentation/extensions/config_display_extension.dart';

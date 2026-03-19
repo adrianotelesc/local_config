@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:local_config/src/core/di/service_locator.dart';
 import 'package:local_config/src/infrastructure/di/internal_service_locator.dart';
-import 'package:local_config/src/presentation/l10n/local_config_localizations.dart';
+import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
 import 'package:local_config/src/presentation/local_config_routes.dart';
 import 'package:local_config/src/presentation/page/config_edit_page.dart';
 import 'package:local_config/src/presentation/page/config_list_page.dart';

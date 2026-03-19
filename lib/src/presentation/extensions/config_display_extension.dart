@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_config/src/common/utils/type_converters.dart';
 import 'package:local_config/src/domain/entity/local_config_value.dart';
-import 'package:local_config/src/presentation/l10n/local_config_localizations.dart';
+import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
 import 'package:local_config/src/presentation/widget/text_editor/controller/text_editor_controller.dart';
 import 'package:local_config/src/presentation/widget/text_editor/controller/json_editor_controller.dart';
 import 'package:local_config/src/presentation/widget/text_editor/controller/string_editor_controller.dart';

@@ -3,7 +3,7 @@ import 'package:local_config/src/core/di/service_locator.dart';
 import 'package:local_config/src/domain/repository/local_config_repository.dart';
 import 'package:local_config/src/presentation/extensions/config_display_extension.dart';
 import 'package:local_config/src/domain/entity/local_config_value.dart';
-import 'package:local_config/src/presentation/l10n/local_config_localizations.dart';
+import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
 import 'package:local_config/src/presentation/widget/root_aware_sliver_app_bar.dart';
 import 'package:local_config/src/presentation/widget/text_editor/text_editor.dart';
 import 'package:local_config/src/presentation/widget/input_form_field.dart';
