@@ -40,7 +40,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
 
   var _configs = <String, LocalConfigValue>{};
 
-  var _items = <(String, LocalConfigValue)>[];
+  var _items = <MapEntry<String, LocalConfigValue>>[];
 
   var _hasOverrides = false;
 
@@ -89,7 +89,7 @@ class _ConfigListPageState extends State<ConfigListPage> {
                 (q) => [key, value.asString].join().containsInsensitive(q),
               ));
     });
-    final items = filtered.toRecordList();
+    final items = filtered.entries.toList();
     setState(() {
       _terms = _terms;
       _items = items;
@@ -346,7 +346,7 @@ class _SearchBar extends StatelessWidget {
 
 class _List extends StatelessWidget {
   final List<String> terms;
-  final List<(String, LocalConfigValue)> items;
+  final List<MapEntry<String, LocalConfigValue>> items;
   final LocalConfigRepository repo;
 
   const _List({required this.items, required this.repo, this.terms = const []});
@@ -377,7 +377,8 @@ class _List extends StatelessWidget {
                 itemCount: items.length,
                 separatorBuilder: (_, __) => const Divider(height: 1),
                 itemBuilder: (_, index) {
-                  final (name, config) = items[index];
+                  final item = items[index];
+                  final (name, config) = (item.key, item.value);
                   final isOverridden = config.hasOverride;
 
                   return ExtendedListTile(

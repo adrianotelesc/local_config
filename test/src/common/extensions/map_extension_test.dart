@@ -20,23 +20,5 @@ void main() {
         expect(result, isEmpty);
       });
     });
-
-    group('toRecordList', () {
-      test('converts to list of records', () {
-        final map = {'a': 1, 'b': 2};
-
-        final result = map.toRecordList();
-
-        expect(result, contains(('a', 1)));
-        expect(result, contains(('b', 2)));
-        expect(result.length, 2);
-      });
-
-      test('returns empty list for empty map', () {
-        final result = <String, int>{}.toRecordList();
-
-        expect(result, isEmpty);
-      });
-    });
   });
 }
