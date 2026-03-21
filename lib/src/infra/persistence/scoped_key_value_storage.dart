@@ -1,16 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:local_config/src/common/utils/case_validators.dart';
 import 'package:local_config/src/core/persistence/key_value_storage.dart';
+import 'package:local_config/src/infra/models/key_namespace.dart';
 
 class ScopedKeyValueStorage implements KeyValueStorage {
-  final KeyNamespace _namespace;
-  final KeyValueStorage _delegate;
-
   ScopedKeyValueStorage({
     required KeyNamespace namespace,
     required KeyValueStorage delegate,
   }) : _namespace = namespace,
        _delegate = delegate;
+
+  final KeyNamespace _namespace;
+
+  final KeyValueStorage _delegate;
 
   @override
   Future<Map<String, String>> get all async {
@@ -27,9 +28,6 @@ class ScopedKeyValueStorage implements KeyValueStorage {
       _delegate.getString(_namespace.qualify(key));
 
   @override
-  Future<void> remove(String key) => _delegate.remove(_namespace.qualify(key));
-
-  @override
   Future<void> setString(String key, String value) {
     if (!isSnakeCase(key)) {
       throw ArgumentError.value(
@@ -43,14 +41,7 @@ class ScopedKeyValueStorage implements KeyValueStorage {
   }
 
   @override
-  Future<void> clear() async {
-    final all = await _delegate.all;
-    for (final key in all.keys) {
-      if (_namespace.hasBasePrefix(key)) {
-        await _delegate.remove(key);
-      }
-    }
-  }
+  Future<void> remove(String key) => _delegate.remove(_namespace.qualify(key));
 
   @override
   Future<void> prune(Set<String> retainedKeys) async {
@@ -73,74 +64,14 @@ class ScopedKeyValueStorage implements KeyValueStorage {
       }
     }
   }
-}
 
-class KeyNamespace {
-  static const String separator = '_';
-
-  final String _base;
-
-  final List<String> _segments;
-
-  late final String _basePrefix = '$_base$separator';
-
-  late final String _qualifiedPrefix =
-      [_base, ..._segments].join(separator) + separator;
-
-  KeyNamespace({required String base, List<String> segments = const []})
-    : assert(base.isNotEmpty, 'base cannot be empty'),
-      assert(
-        segments.every((p) => p.isNotEmpty),
-        'segments cannot contain empty',
-      ),
-      _base = base,
-      _segments = List.unmodifiable(segments);
-
-  bool hasBasePrefix(String key) => key.startsWith(_basePrefix);
-
-  bool hasQualifiedPrefix(String key) => key.startsWith(_qualifiedPrefix);
-
-  String qualify(String key) {
-    if (key.isEmpty) {
-      throw ArgumentError.value(key, 'key', 'must not be empty');
+  @override
+  Future<void> clear() async {
+    final all = await _delegate.all;
+    for (final key in all.keys) {
+      if (_namespace.hasBasePrefix(key)) {
+        await _delegate.remove(key);
+      }
     }
-
-    if (key == _basePrefix || key == _qualifiedPrefix) {
-      throw ArgumentError.value(
-        key,
-        'key',
-        'must not be exactly the same as the namespace prefix to avoid ambiguity',
-      );
-    }
-
-    if (key.startsWith(_qualifiedPrefix)) {
-      return key;
-    }
-
-    if (key.startsWith(_basePrefix)) {
-      final rest = key.substring(_basePrefix.length);
-      return '$_qualifiedPrefix$rest';
-    }
-
-    return '$_qualifiedPrefix$key';
   }
-
-  String strip(String key) {
-    if (hasQualifiedPrefix(key)) return key.substring(_qualifiedPrefix.length);
-    if (hasBasePrefix(key)) return key.substring(_basePrefix.length);
-    return key;
-  }
-
-  @override
-  String toString() => _qualifiedPrefix;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is KeyNamespace &&
-          _base == other._base &&
-          listEquals(_segments, other._segments);
-
-  @override
-  int get hashCode => Object.hash(_base, Object.hashAll(_segments));
 }

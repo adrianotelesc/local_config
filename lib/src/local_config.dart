@@ -1,13 +1,14 @@
 import 'package:local_config/src/common/utils/type_converters.dart';
-import 'package:local_config/src/infra/vo/local_config_settings.dart';
+import 'package:local_config/src/data/repositories/local_config_repository_impl.dart';
 import 'package:local_config/src/domain/entities/local_config_update.dart';
 import 'package:local_config/src/domain/entities/local_config_value.dart';
+import 'package:local_config/src/domain/repositories/local_config_repository.dart';
+import 'package:local_config/src/infra/models/key_namespace.dart';
+import 'package:local_config/src/infra/models/local_config_settings.dart';
 import 'package:local_config/src/infra/persistence/scoped_key_value_storage.dart';
+import 'package:local_config/src/infra/persistence/shared_preferences_key_value_storage.dart';
 import 'package:local_config/src/local_config_internals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:local_config/src/data/repositories/local_config_repository_impl.dart';
-import 'package:local_config/src/domain/repositories/local_config_repository.dart';
-import 'package:local_config/src/infra/persistence/shared_preferences_key_value_storage.dart';
 
 /// The entry point for accessing Local Config.
 final class LocalConfig {

@@ -49,7 +49,7 @@ class LocalConfigRepositoryImpl implements LocalConfigRepository {
   @override
   Future<void> set(String key, String value) async {
     final updated = _configs.update(key, (configValue) {
-      return configValue.setOverride(value);
+      return configValue.withOverride(value);
     });
 
     if (updated.hasOverride) {
@@ -64,7 +64,7 @@ class LocalConfigRepositoryImpl implements LocalConfigRepository {
   @override
   Future<void> reset(String key) async {
     _configs.update(key, (configValue) {
-      return configValue.setOverride(null);
+      return configValue.withOverride(null);
     });
 
     await _storage.remove(key);
@@ -75,7 +75,7 @@ class LocalConfigRepositoryImpl implements LocalConfigRepository {
   @override
   Future<void> resetAll() async {
     _configs.updateAll((_, configValue) {
-      return configValue.setOverride(null);
+      return configValue.withOverride(null);
     });
 
     await _storage.clear();

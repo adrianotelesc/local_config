@@ -7,7 +7,7 @@ abstract class KeyValueStorage {
 
   Future<void> remove(String key);
 
-  Future<void> clear();
-
   Future<void> prune(Set<String> retainedKeys);
+
+  Future<void> clear();
 }

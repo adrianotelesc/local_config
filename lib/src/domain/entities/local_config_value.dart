@@ -2,15 +2,6 @@ import 'package:local_config/src/common/utils/type_converters.dart';
 
 /// Encapsulates the value of a Local Config parameter.
 class LocalConfigValue {
-  /// The type of the value.
-  final LocalConfigType type;
-
-  /// The default value.
-  final String defaultValue;
-
-  /// The override value.
-  final String? overrideValue;
-
   /// Wraps a value with metadata and type-safe getters.
   LocalConfigValue({
     required this.type,
@@ -24,6 +15,15 @@ class LocalConfigValue {
          overrideValue == null || type == LocalConfigType.infer(overrideValue),
          'override value type must match the inferred type.',
        );
+
+  /// The type of the value.
+  final LocalConfigType type;
+
+  /// The default value.
+  final String defaultValue;
+
+  /// The override value.
+  final String? overrideValue;
 
   /// Returns true if the override value is not set or is the same as the default value.
   bool get isDefault => overrideValue == null || overrideValue == defaultValue;
@@ -48,14 +48,11 @@ class LocalConfigValue {
   Object? get asJson => tryJsonDecode(asString);
 
   /// Returns a copy of this LocalConfigValue with the override value.
-  LocalConfigValue setOverride(String? value) => LocalConfigValue(
+  LocalConfigValue withOverride(String? value) => LocalConfigValue(
     type: type,
     defaultValue: defaultValue,
     overrideValue: value,
   );
-
-  @override
-  int get hashCode => Object.hash(type, defaultValue, overrideValue);
 
   @override
   bool operator ==(Object other) =>
@@ -66,8 +63,7 @@ class LocalConfigValue {
           overrideValue == other.overrideValue;
 
   @override
-  String toString() =>
-      'ConfigValue(default: $defaultValue, override: $overrideValue)';
+  int get hashCode => Object.hash(type, defaultValue, overrideValue);
 }
 
 enum LocalConfigType {
@@ -76,13 +72,13 @@ enum LocalConfigType {
   string,
   json;
 
-  bool get isTextBased =>
-      this == LocalConfigType.string || this == LocalConfigType.json;
-
   static LocalConfigType infer(String source) {
     if (tryParseBool(source) != null) return LocalConfigType.boolean;
     if (num.tryParse(source) != null) return LocalConfigType.number;
     if (tryJsonDecode(source) != null) return LocalConfigType.json;
     return LocalConfigType.string;
   }
+
+  bool get isTextBased =>
+      this == LocalConfigType.string || this == LocalConfigType.json;
 }

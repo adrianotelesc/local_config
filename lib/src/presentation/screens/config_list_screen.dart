@@ -4,16 +4,16 @@ import 'package:boxy/slivers.dart';
 import 'package:flutter/material.dart';
 import 'package:local_config/src/common/extensions/map_extension.dart';
 import 'package:local_config/src/common/extensions/string_extension.dart';
+import 'package:local_config/src/domain/entities/local_config_value.dart';
 import 'package:local_config/src/domain/repositories/local_config_repository.dart';
 import 'package:local_config/src/local_config_internals.dart';
+import 'package:local_config/src/presentation/extensions/config_display_extension.dart';
 import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
 import 'package:local_config/src/presentation/local_config_routes.dart';
 import 'package:local_config/src/presentation/local_config_theme.dart';
-import 'package:local_config/src/presentation/extensions/config_display_extension.dart';
 import 'package:local_config/src/presentation/widgets/callout.dart';
-import 'package:local_config/src/domain/entities/local_config_value.dart';
-import 'package:local_config/src/presentation/widgets/extended_list_tile.dart';
 import 'package:local_config/src/presentation/widgets/clearable_search_bar.dart';
+import 'package:local_config/src/presentation/widgets/extended_list_tile.dart';
 import 'package:local_config/src/presentation/widgets/root_aware_sliver_app_bar.dart';
 
 class ConfigListScreen extends StatefulWidget {
@@ -32,9 +32,9 @@ class _ConfigListScreenState extends State<ConfigListScreen> {
 
   final _scrollController = ScrollController();
 
-  late final LocalConfigRepository _repo;
+  final LocalConfigRepository _configRepo = configRepository;
 
-  StreamSubscription? _sub;
+  StreamSubscription? _configUpdatedSub;
 
   var showOnlyChanged = false;
 
@@ -51,11 +51,10 @@ class _ConfigListScreenState extends State<ConfigListScreen> {
   @override
   void initState() {
     super.initState();
-    _repo = configRepository;
-    _updateConfigs(_repo.configs);
+    _updateConfigs(_configRepo.configs);
     _textController.addListener(_updateItems);
-    _sub = _repo.onConfigUpdated.listen(
-      (update) => _updateConfigs(_repo.configs),
+    _configUpdatedSub = _configRepo.onConfigUpdated.listen(
+      (update) => _updateConfigs(_configRepo.configs),
     );
     _scrollController.addListener(_updateBackToTop);
   }
@@ -106,8 +105,8 @@ class _ConfigListScreenState extends State<ConfigListScreen> {
 
   @override
   void dispose() {
-    _sub?.cancel();
-    _sub = null;
+    _configUpdatedSub?.cancel();
+    _configUpdatedSub = null;
     _textController.removeListener(_updateItems);
     _scrollController.removeListener(_updateBackToTop);
     super.dispose();
@@ -133,7 +132,7 @@ class _ConfigListScreenState extends State<ConfigListScreen> {
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
-          _AppBar(hasOverrides: _hasOverrides, repo: _repo),
+          _AppBar(hasOverrides: _hasOverrides, repo: _configRepo),
           if (_configs.isEmpty)
             const _PendingStatusNotice()
           else ...[
@@ -160,7 +159,7 @@ class _ConfigListScreenState extends State<ConfigListScreen> {
               ),
             ),
             SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
-            _List(items: _items, repo: _repo, terms: _terms),
+            _List(items: _items, repo: _configRepo, terms: _terms),
           ],
         ],
       ),

@@ -1,5 +1,15 @@
 import 'dart:convert';
 
+String stringify(Object object) {
+  if (object is String) return object;
+
+  if (object is Map || object is List) {
+    return tryJsonEncode(object) ?? object.toString();
+  }
+
+  return object.toString();
+}
+
 bool? tryParseBool(Object object) {
   if (object is bool) return object;
 
@@ -37,14 +47,4 @@ String? tryJsonEncode(Object object) {
   } catch (_) {
     return null;
   }
-}
-
-String stringify(Object object) {
-  if (object is String) return object;
-
-  if (object is Map || object is List) {
-    return tryJsonEncode(object) ?? object.toString();
-  }
-
-  return object.toString();
 }
