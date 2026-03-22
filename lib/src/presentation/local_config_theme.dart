@@ -111,6 +111,14 @@ abstract final class LocalConfigTheme {
         successContainer: Color(0X146DD58C),
         onSuccessContainer: Color(0X4D6DD58C),
       ),
+      ExtendedTextTheme(
+        codeBodyLarge: _base.textTheme.bodyLarge?.copyWith(
+          fontFamily: 'GoogleSansCode',
+        ),
+        codeBodyMedium: _base.textTheme.bodyMedium?.copyWith(
+          fontFamily: 'GoogleSansCode',
+        ),
+      ),
     ],
   );
 }
@@ -185,6 +193,42 @@ class ExtendedColorScheme extends ThemeExtension<ExtendedColorScheme> {
   }
 }
 
+class ExtendedTextTheme extends ThemeExtension<ExtendedTextTheme> {
+  final TextStyle? codeBodyLarge;
+  final TextStyle? codeBodyMedium;
+
+  ExtendedTextTheme({
+    this.codeBodyLarge,
+    this.codeBodyMedium,
+  });
+
+  @override
+  ThemeExtension<ExtendedTextTheme> copyWith({
+    TextStyle? codeBodyLarge,
+    TextStyle? codeBodyMedium,
+  }) {
+    return ExtendedTextTheme(
+      codeBodyLarge: codeBodyLarge ?? this.codeBodyLarge,
+      codeBodyMedium: codeBodyMedium ?? this.codeBodyMedium,
+    );
+  }
+
+  @override
+  ThemeExtension<ExtendedTextTheme> lerp(
+    covariant ThemeExtension<ExtendedTextTheme>? other,
+    double t,
+  ) {
+    if (other is! ExtendedTextTheme) {
+      return this;
+    }
+
+    return ExtendedTextTheme(
+      codeBodyLarge: TextStyle.lerp(codeBodyLarge, other.codeBodyLarge, t)!,
+      codeBodyMedium: TextStyle.lerp(codeBodyMedium, other.codeBodyMedium, t)!,
+    );
+  }
+}
+
 ButtonStyle warningButtonStyle(BuildContext context) {
   final colorScheme = Theme.of(context).extension<ExtendedColorScheme>();
   assert(colorScheme != null, 'ExtendedColorScheme must be available in theme');
@@ -213,5 +257,13 @@ extension BuildContextThemeExtension on BuildContext {
       throw StateError('ExtendedColorScheme not found in the theme context.');
     }
     return extendedColors;
+  }
+
+  ExtendedTextTheme get extendedTextTheme {
+    final extendedText = Theme.of(this).extension<ExtendedTextTheme>();
+    if (extendedText == null) {
+      throw StateError('ExtendedTextTheme not found in the theme context.');
+    }
+    return extendedText;
   }
 }

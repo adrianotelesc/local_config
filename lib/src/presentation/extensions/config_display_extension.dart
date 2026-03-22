@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:local_config/src/common/utils/type_converters.dart';
 import 'package:local_config/src/domain/entities/local_config_value.dart';
 import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
+import 'package:local_config/src/presentation/local_config_theme.dart';
 import 'package:local_config/src/presentation/widgets/text_editor/controller/json_editor_controller.dart';
 import 'package:local_config/src/presentation/widgets/text_editor/controller/string_editor_controller.dart';
 import 'package:local_config/src/presentation/widgets/text_editor/controller/text_editor_controller.dart';
@@ -47,23 +48,20 @@ extension ConfigTypeExtension on LocalConfigType {
             children: [
               TextSpan(
                 text: '\nconfig.get$suffix("',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontFamily: 'GoogleSansCode',
+                style: context.extendedTextTheme.codeBodyMedium?.copyWith(
                   color: ColorScheme.of(context).surface,
                 ),
               ),
               TextSpan(
                 text: name,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontFamily: 'GoogleSansCode',
+                style: context.extendedTextTheme.codeBodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: ColorScheme.of(context).surface,
                 ),
               ),
               TextSpan(
                 text: '");',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontFamily: 'GoogleSansCode',
+                style: context.extendedTextTheme.codeBodyMedium?.copyWith(
                   color: ColorScheme.of(context).surface,
                 ),
               ),

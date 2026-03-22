@@ -380,37 +380,32 @@ class _List extends StatelessWidget {
                 itemBuilder: (_, index) {
                   final item = items[index];
                   final (name, config) = (item.key, item.value);
-                  final isOverridden = config.hasOverride;
+                  final hasOverride = config.hasOverride;
 
                   return ExtendedListTile(
                     leading: Icon(config.type.displayIcon),
                     style:
-                        isOverridden
+                        hasOverride
                             ? warningExtendedListTileStyle(context) //
                             : null,
                     title: Text.rich(
                       highlightTerms(
                         text: name,
                         terms: terms,
-                        normalStyle: Theme.of(
-                          context,
-                        ).textTheme.bodyMedium?.copyWith(
-                          fontFamily: 'GoogleSansCode',
-                          fontWeight: isOverridden ? FontWeight.bold : null,
-                        ),
-                        highlightStyle: Theme.of(
-                          context,
-                        ).textTheme.bodyMedium?.copyWith(
-                          fontFamily: 'GoogleSansCode',
-                          fontWeight: isOverridden ? FontWeight.bold : null,
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary.withAlpha(102),
-                        ),
+                        normalStyle: context.extendedTextTheme.codeBodyMedium
+                            ?.copyWith(
+                              fontWeight: hasOverride ? FontWeight.bold : null,
+                            ),
+                        highlightStyle: context.extendedTextTheme.codeBodyMedium
+                            ?.copyWith(
+                              fontWeight: hasOverride ? FontWeight.bold : null,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary.withAlpha(102),
+                            ),
                       ),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontFamily: 'GoogleSansCode',
-                        fontWeight: isOverridden ? FontWeight.bold : null,
+                      style: context.extendedTextTheme.codeBodyMedium?.copyWith(
+                        fontWeight: hasOverride ? FontWeight.bold : null,
                       ),
                     ),
                     subtitle: Text.rich(
@@ -421,13 +416,13 @@ class _List extends StatelessWidget {
                           context,
                         ).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
-                          fontWeight: isOverridden ? FontWeight.bold : null,
+                          fontWeight: hasOverride ? FontWeight.bold : null,
                         ),
                         highlightStyle: Theme.of(
                           context,
                         ).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
-                          fontWeight: isOverridden ? FontWeight.bold : null,
+                          fontWeight: hasOverride ? FontWeight.bold : null,
                           backgroundColor: Theme.of(
                             context,
                           ).colorScheme.primary.withAlpha(102),
@@ -437,11 +432,11 @@ class _List extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.primary,
-                        fontWeight: isOverridden ? FontWeight.bold : null,
+                        fontWeight: hasOverride ? FontWeight.bold : null,
                       ),
                     ),
                     top:
-                        isOverridden
+                        hasOverride
                             ? Callout.warning(
                               style: CalloutStyle(
                                 borderRadius: BorderRadius.circular(16),

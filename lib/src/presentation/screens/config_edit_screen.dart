@@ -4,6 +4,7 @@ import 'package:local_config/src/domain/repositories/local_config_repository.dar
 import 'package:local_config/src/local_config_internals.dart';
 import 'package:local_config/src/presentation/extensions/config_display_extension.dart';
 import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
+import 'package:local_config/src/presentation/local_config_theme.dart';
 import 'package:local_config/src/presentation/widgets/input_form_field.dart';
 import 'package:local_config/src/presentation/widgets/root_aware_sliver_app_bar.dart';
 import 'package:local_config/src/presentation/widgets/text_editor/text_editor.dart';
@@ -127,8 +128,7 @@ class _Form extends StatelessWidget {
             children: [
               InputFormField(
                 controller: TextEditingController(text: name),
-                textStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontFamily: 'GoogleSansCode',
+                textStyle: context.extendedTextTheme.codeBodyLarge?.copyWith(
                   color: Theme.of(context).colorScheme.onSurface.withAlpha(97),
                 ),
                 label: Tooltip(
