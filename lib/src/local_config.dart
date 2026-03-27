@@ -6,9 +6,7 @@ import 'package:local_config/src/domain/repositories/local_config_repository.dar
 import 'package:local_config/src/infra/models/key_namespace.dart';
 import 'package:local_config/src/infra/models/local_config_settings.dart';
 import 'package:local_config/src/infra/persistence/scoped_key_value_storage.dart';
-import 'package:local_config/src/infra/persistence/shared_preferences_key_value_storage.dart';
 import 'package:local_config/src/local_config_internals.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// The entry point for accessing Local Config.
 final class LocalConfig {
@@ -20,13 +18,13 @@ final class LocalConfig {
   LocalConfig._();
 
   var _initialized = false;
+  bool get initialized => _initialized;
 
   /// Returns a Map of all Local Config parameters.
   Map<String, LocalConfigValue> get all =>
       _repo.configs.map((key, value) => MapEntry(key, value));
 
   LocalConfigRepository get _repo {
-    _ensureInitialized();
     return configRepository;
   }
 
@@ -35,33 +33,19 @@ final class LocalConfig {
   /// Initializes the LocalConfig with the provided settings.
   /// This method must be called before accessing any other methods.
   Future<void> initialize({
-    final LocalConfigSettings configSettings = const LocalConfigSettings(),
+    required final LocalConfigSettings configSettings,
   }) async {
-    if (_initialized) {
-      throw StateError('LocalConfig already initialized');
-    }
-
     configRepository = LocalConfigRepositoryImpl(
       storage: ScopedKeyValueStorage(
         namespace: KeyNamespace(
           base: _keyNamespaceBase,
           segments: configSettings.keyNamespaceSegments,
         ),
-        delegate:
-            configSettings.keyValueStorage ??
-            SharedPreferencesKeyValueStorage(
-              sharedPreferences: SharedPreferencesAsync(),
-            ),
+        delegate: configSettings.keyValueStorage,
       ),
     );
 
     _initialized = true;
-  }
-
-  void _ensureInitialized() {
-    if (!_initialized) {
-      throw StateError('LocalConfig not initialized');
-    }
   }
 
   /// Sets the default parameter values.

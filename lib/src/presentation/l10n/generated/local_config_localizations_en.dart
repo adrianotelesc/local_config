@@ -58,35 +58,12 @@ class LocalConfigLocalizationsEn extends LocalConfigLocalizations {
   String get showOnlyChanged => 'Show only changed';
 
   @override
-  String get noConfigsQuestion => 'NO CONFIGS!?';
+  String get noConfigs =>
+      'No configurations are available. Ensure default parameters are set before accessing the configurations.';
 
   @override
-  String get possibleCauses => 'This might be happening for a few reasons:';
-
-  @override
-  String get uninitializedTitle => '• The initialization wasn\'t done.';
-
-  @override
-  String get uninitializedDescription =>
-      'Are you sure you initialized the lib the right way?';
-
-  @override
-  String get emptyConfigsTitle => '• The configs are empty.';
-
-  @override
-  String get emptyConfigsDescription =>
-      'You might have passed empty configs in the initialization.';
-
-  @override
-  String get loadingConfigsTitle => '• The configs haven\'t arrived yet.';
-
-  @override
-  String get loadingConfigsDescription =>
-      'It\'s rare, but depending on the initialization, there might be a small delay.';
-
-  @override
-  String get openGitHubIssue =>
-      'If nothing works, open a GitHub issue that we\'ll help you.';
+  String get uninitialized =>
+      'LocalConfig has not been initialized. Ensure it is initialized before accessing the configurations.';
 
   @override
   String get emptyString => '(empty string)';

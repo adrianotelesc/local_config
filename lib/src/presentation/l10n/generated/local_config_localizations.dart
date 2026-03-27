@@ -197,59 +197,17 @@ abstract class LocalConfigLocalizations {
   /// **'Show only changed'**
   String get showOnlyChanged;
 
-  /// No description provided for @noConfigsQuestion.
+  /// No description provided for @noConfigs.
   ///
   /// In en, this message translates to:
-  /// **'NO CONFIGS!?'**
-  String get noConfigsQuestion;
+  /// **'No configurations are available. Ensure default parameters are set before accessing the configurations.'**
+  String get noConfigs;
 
-  /// No description provided for @possibleCauses.
+  /// No description provided for @uninitialized.
   ///
   /// In en, this message translates to:
-  /// **'This might be happening for a few reasons:'**
-  String get possibleCauses;
-
-  /// No description provided for @uninitializedTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'• The initialization wasn\'t done.'**
-  String get uninitializedTitle;
-
-  /// No description provided for @uninitializedDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you initialized the lib the right way?'**
-  String get uninitializedDescription;
-
-  /// No description provided for @emptyConfigsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'• The configs are empty.'**
-  String get emptyConfigsTitle;
-
-  /// No description provided for @emptyConfigsDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'You might have passed empty configs in the initialization.'**
-  String get emptyConfigsDescription;
-
-  /// No description provided for @loadingConfigsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'• The configs haven\'t arrived yet.'**
-  String get loadingConfigsTitle;
-
-  /// No description provided for @loadingConfigsDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'It\'s rare, but depending on the initialization, there might be a small delay.'**
-  String get loadingConfigsDescription;
-
-  /// No description provided for @openGitHubIssue.
-  ///
-  /// In en, this message translates to:
-  /// **'If nothing works, open a GitHub issue that we\'ll help you.'**
-  String get openGitHubIssue;
+  /// **'LocalConfig has not been initialized. Ensure it is initialized before accessing the configurations.'**
+  String get uninitialized;
 
   /// No description provided for @emptyString.
   ///

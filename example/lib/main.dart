@@ -2,10 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:local_config/local_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await LocalConfig.instance.initialize();
+  await LocalConfig.instance.initialize(
+    configSettings: LocalConfigSettings(
+      keyValueStorage: SharedPreferencesKeyValueStorage(
+        sharedPreferences: SharedPreferencesAsync(),
+      ),
+    ),
+  );
   await LocalConfig.instance.setDefaults({
     'social_login_enabled': false,
     'timeout_ms': 8000,

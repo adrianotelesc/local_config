@@ -1,6 +1,7 @@
 import 'package:boxy/slivers.dart';
 import 'package:flutter/material.dart';
 import 'package:local_config/src/domain/entities/local_config_value.dart';
+import 'package:local_config/src/local_config.dart';
 import 'package:local_config/src/local_config_internals.dart';
 import 'package:local_config/src/presentation/extensions/config_display_extension.dart';
 import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
@@ -59,7 +60,19 @@ class _ConfigListingScreenState extends State<ConfigListingScreen> {
                 onResetAllTap: _configNotifier.resetAll,
               ),
               if (_configNotifier.configs.isEmpty)
-                const _PendingStatusNotice()
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Text(
+                      LocalConfig.instance.initialized
+                          ? LocalConfigLocalizations.of(context)!.noConfigs
+                          : LocalConfigLocalizations.of(context)!.uninitialized,
+                    ),
+                  ),
+                )
               else ...[
                 SliverToBoxAdapter(child: SizedBox.square(dimension: 16)),
                 _SearchBar(controller: _textController),
@@ -137,119 +150,6 @@ class _AppBar extends StatelessWidget {
                 ),
               )
               : null,
-    );
-  }
-}
-
-class _PendingStatusNotice extends StatelessWidget {
-  const _PendingStatusNotice();
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverFillRemaining(
-      hasScrollBody: false,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 24,
-          children: [
-            Text(
-              LocalConfigLocalizations.of(context)!.noConfigsQuestion,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: LocalConfigLocalizations.of(context)!.possibleCauses,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const TextSpan(text: '\n\n'),
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            LocalConfigLocalizations.of(
-                              context,
-                            )!.uninitializedTitle,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const TextSpan(text: ' '),
-                      TextSpan(
-                        text:
-                            LocalConfigLocalizations.of(
-                              context,
-                            )!.uninitializedDescription,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                  const TextSpan(text: '\n\n'),
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            LocalConfigLocalizations.of(
-                              context,
-                            )!.emptyConfigsTitle,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const TextSpan(text: ' '),
-                      TextSpan(
-                        text:
-                            LocalConfigLocalizations.of(
-                              context,
-                            )!.emptyConfigsDescription,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                  const TextSpan(text: '\n\n'),
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            LocalConfigLocalizations.of(
-                              context,
-                            )!.loadingConfigsTitle,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const TextSpan(text: ' '),
-                      TextSpan(
-                        text:
-                            LocalConfigLocalizations.of(
-                              context,
-                            )!.loadingConfigsDescription,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                  const TextSpan(text: '\n\n'),
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            LocalConfigLocalizations.of(
-                              context,
-                            )!.openGitHubIssue,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

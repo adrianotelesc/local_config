@@ -4,7 +4,7 @@ import 'package:local_config/src/domain/repositories/local_config_repository.dar
 
 class NoopLocalConfigRepositoryImpl implements LocalConfigRepository {
   @override
-  Map<String, LocalConfigValue> get configs => throw UnimplementedError();
+  Map<String, LocalConfigValue> get configs => {};
 
   @override
   Stream<LocalConfigUpdate> get onConfigUpdated => Stream.empty();
