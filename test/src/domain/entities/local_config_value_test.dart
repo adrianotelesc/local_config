@@ -1,219 +1,280 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:local_config/src/domain/entities/local_config_value.dart';
 
+class TestingLocalConfigValue extends LocalConfigValue {
+  TestingLocalConfigValue({required super.value, required super.source});
+}
+
 void main() {
   group('LocalConfigValue', () {
-    test('should return default value when override is null', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'default',
-      );
-
-      expect(value.isDefault, isTrue);
-      expect(value.hasOverride, isFalse);
-      expect(value.asString, 'default');
-    });
-
-    test(
-      'should return override value when it exists and differs from default',
-      () {
-        final value = LocalConfigValue(
-          type: LocalConfigType.string,
-          defaultValue: 'default',
-          overrideValue: 'override',
+    group('asString', () {
+      test('returns the raw string value', () {
+        final config = TestingLocalConfigValue(
+          value: 'hello',
+          source: ValueSource.valueDefault,
         );
+        expect(config.asString, equals('hello'));
+      });
 
-        expect(value.isDefault, isFalse);
-        expect(value.hasOverride, isTrue);
-        expect(value.asString, 'override');
-      },
-    );
-
-    test('should treat override equal to default as default', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'same',
-        overrideValue: 'same',
-      );
-
-      expect(value.isDefault, isTrue);
-      expect(value.hasOverride, isFalse);
-    });
-
-    test('should parse value as int when possible', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.number,
-        defaultValue: '10',
-      );
-
-      expect(value.asInt, 10);
-    });
-
-    test('should parse value as double when possible', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.number,
-        defaultValue: '10.5',
-      );
-
-      expect(value.asDouble, 10.5);
-    });
-
-    test('should return null when parsing invalid int', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'abc',
-      );
-
-      expect(value.asInt, isNull);
-    });
-
-    test('should parse value as bool when possible', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.boolean,
-        defaultValue: 'true',
-      );
-
-      expect(value.asBool, isTrue);
-    });
-
-    test('should return null when parsing invalid bool', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'not_bool',
-      );
-
-      expect(value.asBool, isNull);
-    });
-
-    test('should parse value as json when possible', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.json,
-        defaultValue: '{"a":1}',
-      );
-
-      expect(value.asJson, {'a': 1});
-    });
-
-    test('should return null when parsing invalid json', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'not_json',
-      );
-
-      expect(value.asJson, isNull);
-    });
-
-    test('should create new instance with override using withOverride', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'default',
-      );
-
-      final updated = value.withOverride('override');
-
-      expect(updated.asString, 'override');
-      expect(updated.hasOverride, isTrue);
-      expect(value.overrideValue, isNull);
-    });
-
-    test('should support equality comparison', () {
-      final a = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'a',
-      );
-
-      final b = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'a',
-      );
-
-      expect(a, equals(b));
-    });
-
-    test('should include override in equality comparison', () {
-      final a = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'a',
-        overrideValue: 'b',
-      );
-
-      final b = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'a',
-        overrideValue: 'c',
-      );
-
-      expect(a == b, isFalse);
-    });
-
-    test('should return string representation of current value', () {
-      final value = LocalConfigValue(
-        type: LocalConfigType.string,
-        defaultValue: 'default',
-        overrideValue: 'override',
-      );
-
-      expect(value.toString(), 'override');
-    });
-
-    test(
-      'should throw assertion error when default type does not match inferred type',
-      () {
-        expect(
-          () => LocalConfigValue(
-            type: LocalConfigType.boolean,
-            defaultValue: 'not_bool',
-          ),
-          throwsA(isA<AssertionError>()),
+      test('returns empty string when value is empty', () {
+        final config = TestingLocalConfigValue(
+          value: '',
+          source: ValueSource.valueDefault,
         );
-      },
-    );
+        expect(config.asString, equals(''));
+      });
+    });
 
-    test(
-      'should throw assertion error when override type does not match inferred type',
-      () {
-        expect(
-          () => LocalConfigValue(
-            type: LocalConfigType.boolean,
-            defaultValue: 'true',
-            overrideValue: 'not_bool',
-          ),
-          throwsA(isA<AssertionError>()),
+    group('asBool', () {
+      test('returns true for "true"', () {
+        final config = TestingLocalConfigValue(
+          value: 'true',
+          source: ValueSource.valueDefault,
         );
-      },
-    );
-  });
+        expect(config.asBool, isTrue);
+      });
 
-  group('LocalConfigType.infer', () {
-    test('should infer number type from numeric string', () {
-      expect(LocalConfigType.infer('10'), LocalConfigType.number);
-      expect(LocalConfigType.infer('10.5'), LocalConfigType.number);
+      test('returns false for "false"', () {
+        final config = TestingLocalConfigValue(
+          value: 'false',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asBool, isFalse);
+      });
+
+      test('returns null for non-bool string', () {
+        final config = TestingLocalConfigValue(
+          value: 'not_a_bool',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asBool, isNull);
+      });
+
+      test('returns null for empty string', () {
+        final config = TestingLocalConfigValue(
+          value: '',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asBool, isNull);
+      });
     });
 
-    test('should infer boolean type from boolean string', () {
-      expect(LocalConfigType.infer('true'), LocalConfigType.boolean);
-      expect(LocalConfigType.infer('false'), LocalConfigType.boolean);
+    group('asDouble', () {
+      test('parses valid double string', () {
+        final config = TestingLocalConfigValue(
+          value: '3.14',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asDouble, equals(3.14));
+      });
+
+      test('parses integer string as double', () {
+        final config = TestingLocalConfigValue(
+          value: '42',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asDouble, equals(42.0));
+      });
+
+      test('parses negative double string', () {
+        final config = TestingLocalConfigValue(
+          value: '-1.5',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asDouble, equals(-1.5));
+      });
+
+      test('returns null for non-numeric string', () {
+        final config = TestingLocalConfigValue(
+          value: 'abc',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asDouble, isNull);
+      });
+
+      test('returns null for empty string', () {
+        final config = TestingLocalConfigValue(
+          value: '',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asDouble, isNull);
+      });
     });
 
-    test('should infer json type from json string', () {
-      expect(LocalConfigType.infer('{"a":1}'), LocalConfigType.json);
-      expect(LocalConfigType.infer('[1,2,3]'), LocalConfigType.json);
+    group('asInt', () {
+      test('parses valid int string', () {
+        final config = TestingLocalConfigValue(
+          value: '10',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asInt, equals(10));
+      });
+
+      test('parses negative int string', () {
+        final config = TestingLocalConfigValue(
+          value: '-7',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asInt, equals(-7));
+      });
+
+      test('returns null for double string', () {
+        final config = TestingLocalConfigValue(
+          value: '3.14',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asInt, isNull);
+      });
+
+      test('returns null for non-numeric string', () {
+        final config = TestingLocalConfigValue(
+          value: 'abc',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asInt, isNull);
+      });
+
+      test('returns null for empty string', () {
+        final config = TestingLocalConfigValue(
+          value: '',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asInt, isNull);
+      });
     });
 
-    test('should infer string type when no other type matches', () {
-      expect(LocalConfigType.infer('hello'), LocalConfigType.string);
-    });
-  });
+    group('asJson', () {
+      test('parses valid JSON object string', () {
+        final config = TestingLocalConfigValue(
+          value: '{"key":"value"}',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asJson, equals({'key': 'value'}));
+      });
 
-  group('LocalConfigType.isTextBased', () {
-    test('should return true for string and json types', () {
-      expect(LocalConfigType.string.isTextBased, isTrue);
-      expect(LocalConfigType.json.isTextBased, isTrue);
+      test('parses valid JSON array string', () {
+        final config = TestingLocalConfigValue(
+          value: '[1,2,3]',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asJson, equals([1, 2, 3]));
+      });
+
+      test('returns null for invalid JSON string', () {
+        final config = TestingLocalConfigValue(
+          value: 'not json',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asJson, isNull);
+      });
+
+      test('returns null for empty string', () {
+        final config = TestingLocalConfigValue(
+          value: '',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.asJson, isNull);
+      });
     });
 
-    test('should return false for non-text types', () {
-      expect(LocalConfigType.boolean.isTextBased, isFalse);
-      expect(LocalConfigType.number.isTextBased, isFalse);
+    group('equality', () {
+      test('two instances with same value and source are equal', () {
+        final a = TestingLocalConfigValue(
+          value: 'x',
+          source: ValueSource.valueLocal,
+        );
+        final b = TestingLocalConfigValue(
+          value: 'x',
+          source: ValueSource.valueLocal,
+        );
+        expect(a, equals(b));
+      });
+
+      test('instances with different values are not equal', () {
+        final a = TestingLocalConfigValue(
+          value: 'x',
+          source: ValueSource.valueLocal,
+        );
+        final b = TestingLocalConfigValue(
+          value: 'y',
+          source: ValueSource.valueLocal,
+        );
+        expect(a, isNot(equals(b)));
+      });
+
+      test('instances with different sources are not equal', () {
+        final a = TestingLocalConfigValue(
+          value: 'x',
+          source: ValueSource.valueDefault,
+        );
+        final b = TestingLocalConfigValue(
+          value: 'x',
+          source: ValueSource.valueLocal,
+        );
+        expect(a, isNot(equals(b)));
+      });
+
+      test('identical instance is equal to itself', () {
+        final a = TestingLocalConfigValue(
+          value: 'x',
+          source: ValueSource.valueDefault,
+        );
+        expect(a, equals(a));
+      });
+    });
+
+    group('hashCode', () {
+      test('equal instances have the same hashCode', () {
+        final a = TestingLocalConfigValue(
+          value: 'abc',
+          source: ValueSource.valueDefault,
+        );
+        final b = TestingLocalConfigValue(
+          value: 'abc',
+          source: ValueSource.valueDefault,
+        );
+        expect(a.hashCode, equals(b.hashCode));
+      });
+
+      test('different instances likely have different hashCodes', () {
+        final a = TestingLocalConfigValue(
+          value: 'abc',
+          source: ValueSource.valueDefault,
+        );
+        final b = TestingLocalConfigValue(
+          value: 'xyz',
+          source: ValueSource.valueLocal,
+        );
+        expect(a.hashCode, isNot(equals(b.hashCode)));
+      });
+    });
+
+    group('toString', () {
+      test('returns the string value', () {
+        final config = TestingLocalConfigValue(
+          value: 'my_value',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.toString(), equals('my_value'));
+      });
+    });
+
+    group('source', () {
+      test('exposes valueDefault source correctly', () {
+        final config = TestingLocalConfigValue(
+          value: 'v',
+          source: ValueSource.valueDefault,
+        );
+        expect(config.source, equals(ValueSource.valueDefault));
+      });
+
+      test('exposes valueLocal source correctly', () {
+        final config = TestingLocalConfigValue(
+          value: 'v',
+          source: ValueSource.valueLocal,
+        );
+        expect(config.source, equals(ValueSource.valueLocal));
+      });
     });
   });
 }

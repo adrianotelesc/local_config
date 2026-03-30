@@ -4,7 +4,13 @@ import 'package:local_config/src/domain/repositories/local_config_repository.dar
 
 class NoopLocalConfigRepositoryImpl implements LocalConfigRepository {
   @override
-  Map<String, LocalConfigValue> get configs => {};
+  Map<String, LocalConfigValue> get all => {};
+
+  @override
+  Map<String, String> get defaults => {};
+
+  @override
+  Map<String, String> get locals => {};
 
   @override
   Stream<LocalConfigUpdate> get onConfigUpdated => Stream.empty();
@@ -13,7 +19,7 @@ class NoopLocalConfigRepositoryImpl implements LocalConfigRepository {
   Future<void> setDefaults(Map<String, String> defaultParameters) async {}
 
   @override
-  LocalConfigValue? get(String key) => null;
+  LocalConfigValue? getValue(String key) => null;
 
   @override
   Future<void> set(String key, String value) async {}

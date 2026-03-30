@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:local_config/src/domain/entities/local_config_value.dart';
 import 'package:local_config/src/local_config_internals.dart';
-import 'package:local_config/src/presentation/extensions/config_display_extension.dart';
 import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
 import 'package:local_config/src/presentation/local_config_theme.dart';
+import 'package:local_config/src/presentation/models/config_value.dart';
 import 'package:local_config/src/presentation/notifiers/config_notifier.dart';
 import 'package:local_config/src/presentation/widgets/input_form_field.dart';
 import 'package:local_config/src/presentation/widgets/root_aware_sliver_app_bar.dart';
@@ -25,13 +24,13 @@ class _ConfigEditingScreenState extends State<ConfigEditingScreen> {
 
   final _configNotifier = ConfigNotifier(configRepo: configRepo);
 
-  late LocalConfigValue _configValue;
+  late ConfigValue _configValue;
 
   @override
   void initState() {
     super.initState();
     _configValue = _configNotifier.get(widget.name)!;
-    _textController.text = _configValue.asString;
+    _textController.text = _configValue.effectiveValue;
   }
 
   @override
@@ -97,7 +96,7 @@ class _Form extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController fieldTextController;
   final String name;
-  final LocalConfigValue configValue;
+  final ConfigValue configValue;
   final Function(String)? onSubmitted;
 
   const _Form({
@@ -129,7 +128,7 @@ class _Form extends StatelessWidget {
                   showDuration: const Duration(seconds: 5),
                   triggerMode: TooltipTriggerMode.tap,
                   padding: const EdgeInsets.all(8),
-                  richMessage: configValue.type.help(context, name: name),
+                  richMessage: configValue.type.usageHint(context, name: name),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -147,7 +146,7 @@ class _Form extends StatelessWidget {
                   text: configValue.type.getDisplayName(context),
                 ),
                 entries:
-                    LocalConfigType.values.map((value) {
+                    ConfigValueType.values.map((value) {
                       return DropdownMenuEntry(
                         value: value.getDisplayName(context),
                         label: value.getDisplayName(context),
@@ -165,7 +164,7 @@ class _Form extends StatelessWidget {
               InputFormField(
                 controller: fieldTextController,
                 entries:
-                    configValue.type.presets.map((item) {
+                    configValue.type.allowedValues.map((item) {
                       return DropdownMenuEntry(value: item, label: item);
                     }).toList(),
                 autofocus: true,

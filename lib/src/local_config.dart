@@ -22,8 +22,7 @@ final class LocalConfig {
   bool get initialized => _initialized;
 
   /// Returns a Map of all Local Config parameters.
-  Map<String, LocalConfigValue> get all =>
-      configRepo.configs.map((key, value) => MapEntry(key, value));
+  Map<String, LocalConfigValue> get all => configRepo.all;
 
   Stream<LocalConfigUpdate> get onConfigUpdated => configRepo.onConfigUpdated;
 
@@ -55,7 +54,7 @@ final class LocalConfig {
   bool? getBool(final String key) => getValue(key)?.asBool;
 
   /// Gets the LocalConfigValue for a given key.
-  LocalConfigValue? getValue(final String key) => configRepo.get(key);
+  LocalConfigValue? getValue(final String key) => configRepo.getValue(key);
 
   /// Gets the value for a given key as a double.
   double? getDouble(final String key) => getValue(key)?.asDouble;

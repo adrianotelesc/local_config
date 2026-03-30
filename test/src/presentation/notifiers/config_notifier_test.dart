@@ -24,8 +24,8 @@ void main() {
 
   group('initialization', () {
     test('should load configs on initialization', () {
-      expect(notifier.configs.keys, {'a', 'b'});
-      expect(notifier.items.length, 2);
+      expect(notifier.all.keys, {'a', 'b'});
+      expect(notifier.filtered.length, 2);
     });
   });
 
@@ -35,7 +35,7 @@ void main() {
 
       await Future.delayed(Duration.zero);
 
-      expect(notifier.get('a')?.asString, '10');
+      expect(notifier.get('a')?.effectiveValue, '10');
     });
   });
 
@@ -44,16 +44,16 @@ void main() {
       await repo.set('a', '10');
       await Future.delayed(Duration.zero);
 
-      notifier.showOnlyOverrides = true;
+      notifier.showOnlyLocals = true;
 
-      expect(notifier.items.length, 1);
-      expect(notifier.items.first.key, 'a');
+      expect(notifier.filtered.length, 1);
+      expect(notifier.filtered.first.key, 'a');
     });
 
     test('should include all values when disabled', () {
-      notifier.showOnlyOverrides = false;
+      notifier.showOnlyLocals = false;
 
-      expect(notifier.items.length, 2);
+      expect(notifier.filtered.length, 2);
     });
   });
 
@@ -61,27 +61,27 @@ void main() {
     test('should filter items by key', () {
       notifier.query('a');
 
-      expect(notifier.items.length, 1);
-      expect(notifier.items.first.key, 'a');
+      expect(notifier.filtered.length, 1);
+      expect(notifier.filtered.first.key, 'a');
     });
 
     test('should filter items by value', () {
       notifier.query('1');
 
-      expect(notifier.items.length, 1);
-      expect(notifier.items.first.key, 'a');
+      expect(notifier.filtered.length, 1);
+      expect(notifier.filtered.first.key, 'a');
     });
 
     test('should support multiple search terms', () {
       notifier.query('a 1');
 
-      expect(notifier.items.length, 1);
+      expect(notifier.filtered.length, 1);
     });
 
     test('should return empty when no match found', () {
       notifier.query('xyz');
 
-      expect(notifier.items, isEmpty);
+      expect(notifier.filtered, isEmpty);
     });
   });
 
@@ -95,14 +95,14 @@ void main() {
 
   group('hasOverrides', () {
     test('should return false when no overrides exist', () {
-      expect(notifier.hasOverrides, isFalse);
+      expect(notifier.hasLocalValue, isFalse);
     });
 
     test('should return true when at least one override exists', () async {
       await repo.set('a', '10');
       await Future.delayed(Duration.zero);
 
-      expect(notifier.hasOverrides, isTrue);
+      expect(notifier.hasLocalValue, isTrue);
     });
   });
 
@@ -129,7 +129,7 @@ void main() {
       var notified = false;
       notifier.addListener(() => notified = true);
 
-      notifier.showOnlyOverrides = true;
+      notifier.showOnlyLocals = true;
 
       expect(notified, isTrue);
     });

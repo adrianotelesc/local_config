@@ -3,8 +3,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:local_config/src/common/extensions/string_extension.dart';
-import 'package:local_config/src/domain/entities/local_config_value.dart';
 import 'package:local_config/src/domain/repositories/local_config_repository.dart';
+import 'package:local_config/src/presentation/models/config_value.dart';
 
 class ConfigNotifier extends ChangeNotifier {
   ConfigNotifier({
@@ -21,22 +21,22 @@ class ConfigNotifier extends ChangeNotifier {
 
   StreamSubscription? _configUpdateSub;
 
-  var _configs = <String, LocalConfigValue>{};
-  Map<String, LocalConfigValue> get configs => UnmodifiableMapView(_configs);
+  var _all = <String, ConfigValue>{};
+  Map<String, ConfigValue> get all => UnmodifiableMapView(_all);
 
-  var _items = <MapEntry<String, LocalConfigValue>>[];
-  List<MapEntry<String, LocalConfigValue>> get items => _items;
+  var _filtered = <MapEntry<String, ConfigValue>>[];
+  List<MapEntry<String, ConfigValue>> get filtered => _filtered;
 
-  var _showOnlyOverrides = false;
-  bool get showOnlyOverrides => _showOnlyOverrides;
-  set showOnlyOverrides(bool value) {
-    if (value == _showOnlyOverrides) return;
-    _showOnlyOverrides = value;
+  var _showOnlyLocals = false;
+  bool get showOnlyLocals => _showOnlyLocals;
+  set showOnlyLocals(bool value) {
+    if (value == _showOnlyLocals) return;
+    _showOnlyLocals = value;
     _applyFilters();
     notifyListeners();
   }
 
-  bool get hasOverrides => _configs.values.any((v) => v.hasOverride);
+  bool get hasLocalValue => _all.values.any((config) => config.hasOverride);
 
   var _terms = <String>{};
   Set<String> get terms => UnmodifiableSetView(_terms);
@@ -55,28 +55,37 @@ class ConfigNotifier extends ChangeNotifier {
   }
 
   void refresh() {
-    _configs = _configRepo.configs;
+    _all = _configRepo.defaults.map((key, value) {
+      return MapEntry(
+        key,
+        ConfigValue(
+          type: ConfigValueType.fromValue(value),
+          defaultValue: value,
+          overrideValue: _configRepo.locals[key],
+        ),
+      );
+    });
     _applyFilters();
     notifyListeners();
   }
 
   void _applyFilters({String? query}) {
-    _items =
-        _configs.entries
+    _filtered =
+        _all.entries
             .where((entry) => _overrideFilter(entry) && _termFilter(entry))
             .toList();
   }
 
-  bool _overrideFilter(MapEntry<String, LocalConfigValue> entry) =>
-      !_showOnlyOverrides || entry.value.hasOverride;
+  bool _overrideFilter(MapEntry<String, ConfigValue> entry) =>
+      !_showOnlyLocals || entry.value.hasOverride;
 
-  bool _termFilter(MapEntry<String, LocalConfigValue> entry) =>
+  bool _termFilter(MapEntry<String, ConfigValue> entry) =>
       _terms.isEmpty ||
       _terms.every((term) {
         return "${entry.key} ${entry.value}".containsInsensitive(term);
       });
 
-  LocalConfigValue? get(String key) => _configRepo.get(key);
+  ConfigValue? get(String key) => _all[key];
 
   Future<void> set(String key, String value) => _configRepo.set(key, value);
 

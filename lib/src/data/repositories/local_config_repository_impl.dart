@@ -13,8 +13,26 @@ class LocalConfigRepositoryImpl implements LocalConfigRepository {
   final KeyValueStorage _storage;
 
   @override
-  Map<String, LocalConfigValue> get configs => _configs;
-  var _configs = <String, LocalConfigValue>{};
+  Map<String, LocalConfigValue> get all {
+    Map<String, LocalConfigValue> all = {};
+
+    for (final key in _defaults.keys) {
+      final value = getValue(key);
+      if (value == null) continue;
+
+      all[key] = value;
+    }
+
+    return all;
+  }
+
+  @override
+  Map<String, String> get defaults => _defaults;
+  var _defaults = <String, String>{};
+
+  @override
+  Map<String, String> get locals => _locals;
+  var _locals = <String, String>{};
 
   @override
   Stream<LocalConfigUpdate> get onConfigUpdated => _controller.stream;
@@ -22,51 +40,71 @@ class LocalConfigRepositoryImpl implements LocalConfigRepository {
 
   @override
   Future<void> setDefaults(Map<String, String> defaults) async {
-    final overrides = await _storage.all;
+    _defaults = defaults;
+    final locals = await _storage.all;
 
-    final retainedOverrides = overrides.where((key, value) {
+    final retainedLocals = locals.where((key, value) {
       final defaultValue = defaults[key];
       return defaultValue != null && defaultValue != value;
     });
 
-    await _storage.prune(retainedOverrides.keys.toSet());
+    await _storage.prune(retainedLocals.keys.toSet());
 
-    _configs = defaults.map((key, value) {
-      return MapEntry(
-        key,
-        LocalConfigValue(
-          type: LocalConfigType.infer(value),
-          defaultValue: value,
-          overrideValue: retainedOverrides[key],
-        ),
-      );
-    });
+    _locals = retainedLocals;
   }
 
   @override
-  LocalConfigValue? get(String key) => _configs[key];
+  LocalConfigValue? getValue(String key) {
+    final defaultValue = _defaults[key];
+    if (defaultValue == null) return null;
+
+    final localValue = _locals[key];
+    if (localValue != null && localValue != defaultValue) {
+      return LocalConfigValue(
+        value: localValue,
+        source: ValueSource.valueLocal,
+      );
+    }
+
+    return LocalConfigValue(
+      value: defaultValue,
+      source: ValueSource.valueDefault,
+    );
+  }
 
   @override
   Future<void> set(String key, String value) async {
-    final updated = _configs.update(key, (configValue) {
-      return configValue.withOverride(value);
-    });
+    final defaultValue = _defaults[key];
+    if (defaultValue == null) return;
 
-    if (updated.hasOverride) {
+    if (value != defaultValue) {
+      _locals[key] = value;
       await _storage.setString(key, value);
     } else {
+      _locals.remove(key);
       await _storage.remove(key);
     }
+
+    // _configs.update(key, (configValue) {
+    //   return configValue.copyWith(
+    //     value: value,
+    //     source: source,
+    //   );
+    // });
 
     _controller.add(LocalConfigUpdate({key}));
   }
 
   @override
   Future<void> reset(String key) async {
-    _configs.update(key, (configValue) {
-      return configValue.withOverride(null);
-    });
+    // _configs.update(key, (configValue) {
+    //   return configValue.copyWith(
+    //     value: _defaults[key],
+    //     source: ValueSource.valueDefault,
+    //   );
+    // });
 
+    _locals.remove(key);
     await _storage.remove(key);
 
     _controller.add(LocalConfigUpdate({key}));
@@ -74,12 +112,17 @@ class LocalConfigRepositoryImpl implements LocalConfigRepository {
 
   @override
   Future<void> resetAll() async {
-    _configs.updateAll((_, configValue) {
-      return configValue.withOverride(null);
-    });
+    // _configs.updateAll((key, configValue) {
+    //   return configValue.copyWith(
+    //     value: _defaults[key],
+    //     source: ValueSource.valueDefault,
+    //   );
+    // });
 
+    final updatedKeys = _locals.keys.toSet();
+    _locals.clear();
     await _storage.clear();
 
-    _controller.add(LocalConfigUpdate({..._configs.keys}));
+    _controller.add(LocalConfigUpdate(updatedKeys));
   }
 }

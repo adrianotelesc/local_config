@@ -1,12 +1,11 @@
 import 'package:boxy/slivers.dart';
 import 'package:flutter/material.dart';
-import 'package:local_config/src/domain/entities/local_config_value.dart';
 import 'package:local_config/src/local_config.dart';
 import 'package:local_config/src/local_config_internals.dart';
-import 'package:local_config/src/presentation/extensions/config_display_extension.dart';
 import 'package:local_config/src/presentation/l10n/generated/local_config_localizations.dart';
 import 'package:local_config/src/presentation/local_config_routes.dart';
 import 'package:local_config/src/presentation/local_config_theme.dart';
+import 'package:local_config/src/presentation/models/config_value.dart';
 import 'package:local_config/src/presentation/notifiers/config_notifier.dart';
 import 'package:local_config/src/presentation/widgets/back_to_top_fab.dart';
 import 'package:local_config/src/presentation/widgets/callout.dart';
@@ -56,10 +55,10 @@ class _ConfigListingScreenState extends State<ConfigListingScreen> {
             controller: _scrollController,
             slivers: [
               _AppBar(
-                hasOverrides: _configNotifier.hasOverrides,
+                hasOverrides: _configNotifier.hasLocalValue,
                 onResetAllTap: _configNotifier.resetAll,
               ),
-              if (_configNotifier.configs.isEmpty)
+              if (_configNotifier.all.isEmpty)
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -86,15 +85,15 @@ class _ConfigListingScreenState extends State<ConfigListingScreen> {
                     title: Text(
                       LocalConfigLocalizations.of(context)!.showOnlyChanged,
                     ),
-                    value: _configNotifier.showOnlyOverrides,
+                    value: _configNotifier.showOnlyLocals,
                     onChanged: (value) {
-                      _configNotifier.showOnlyOverrides = value;
+                      _configNotifier.showOnlyLocals = value;
                     },
                   ),
                 ),
                 SliverToBoxAdapter(child: SizedBox.square(dimension: 8)),
                 _List(
-                  items: _configNotifier.items,
+                  items: _configNotifier.filtered,
                   terms: _configNotifier.terms,
                   onResetTap: _configNotifier.reset,
                 ),
@@ -175,7 +174,7 @@ class _SearchBar extends StatelessWidget {
 
 class _List extends StatelessWidget {
   final Set<String> terms;
-  final List<MapEntry<String, LocalConfigValue>> items;
+  final List<MapEntry<String, ConfigValue>> items;
   final Function(String)? onResetTap;
 
   const _List({

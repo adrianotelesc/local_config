@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:local_config/src/core/persistence/key_value_storage.dart';
 import 'package:local_config/src/data/repositories/local_config_repository_impl.dart';
 import 'package:local_config/src/domain/entities/local_config_update.dart';
+import 'package:local_config/src/domain/entities/local_config_value.dart';
 
 import '../../infra/persistence/fake_key_value_storage.dart';
 
@@ -18,9 +19,9 @@ void main() {
     test('should initialize configs with default values', () async {
       await repo.setDefaults({'a': '1', 'b': '2'});
 
-      expect(repo.configs.keys, {'a', 'b'});
-      expect(repo.get('a')?.asString, '1');
-      expect(repo.get('b')?.asString, '2');
+      expect(repo.defaults.keys, {'a', 'b'});
+      expect(repo.getValue('a')?.asString, '1');
+      expect(repo.getValue('b')?.asString, '2');
     });
 
     test('should apply overrides when present in storage', () async {
@@ -28,8 +29,8 @@ void main() {
 
       await repo.setDefaults({'a': '1'});
 
-      expect(repo.get('a')?.asString, '10');
-      expect(repo.get('a')?.hasOverride, isTrue);
+      expect(repo.getValue('a')?.asString, '10');
+      expect(repo.getValue('a')?.source, ValueSource.valueLocal);
     });
 
     test('should ignore overrides equal to default', () async {
@@ -37,8 +38,8 @@ void main() {
 
       await repo.setDefaults({'a': '1'});
 
-      expect(repo.get('a')?.asString, '1');
-      expect(repo.get('a')?.hasOverride, isFalse);
+      expect(repo.getValue('a')?.asString, '1');
+      expect(repo.getValue('a')?.source, ValueSource.valueDefault);
     });
 
     test('should prune keys not present in defaults', () async {
@@ -47,13 +48,13 @@ void main() {
       await repo.setDefaults({'a': '1'});
 
       expect((await storage.all).containsKey('obsolete'), isFalse);
-      expect(repo.configs.containsKey('obsolete'), isFalse);
+      expect(repo.defaults.containsKey('obsolete'), isFalse);
     });
   });
 
   group('get', () {
     test('should return null when key does not exist', () {
-      expect(repo.get('unknown'), isNull);
+      expect(repo.getValue('unknown'), isNull);
     });
   });
 
@@ -65,7 +66,7 @@ void main() {
 
         await repo.set('a', '2');
 
-        expect(repo.get('a')?.asString, '2');
+        expect(repo.getValue('a')?.asString, '2');
         expect(await storage.all, {'a': '2'});
       },
     );
@@ -76,7 +77,7 @@ void main() {
       await repo.set('a', '2');
       await repo.set('a', '1');
 
-      expect(repo.get('a')?.hasOverride, isFalse);
+      expect(repo.getValue('a')?.source, ValueSource.valueDefault);
       expect((await storage.all).containsKey('a'), isFalse);
     });
 
@@ -103,7 +104,7 @@ void main() {
 
       await repo.reset('a');
 
-      expect(repo.get('a')?.asString, '1');
+      expect(repo.getValue('a')?.asString, '1');
       expect((await storage.all).containsKey('a'), isFalse);
     });
 
@@ -133,13 +134,16 @@ void main() {
 
       await repo.resetAll();
 
-      expect(repo.get('a')?.asString, '1');
-      expect(repo.get('b')?.asString, '2');
+      expect(repo.getValue('a')?.asString, '1');
+      expect(repo.getValue('b')?.asString, '2');
       expect(await storage.all, isEmpty);
     });
 
     test('should emit update event with all keys', () async {
       await repo.setDefaults({'a': '1', 'b': '2'});
+
+      await repo.set('a', '10');
+      await repo.set('b', '20');
 
       expectLater(
         repo.onConfigUpdated,
