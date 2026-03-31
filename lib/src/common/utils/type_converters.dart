@@ -48,3 +48,16 @@ String? tryJsonEncode(Object object) {
     return null;
   }
 }
+
+dynamic parseValue(String value) {
+  final boolean = bool.tryParse(value);
+  if (boolean != null) return boolean;
+
+  final number = num.tryParse(value);
+  if (number != null) return number;
+
+  final json = tryJsonDecode(value);
+  if (json != null) return json;
+
+  return value;
+}

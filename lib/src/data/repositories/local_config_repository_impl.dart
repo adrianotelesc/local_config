@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:local_config/src/common/extensions/map_extension.dart';
+import 'package:local_config/src/common/utils/type_converters.dart';
 import 'package:local_config/src/core/persistence/key_value_storage.dart';
 import 'package:local_config/src/domain/entities/local_config_update.dart';
 import 'package:local_config/src/domain/entities/local_config_value.dart';
@@ -45,7 +46,10 @@ class LocalConfigRepositoryImpl implements LocalConfigRepository {
 
     final retainedLocals = locals.where((key, value) {
       final defaultValue = defaults[key];
-      return defaultValue != null && defaultValue != value;
+      if (defaultValue == null) return false;
+
+      return defaultValue != value &&
+          parseValue(defaultValue).runtimeType == parseValue(value).runtimeType;
     });
 
     await _storage.prune(retainedLocals.keys.toSet());
