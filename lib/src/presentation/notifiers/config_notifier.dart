@@ -90,7 +90,8 @@ class ConfigNotifier extends ChangeNotifier {
   bool _termFilter(MapEntry<String, ConfigValue> entry) =>
       _terms.isEmpty ||
       _terms.every((term) {
-        return "${entry.key} ${entry.value}".containsInsensitive(term);
+        return "${entry.key} ${entry.value.defaultValue} ${entry.value.overrideValue}"
+            .containsInsensitive(term);
       });
 
   ConfigValue? get(String key) => _all[key];

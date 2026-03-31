@@ -282,23 +282,13 @@ class _List extends StatelessWidget {
                                       hasOverride ? FontWeight.bold : null,
                                 ),
                               ),
-                              side: BorderSide(
-                                width: 0,
-                                color: Colors.transparent,
-                              ),
                               color: WidgetStatePropertyAll(
-                                [
-                                  Colors.red,
-                                  Colors.yellow,
-                                  Colors.orange,
-                                  Colors.green,
-                                  Colors.blue,
-                                ].shuffled(Random()).first.withAlpha(80),
+                                Colors.red.withAlpha(80),
                               ),
                             ),
                             value: Text.rich(
                               highlightTerms(
-                                text: config.getDisplayText(context),
+                                text: config.getLocalDisplayText(context),
                                 terms: terms,
                                 normalStyle: Theme.of(
                                   context,

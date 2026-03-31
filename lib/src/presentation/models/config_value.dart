@@ -32,10 +32,16 @@ final class ConfigValue {
   bool get hasOverride =>
       overrideValue != null && overrideValue != defaultValue;
 
-  String getDisplayText(final BuildContext context) {
-    return type == ConfigValueType.string && effectiveValue.isEmpty
+  String getLocalDisplayText(final BuildContext context) {
+    return type == ConfigValueType.string && overrideValue?.isEmpty == true
         ? LocalConfigLocalizations.of(context)!.emptyString
-        : effectiveValue;
+        : overrideValue ?? '';
+  }
+
+  String getDefaultDisplayText(final BuildContext context) {
+    return type == ConfigValueType.string && defaultValue.isEmpty
+        ? LocalConfigLocalizations.of(context)!.emptyString
+        : defaultValue;
   }
 
   ConfigValue copyWith({final String? overrideValue}) {
