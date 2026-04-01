@@ -35,7 +35,7 @@ void main() {
 
       await Future.delayed(Duration.zero);
 
-      expect(notifier.get('a')?.effectiveValue, '10');
+      expect(notifier.all['a']?.effectiveValue, '10');
     });
   });
 

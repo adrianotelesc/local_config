@@ -11,31 +11,29 @@ final class ConfigValue {
 
   final String defaultValue;
 
-  final String? overrideValue;
+  final String? localValue;
 
   ConfigValue({
     required this.type,
     required this.defaultValue,
-    required this.overrideValue,
+    required this.localValue,
   }) : assert(
          type == ConfigValueType.fromValue(defaultValue),
          'value type must match the inferred type.',
        ),
        assert(
-         overrideValue == null ||
-             type == ConfigValueType.fromValue(overrideValue),
+         localValue == null || type == ConfigValueType.fromValue(localValue),
          'value type must match the inferred type.',
        );
 
-  String get effectiveValue => overrideValue ?? defaultValue;
+  String get effectiveValue => localValue ?? defaultValue;
 
-  bool get hasOverride =>
-      overrideValue != null && overrideValue != defaultValue;
+  bool get hasLocalValue => localValue != null && localValue != defaultValue;
 
   String getLocalDisplayText(final BuildContext context) {
-    return type == ConfigValueType.string && overrideValue?.isEmpty == true
+    return type == ConfigValueType.string && localValue?.isEmpty == true
         ? LocalConfigLocalizations.of(context)!.emptyString
-        : overrideValue ?? '';
+        : localValue ?? '';
   }
 
   String getDefaultDisplayText(final BuildContext context) {
@@ -48,7 +46,7 @@ final class ConfigValue {
     return ConfigValue(
       type: type,
       defaultValue: defaultValue,
-      overrideValue: overrideValue,
+      localValue: overrideValue,
     );
   }
 
@@ -58,10 +56,10 @@ final class ConfigValue {
       other is ConfigValue &&
           type == other.type &&
           defaultValue == other.defaultValue &&
-          overrideValue == other.overrideValue;
+          localValue == other.localValue;
 
   @override
-  int get hashCode => Object.hash(type, defaultValue, overrideValue);
+  int get hashCode => Object.hash(type, defaultValue, localValue);
 
   @override
   String toString() => effectiveValue;

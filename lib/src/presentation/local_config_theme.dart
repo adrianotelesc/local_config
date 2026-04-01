@@ -234,28 +234,6 @@ class ExtendedTextTheme extends ThemeExtension<ExtendedTextTheme> {
   }
 }
 
-ButtonStyle warningButtonStyle(BuildContext context) {
-  final colorScheme = Theme.of(context).extension<ExtendedColorScheme>();
-  assert(colorScheme != null, 'ExtendedColorScheme must be available in theme');
-  return ButtonStyle(
-    overlayColor: WidgetStatePropertyAll(colorScheme?.warningContainer),
-    foregroundColor: WidgetStatePropertyAll(colorScheme?.warning),
-  );
-}
-
-ExtendedListTileStyle warningExtendedListTileStyle(BuildContext context) {
-  final colorScheme = Theme.of(context).extension<ExtendedColorScheme>();
-  assert(colorScheme != null, 'ExtendedColorScheme must be available in theme');
-  return ExtendedListTileStyle(
-    tileColor: colorScheme?.warningContainer,
-    titleTextStyle: context.extendedTextTheme.codeBodyMedium,
-    // titleTextStyle: TextTheme.of(context) //
-    // .bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-    // subtitleTextStyle: TextTheme.of(context) //
-    // .bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-  );
-}
-
 extension BuildContextThemeExtension on BuildContext {
   ExtendedColorScheme get extendedColorScheme {
     final extendedColors = Theme.of(this).extension<ExtendedColorScheme>();

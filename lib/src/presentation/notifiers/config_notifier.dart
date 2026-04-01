@@ -34,7 +34,7 @@ class ConfigNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get hasLocalValue => _all.values.any((config) => config.hasOverride);
+  bool get hasLocalValue => _all.values.any((config) => config.hasLocalValue);
 
   var _terms = <String>{};
   Set<String> get terms => UnmodifiableSetView(_terms);
@@ -69,7 +69,7 @@ class ConfigNotifier extends ChangeNotifier {
         ConfigValue(
           type: ConfigValueType.fromValue(value),
           defaultValue: value,
-          overrideValue: _configRepo.locals[key],
+          localValue: _configRepo.locals[key],
         ),
       );
     });
@@ -85,18 +85,14 @@ class ConfigNotifier extends ChangeNotifier {
   }
 
   bool _overrideFilter(MapEntry<String, ConfigValue> entry) =>
-      !_showOnlyLocals || entry.value.hasOverride;
+      !_showOnlyLocals || entry.value.hasLocalValue;
 
   bool _termFilter(MapEntry<String, ConfigValue> entry) =>
       _terms.isEmpty ||
       _terms.every((term) {
-        return "${entry.key} ${entry.value.defaultValue} ${entry.value.overrideValue}"
+        return "${entry.key} ${entry.value.defaultValue} ${entry.value.localValue}"
             .containsInsensitive(term);
       });
-
-  ConfigValue? get(String key) => _all[key];
-
-  Future<void> set(String key, String value) => _configRepo.set(key, value);
 
   Future<void> reset(String key) => _configRepo.reset(key);
 

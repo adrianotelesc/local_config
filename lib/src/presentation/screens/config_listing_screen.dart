@@ -12,6 +12,7 @@ import 'package:local_config/src/presentation/widgets/callout.dart';
 import 'package:local_config/src/presentation/widgets/clearable_search_bar.dart';
 import 'package:local_config/src/presentation/widgets/dashed_l_connector.dart';
 import 'package:local_config/src/presentation/widgets/extended_list_tile.dart';
+import 'package:local_config/src/presentation/widgets/highlighted_text_rich.dart';
 import 'package:local_config/src/presentation/widgets/root_aware_sliver_app_bar.dart';
 
 class ConfigListingScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _ConfigListingScreenState extends State<ConfigListingScreen> {
             controller: _scrollController,
             slivers: [
               _AppBar(
-                hasOverrides: _configNotifier.hasLocalValue,
+                hasLocalValue: _configNotifier.hasLocalValue,
                 onResetAllTap: _configNotifier.resetAll,
               ),
               if (_configNotifier.all.isEmpty)
@@ -108,11 +109,11 @@ class _ConfigListingScreenState extends State<ConfigListingScreen> {
 }
 
 class _AppBar extends StatelessWidget {
-  final bool hasOverrides;
+  final bool hasLocalValue;
   final Function()? onResetAllTap;
 
   const _AppBar({
-    required this.hasOverrides,
+    required this.hasLocalValue,
     this.onResetAllTap,
   });
 
@@ -128,7 +129,7 @@ class _AppBar extends StatelessWidget {
       floating: true,
       pinned: true,
       bottom:
-          hasOverrides
+          hasLocalValue
               ? PreferredSize(
                 preferredSize: const Size.fromHeight(Callout.defaultHeight),
                 child: Padding(
@@ -141,7 +142,17 @@ class _AppBar extends StatelessWidget {
                     text: LocalConfigLocalizations.of(context)!.changesApplied,
                     trailing: TextButton(
                       onPressed: onResetAllTap,
-                      style: warningButtonStyle(context),
+                      style: ButtonStyle(
+                        overlayColor: WidgetStatePropertyAll(
+                          Theme.of(
+                            context,
+                          ).extension<ExtendedColorScheme>()?.warningContainer,
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(
+                          Theme.of(context) //
+                          .extension<ExtendedColorScheme>()?.warning,
+                        ),
+                      ),
                       child: Text(
                         LocalConfigLocalizations.of(context)!.revertAll,
                       ),
@@ -211,45 +222,68 @@ class _List extends StatelessWidget {
                 separatorBuilder: (_, _) => const Divider(height: 1),
                 itemBuilder: (_, index) {
                   final item = items[index];
-                  final (name, config) = (item.key, item.value);
-                  final hasOverride = config.hasOverride;
+                  final (name, configValue) = (item.key, item.value);
+                  final hasLocalValue = configValue.hasLocalValue;
 
                   return ExtendedListTile(
                     style:
-                        hasOverride
-                            ? warningExtendedListTileStyle(context) //
+                        hasLocalValue
+                            ? ExtendedListTileStyle(
+                              tileColor:
+                                  Theme.of(context)
+                                      .extension<ExtendedColorScheme>()
+                                      ?.warningContainer,
+                              titleTextStyle: context
+                                  .extendedTextTheme
+                                  .codeBodyMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            )
+                            : ExtendedListTileStyle(
+                              titleTextStyle:
+                                  context.extendedTextTheme.codeBodyMedium,
+                            ),
+                    top:
+                        hasLocalValue
+                            ? Callout.warning(
+                              style: CalloutStyle(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              icon: Icons.error,
+                              text:
+                                  LocalConfigLocalizations.of(context)!.changed,
+                              trailing: TextButton(
+                                onPressed: () => onResetTap?.call(name),
+                                style: ButtonStyle(
+                                  overlayColor: WidgetStatePropertyAll(
+                                    Theme.of(context)
+                                        .extension<ExtendedColorScheme>()
+                                        ?.warningContainer,
+                                  ),
+                                  foregroundColor: WidgetStatePropertyAll(
+                                    Theme.of(context) //
+                                    .extension<ExtendedColorScheme>()?.warning,
+                                  ),
+                                ),
+                                child: Text(
+                                  LocalConfigLocalizations.of(context)!.revert,
+                                ),
+                              ),
+                            )
                             : null,
                     title: Row(
                       spacing: 8,
                       children: [
-                        Icon(config.type.displayIcon),
+                        Icon(configValue.type.displayIcon),
                         Expanded(
-                          child: Text.rich(
-                            highlightTerms(
-                              text: name,
-                              terms: terms,
-                              normalStyle: context
-                                  .extendedTextTheme
-                                  .codeBodyMedium
-                                  ?.copyWith(
-                                    fontWeight:
-                                        hasOverride ? FontWeight.bold : null,
-                                  ),
-                              highlightStyle: context
-                                  .extendedTextTheme
-                                  .codeBodyMedium
-                                  ?.copyWith(
-                                    fontWeight:
-                                        hasOverride ? FontWeight.bold : null,
-                                    backgroundColor: Theme.of(
-                                      context,
-                                    ).colorScheme.primary.withAlpha(102),
-                                  ),
-                            ),
+                          child: HighlightText(
+                            text: name,
+                            terms: terms,
                             style: context.extendedTextTheme.codeBodyMedium
                                 ?.copyWith(
                                   fontWeight:
-                                      hasOverride ? FontWeight.bold : null,
+                                      hasLocalValue ? FontWeight.bold : null,
                                 ),
                           ),
                         ),
@@ -266,109 +300,51 @@ class _List extends StatelessWidget {
                       ],
                     ),
                     subtitle: DashedLConnector(
+                      size: const Size(32, 24),
                       entries: [
-                        if (config.hasOverride)
+                        if (hasLocalValue)
                           DashedLEntry(
                             label: Chip(
                               label: Text(
                                 'Local value',
-                                style: Theme.of(
+                                style: TextTheme.of(
                                   context,
-                                ).textTheme.bodyMedium?.copyWith(
+                                ).bodyMedium?.copyWith(
                                   fontWeight:
-                                      hasOverride ? FontWeight.bold : null,
+                                      hasLocalValue ? FontWeight.bold : null,
                                 ),
                               ),
                               color: WidgetStatePropertyAll(
                                 Colors.red.withAlpha(80),
                               ),
                             ),
-                            value: Text.rich(
-                              highlightTerms(
-                                text: config.getLocalDisplayText(context),
-                                terms: terms,
-                                normalStyle: Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium?.copyWith(
-                                  fontWeight:
-                                      hasOverride ? FontWeight.bold : null,
-                                ),
-                                highlightStyle: Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight:
-                                      hasOverride ? FontWeight.bold : null,
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary.withAlpha(102),
-                                ),
-                              ),
+                            value: HighlightText(
+                              text: configValue.getLocalDisplayText(context),
+                              terms: terms,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(
+                              style: TextTheme.of(
                                 context,
-                              ).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight:
-                                    hasOverride ? FontWeight.bold : null,
+                              ).bodyMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         DashedLEntry(
                           label: Text(
                             'Default value',
-                            style:
-                                Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium,
+                            style: TextTheme.of(context).bodyMedium,
                           ),
-                          value: Text.rich(
-                            highlightTerms(
-                              text: config.defaultValue,
-                              terms: terms,
-                              normalStyle:
-                                  Theme.of(
-                                    context,
-                                  ).textTheme.bodyMedium?.copyWith(),
-                              highlightStyle: Theme.of(
-                                context,
-                              ).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                backgroundColor: Theme.of(
-                                  context,
-                                ).colorScheme.primary.withAlpha(102),
-                              ),
-                            ),
+                          value: HighlightText(
+                            text: configValue.defaultValue,
+                            terms: terms,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                            style: TextTheme.of(context).bodyMedium,
                           ),
                         ),
                       ],
                     ),
-                    top:
-                        hasOverride
-                            ? Callout.warning(
-                              style: CalloutStyle(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              icon: Icons.error,
-                              text:
-                                  LocalConfigLocalizations.of(context)!.changed,
-                              trailing: TextButton(
-                                onPressed: () => onResetTap?.call(name),
-                                style: warningButtonStyle(context),
-                                child: Text(
-                                  LocalConfigLocalizations.of(context)!.revert,
-                                ),
-                              ),
-                            )
-                            : null,
                   );
                 },
               ),
@@ -376,49 +352,5 @@ class _List extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  TextSpan highlightTerms({
-    required String text,
-    required Set<String> terms,
-    TextStyle? normalStyle,
-    TextStyle? highlightStyle,
-  }) {
-    if (terms.isEmpty) {
-      return TextSpan(text: text, style: normalStyle);
-    }
-
-    final escaped = terms.map(RegExp.escape);
-    final pattern = RegExp('(${escaped.join('|')})', caseSensitive: false);
-
-    final matches = pattern.allMatches(text);
-
-    if (matches.isEmpty) {
-      return TextSpan(text: text, style: normalStyle);
-    }
-
-    final spans = <TextSpan>[];
-    int start = 0;
-
-    for (final match in matches) {
-      if (match.start > start) {
-        spans.add(
-          TextSpan(
-            text: text.substring(start, match.start),
-            style: normalStyle,
-          ),
-        );
-      }
-
-      spans.add(TextSpan(text: match.group(0), style: highlightStyle));
-
-      start = match.end;
-    }
-
-    if (start < text.length) {
-      spans.add(TextSpan(text: text.substring(start), style: normalStyle));
-    }
-
-    return TextSpan(children: spans);
   }
 }

@@ -10,10 +10,12 @@ class TextEditor extends StatefulWidget {
     this.value = '',
     required this.title,
     required this.controller,
+    this.readOnly = false,
   });
 
   final String title;
   final String value;
+  final bool readOnly;
   final TextEditorController controller;
 
   @override
@@ -48,11 +50,12 @@ class _TextEditorState extends State<TextEditor> {
       appBar: _AppBar(
         title: widget.title,
         onCloseClick: pop,
+        showSaveAction: !widget.readOnly,
         onSaveClick: _isValid ?? true ? popAndResult : null,
       ),
       body: Column(
         children: [
-          if (_isValid != null)
+          if (!widget.readOnly && _isValid != null)
             _FormattingBar(
               isValid: _isValid ?? false,
               onFormatClick: () {
@@ -62,6 +65,7 @@ class _TextEditorState extends State<TextEditor> {
               },
             ),
           _Editor(
+            readOnly: widget.readOnly,
             textController: _textController,
             textEditorController: widget.controller,
           ),
@@ -87,11 +91,17 @@ class _TextEditorState extends State<TextEditor> {
 }
 
 class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({required this.title, this.onCloseClick, this.onSaveClick});
+  const _AppBar({
+    required this.title,
+    this.onCloseClick,
+    this.onSaveClick,
+    this.showSaveAction = true,
+  });
 
   final String title;
   final void Function()? onCloseClick;
   final void Function()? onSaveClick;
+  final bool showSaveAction;
 
   @override
   Widget build(BuildContext context) {
@@ -104,11 +114,12 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.close),
       ),
       actions: [
-        IconButton(
-          tooltip: 'Save',
-          onPressed: onSaveClick,
-          icon: const Icon(Icons.check),
-        ),
+        if (showSaveAction)
+          IconButton(
+            tooltip: 'Save',
+            onPressed: onSaveClick,
+            icon: const Icon(Icons.check),
+          ),
       ],
     );
   }
@@ -173,15 +184,18 @@ class _Editor extends StatelessWidget {
   const _Editor({
     required this.textController,
     required this.textEditorController,
+    this.readOnly = false,
   });
 
   final CodeLineEditingController textController;
   final TextEditorController textEditorController;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: CodeEditor(
+        readOnly: readOnly,
         wordWrap: false,
         autocompleteSymbols: false,
         sperator: Container(
