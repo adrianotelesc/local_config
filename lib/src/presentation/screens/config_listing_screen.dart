@@ -273,18 +273,21 @@ class _List extends StatelessWidget {
                             )
                             : null,
                     title: Row(
-                      spacing: 8,
+                      spacing: 16,
                       children: [
                         Icon(configValue.type.displayIcon),
                         Expanded(
-                          child: HighlightText(
-                            text: name,
-                            terms: terms,
-                            style: context.extendedTextTheme.codeBodyMedium
-                                ?.copyWith(
-                                  fontWeight:
-                                      hasLocalValue ? FontWeight.bold : null,
-                                ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            child: HighlightText(
+                              text: name,
+                              terms: terms,
+                              style: context.extendedTextTheme.codeBodyMedium
+                                  ?.copyWith(
+                                    fontWeight:
+                                        hasLocalValue ? FontWeight.bold : null,
+                                  ),
+                            ),
                           ),
                         ),
                         IconButton(
@@ -299,6 +302,7 @@ class _List extends StatelessWidget {
                         ),
                       ],
                     ),
+
                     subtitle: DashedLConnector(
                       size: const Size(32, 24),
                       entries: [
@@ -336,7 +340,7 @@ class _List extends StatelessWidget {
                             style: TextTheme.of(context).bodyMedium,
                           ),
                           value: HighlightText(
-                            text: configValue.defaultValue,
+                            text: configValue.getDefaultDisplayText(context),
                             terms: terms,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
