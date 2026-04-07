@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:local_config/src/common/utils/type_converters.dart';
 import 'package:local_config/src/presentation/widgets/text_editor/controller/text_editor_controller.dart';
 import 'package:re_editor/re_editor.dart';
 import 'package:re_highlight/languages/json.dart';
@@ -41,11 +42,7 @@ class JsonEditorController implements TextEditorController {
 
   @override
   bool? validate(String value) {
-    try {
-      jsonDecode(value);
-      return true;
-    } on FormatException catch (_) {
-      return false;
-    }
+    return RegExp(r'^\{.*\}|\[.*\]$').hasMatch(value) &&
+        tryJsonDecode(value) != null;
   }
 }

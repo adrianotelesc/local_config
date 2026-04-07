@@ -142,7 +142,9 @@ enum ConfigValueType {
       LocalConfigLocalizations.of(context)!.invalidBoolean,
     ConfigValueType.number when num.tryParse(value) == null =>
       LocalConfigLocalizations.of(context)!.invalidNumber,
-    ConfigValueType.json when tryJsonDecode(value) == null =>
+    ConfigValueType.json
+        when !RegExp(r'^\{.*\}|\[.*\]$').hasMatch(value) ||
+            tryJsonDecode(value) == null =>
       LocalConfigLocalizations.of(context)!.invalidJson,
     _ => null,
   };
