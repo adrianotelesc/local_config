@@ -76,7 +76,10 @@ class _ConfigEditingScreenState extends State<ConfigEditingScreen> {
   }
 
   void _submit(String value) {
-    if (_formKey.currentState?.validate() == false) return;
+    if (_formKey.currentState?.validate() == false &&
+        !_configEditingNotifier.shouldResetToDefault) {
+      return;
+    }
     _configEditingNotifier.save(value);
     Navigator.of(context).pop();
   }
