@@ -65,7 +65,7 @@ enum ConfigValueType {
   static ConfigValueType fromValue(final String value) {
     if (bool.tryParse(value) != null) return ConfigValueType.boolean;
     if (num.tryParse(value) != null) return ConfigValueType.number;
-    if (RegExp(r'^\{.*\}|\[.*\]$').hasMatch(value) &&
+    if (RegExp(r'\{.*\}|\[.*\]', dotAll: true).hasMatch(value) &&
         tryJsonDecode(value) != null) {
       return ConfigValueType.json;
     }
@@ -143,7 +143,7 @@ enum ConfigValueType {
     ConfigValueType.number when num.tryParse(value) == null =>
       LocalConfigLocalizations.of(context)!.invalidNumber,
     ConfigValueType.json
-        when !RegExp(r'^\{.*\}|\[.*\]$').hasMatch(value) ||
+        when !RegExp(r'\{.*\}|\[.*\]', dotAll: true).hasMatch(value) ||
             tryJsonDecode(value) == null =>
       LocalConfigLocalizations.of(context)!.invalidJson,
     _ => null,

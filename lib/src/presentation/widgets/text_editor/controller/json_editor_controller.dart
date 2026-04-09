@@ -42,7 +42,7 @@ class JsonEditorController implements TextEditorController {
 
   @override
   bool? validate(String value) {
-    return RegExp(r'^\{.*\}|\[.*\]$').hasMatch(value) &&
+    return RegExp(r'\{.*\}|\[.*\]', dotAll: true).hasMatch(value) &&
         tryJsonDecode(value) != null;
   }
 }

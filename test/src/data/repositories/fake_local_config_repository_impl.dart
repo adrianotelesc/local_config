@@ -9,7 +9,7 @@ class FakeLocalConfigRepositoryImpl implements LocalConfigRepository {
   final _controller = StreamController<LocalConfigUpdate>.broadcast();
 
   @override
-  Map<String, LocalConfigValue> get all => throw UnimplementedError();
+  Map<String, LocalConfigValue> get all => {};
 
   @override
   Map<String, String> get defaults => UnmodifiableMapView(_defaults);
